@@ -22,6 +22,7 @@ const ProjectReelContainer = styled.div`
   width: 100%;
   overflow: hidden;
   padding: 2rem 0;
+  position: relative;
 `;
 
 const ProjectReel = styled(motion.div)`
@@ -102,17 +103,18 @@ const ProjectDescription = styled.p`
   margin-bottom: 0.5rem;
 `;
 
-const projects = [
-    { id: 1, name: "Proyecto 1", image: "/path/to/image1.jpg", description: "Descripción del Proyecto 1", link: "https://ejemplo1.com" },
-    { id: 2, name: "Proyecto 2", image: "/path/to/image2.jpg", description: "Descripción del Proyecto 2", link: "https://ejemplo2.com" },
-    { id: 3, name: "Proyecto 3", image: "/path/to/image3.jpg", description: "Descripción del Proyecto 3", link: "https://ejemplo3.com" },
-    { id: 4, name: "Proyecto 4", image: "/path/to/image4.jpg", description: "Descripción del Proyecto 4", link: "https://ejemplo4.com" },
-];
-
 function Portfolio() {
+    const [projects, setProjects] = useState([]);
     const [isHovering, setIsHovering] = useState(false);
     const controls = useAnimation();
     const reelRef = useRef(null);
+
+    useEffect(() => {
+        fetch('/api/projects')
+            .then(response => response.json())
+            .then(data => setProjects(data))
+            .catch(error => console.error("Error loading projects:", error));
+    }, []);
 
     useEffect(() => {
         const moveReel = async () => {
@@ -155,13 +157,13 @@ function Portfolio() {
                         <ProjectCard
                             key={`${project.id}-${index}`}
                             whileHover={{
-                                scale: 1.2,
-                                zIndex: 1,
+                                scale: 1.4, // Incrementado a 1.4 (40% más grande)
+                                zIndex: 20, // Aumentado para asegurar que esté por encima de todo
                                 transition: { duration: 0.3 }
                             }}
                             onClick={() => setIsHovering(true)}
                         >
-                            <ProjectImage src={project.image} alt={project.name} />
+                            <ProjectImage src={`/images/portfolio/${project.image}`} alt={project.name} />
                             <ProjectName>{project.name}</ProjectName>
                             <ProjectInfo
                                 initial={{ opacity: 0 }}

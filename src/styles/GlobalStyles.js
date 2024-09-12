@@ -1,14 +1,33 @@
 import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyles = createGlobalStyle`
-  body {
+  html, body {
     margin: 0;
     padding: 0;
+    min-height: 100vh;
+  }
+
+  body {
     font-family: ${props => props.theme.fonts.secondary};
     background-color: #000;
     color: ${props => props.theme.colors.text};
     line-height: 1.6;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  #root {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
   }
 
   h1, h2, h3, h4, h5, h6 {
