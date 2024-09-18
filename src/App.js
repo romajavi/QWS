@@ -5,25 +5,26 @@ import { AnimatePresence } from 'framer-motion';
 import GlobalStyles from './styles/GlobalStyles';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import LoadingSpinner from './components/LoadingSpinner'; // Necesitarás crear este componente
+import LoadingSpinner from './components/LoadingSpinner';
+import PageTransition from './components/PageTransition';
 
-
-
-// importacion de pages
-import Home from './pages/Home';
-import Services from './pages/Services';
-import Portfolio from './pages/Portfolio';
-import Blog from './pages/Blog';
-import Contact from './pages/Contact';
+// Lazy loading for pages
+const Home = lazy(() => import('./pages/Home'));
+const Services = lazy(() => import('./pages/Services'));
+const Portfolio = lazy(() => import('./pages/Portfolio'));
+const Blog = lazy(() => import('./pages/Blog'));
+const Contact = lazy(() => import('./pages/Contact'));
 
 const theme = {
     colors: {
-        primary: '#FFD700', // Amarillo dorado (sin cambios)
-        secondary: '#FFA500', // Naranja (sin cambios)
-        background: '#000000', // Negro (sin cambios)
-        text: '#FFFFFF', // Blanco puro para mejor contraste
-        accent: '#00FFFF', // Cyan (sin cambios)
-        buttonText: '#000000', // Negro para texto en botones
+        primary: '#FFD700',    // Amarillo dorado
+        secondary: '#FFA500',  // Naranja
+        background: '#000000', // Negro
+        text: '#FFFFFF',       // Blanco
+        accent: '#00FFFF',     // Cian
+        buttonText: '#000000', // Negro
+        primaryBackground: '#333333', // Gris oscuro
+        secondaryBackground: '#a5aa9a', // Gris medio vizon
     },
     fonts: {
         main: "'Orbitron', sans-serif",
@@ -34,6 +35,7 @@ const theme = {
         gradient: 'linear-gradient(45deg, #FFD700, #00FFFF)',
     }
 };
+
 const pageVariants = {
     initial: { opacity: 0, x: "-100vw" },
     in: { opacity: 1, x: 0 },
@@ -46,21 +48,21 @@ const pageTransition = {
     duration: 0.5
 };
 
-function AnimatedRoutes() {
+function AnimatedRoutes({ setIsExploring }) {
     const location = useLocation();
 
     return (
-        <AnimatePresence mode="wait">
+        <PageTransition location={location}>
             <Suspense fallback={<LoadingSpinner />}>
-                <Routes location={location} key={location.pathname}>
-                    <Route path="/" element={<Home />} />
+                <Routes location={location}>
+                    <Route path="/" element={<Home setIsExploring={setIsExploring} />} />
                     <Route path="/services" element={<Services />} />
                     <Route path="/portfolio" element={<Portfolio />} />
                     <Route path="/blog" element={<Blog />} />
                     <Route path="/contact" element={<Contact />} />
                 </Routes>
             </Suspense>
-        </AnimatePresence>
+        </PageTransition>
     );
 }
 
@@ -74,13 +76,7 @@ function App() {
                 <div className="App">
                     {!isExploring && <Header />}
                     <main>
-                        <Routes>
-                            <Route path="/" element={<Home setIsExploring={setIsExploring} />} />
-                            <Route path="/services" element={<Services />} />
-                            <Route path="/portfolio" element={<Portfolio />} />
-                            <Route path="/blog" element={<Blog />} />
-                            <Route path="/contact" element={<Contact />} />
-                        </Routes>
+                        <AnimatedRoutes setIsExploring={setIsExploring} />
                     </main>
                     {!isExploring && <Footer />}
                 </div>

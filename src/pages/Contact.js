@@ -1,159 +1,346 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import emailjs from '@emailjs/browser';
 import PageAnimation from '../components/PageAnimation';
-import Select from 'react-select';
+import Calendar from '../components/Calendar';
 
 const ContactWrapper = styled.div`
+  padding: 2rem;
+  background-color: ${props => props.theme.colors.background};
+  color: ${props => props.theme.colors.text};
   display: flex;
   flex-direction: column;
   align-items: center;
+`;
+
+const ContentContainer = styled.div`
+  display: flex;
+  width: 56%; // Reduced by 30% from previous 80%
+  max-width: 840px; // Adjusted max-width accordingly
+  margin-bottom: 1rem;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  @media (max-width: 768px) {
+    flex-direction: column;
+    width: 100%;
+  }
+`;
+
+const Section = styled.div`
+  width: 60%;
   padding: 2rem;
-  background-color: #333; // Fondo gris oscuro
+  background-color: ${props => props.primary ? props.theme.colors.primaryBackground : props.theme.colors.secondaryBackground};
+  color: ${props => props.theme.colors.text};
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+`;
+
+const SectionContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; // Added space between elements
+`;
+
+const SectionTitle = styled.h2`
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: ${props => props.theme.colors.primary};
 `;
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-  width: 100%;
-  max-width: 500px;
+  gap: 1rem; // Added space between form elements
 `;
 
 const Input = styled.input`
-  margin-bottom: 1rem;
   padding: 0.5rem;
-  border: none;
+  background-color: ${props => props.theme.colors.background};
+  color: ${props => props.theme.colors.text};
+  border: 1px solid ${props => props.theme.colors.primary};
   border-radius: 4px;
-  background-color: #444; // Fondo gris más claro
-  color: white;
-`;
-
-
-
-const StyledSelect = styled(Select)`
-  margin-bottom: 1rem;
-  .react-select__control {
-    background-color: #444;
-    border: none;
-  }
-  .react-select__single-value {
-    color: white;
-  }
-  .react-select__menu {
-    background-color: #444;
-  }
-  .react-select__option {
-    color: white;
+  &:hover, &:focus {
+    border-color: ${props => props.theme.colors.secondary};
+    outline: none;
   }
 `;
 
 const TextArea = styled.textarea`
-  margin-bottom: 1rem;
   padding: 0.5rem;
-  border: none;
+  background-color: ${props => props.theme.colors.background};
+  color: ${props => props.theme.colors.text};
+  border: 1px solid ${props => props.theme.colors.primary};
   border-radius: 4px;
-  background-color: #444;
-  color: white;
-  min-height: 150px;
+  min-height: 100px;
+  resize: vertical;
+  &:hover, &:focus {
+    border-color: ${props => props.theme.colors.secondary};
+    outline: none;
+  }
+`;
+
+const CheckboxGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+`;
+
+const CheckboxTitle = styled.h4`
+  color: ${props => props.theme.colors.accent};
+  margin-bottom: 0.5rem;
+`;
+
+const CheckboxContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+`;
+
+const CheckboxLabel = styled.label`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+`;
+
+const StyledCalendar = styled(Calendar)`
+  width: 100%;
+  margin-bottom: 1rem;
 `;
 
 const ButtonContainer = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
 `;
 
-const Button = styled.button`
+const Button = styled(motion.button)`
   padding: 0.5rem 1rem;
+  background-color: ${props => props.theme.colors.primary};
+  color: ${props => props.theme.colors.buttonText};
   border: none;
   border-radius: 4px;
-  background-color: ${props => props.theme.colors.primary};
-  color: black;
   cursor: pointer;
-  flex: 1;
-  margin: 0 0.5rem;
+  &:hover {
+    background-color: ${props => props.theme.colors.secondary};
+  }
 `;
 
 const Contact = () => {
-    const [formData, setFormData] = useState({
-        name: '',
-        email: '',
-        phone: '',
-        message: '',
-        contactPreference: '',
-        contactTime: ''
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    company: '',
+    contactPreference: '',
+    contactDays: '',
+    contactTime: '',
+    appointmentDate: '',
+    appointmentTime: '10:00',
+    appointmentMedium: '',
+    observations: ''
+  });
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+
+    if (type === 'checkbox') {
+      setFormData(prevData => ({
+        ...prevData,
+        [name]: checked ? value : ''
+      }));
+    } else {
+      setFormData(prevData => ({
+        ...prevData,
+        [name]: value
+      }));
+    }
+  };
+
+  const handleDateSelect = (date) => {
+    setFormData(prevData => ({
+      ...prevData,
+      appointmentDate: date.toISOString().split('T')[0]
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(formData);
+    alert('Formulario enviado con éxito!');
+  };
+
+  const handleReset = () => {
+    setFormData({
+      name: '',
+      email: '',
+      phone: '',
+      company: '',
+      contactPreference: '',
+      contactDays: '',
+      contactTime: '',
+      appointmentDate: '',
+      appointmentTime: '10:00',
+      appointmentMedium: '',
+      observations: ''
     });
+  };
 
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
+  return (
+    <ContactWrapper>
+      <ContentContainer>
+        <Section primary>
+          <SectionTitle>Información de Contacto</SectionTitle>
+          <SectionContent>
+            <Form>
+              <Input
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Nombre"
+                required
+              />
+              <Input
+                name="email"
+                type="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="Email"
+                required
+              />
+              <Input
+                name="phone"
+                type="tel"
+                value={formData.phone}
+                onChange={handleChange}
+                placeholder="Teléfono (opcional)"
+              />
+              <Input
+                name="company"
+                value={formData.company}
+                onChange={handleChange}
+                placeholder="Empresa (opcional)"
+              />
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        emailjs.send(
-            'YOUR_SERVICE_ID',
-            'YOUR_TEMPLATE_ID',
-            formData,
-            'YOUR_USER_ID'
-        )
-            .then((result) => {
-                console.log(result.text);
-                alert('Mensaje enviado con éxito!');
-            }, (error) => {
-                console.log(error.text);
-                alert('Hubo un error al enviar el mensaje. Por favor, intenta de nuevo.');
-            });
-    };
+              <CheckboxGroup>
+                <CheckboxTitle>Preferencias de Contacto</CheckboxTitle>
+                <CheckboxContainer>
+                  {['Teléfono', 'Email', 'Indistinto'].map(option => (
+                    <CheckboxLabel key={option}>
+                      <input
+                        type="checkbox"
+                        name="contactPreference"
+                        value={option.toLowerCase()}
+                        checked={formData.contactPreference === option.toLowerCase()}
+                        onChange={handleChange}
+                      />
+                      {option}
+                    </CheckboxLabel>
+                  ))}
+                </CheckboxContainer>
+              </CheckboxGroup>
 
-    const handleReset = () => {
-        setFormData({
-            name: '',
-            email: '',
-            phone: '',
-            message: '',
-            contactPreference: '',
-            contactTime: ''
-        });
-    };
+              <CheckboxGroup>
+                <CheckboxTitle>Días de Contacto</CheckboxTitle>
+                <CheckboxContainer>
+                  {['Lunes a Viernes', 'Fines de Semana', 'Todos los días'].map(option => (
+                    <CheckboxLabel key={option}>
+                      <input
+                        type="checkbox"
+                        name="contactDays"
+                        value={option.toLowerCase().replace(/ /g, '-')}
+                        checked={formData.contactDays === option.toLowerCase().replace(/ /g, '-')}
+                        onChange={handleChange}
+                      />
+                      {option}
+                    </CheckboxLabel>
+                  ))}
+                </CheckboxContainer>
+              </CheckboxGroup>
 
-    return (
-        <ContactWrapper>
-            <h1>Contacto</h1>
-            <Form onSubmit={handleSubmit}>
-                <Input name="name" value={formData.name} onChange={handleChange} placeholder="Nombre" required />
-                <Input name="email" type="email" value={formData.email} onChange={handleChange} placeholder="Email" required />
-                <Input name="phone" type="tel" value={formData.phone} onChange={handleChange} placeholder="Teléfono" required />
-                <StyledSelect
-                    name="contactPreference"
-                    value={formData.contactPreference}
-                    onChange={(selectedOption) => handleChange({ target: { name: 'contactPreference', value: selectedOption.value } })}
-                    options={[
-                        { value: 'weekdays', label: 'Lunes a Viernes' },
-                        { value: 'weekends', label: 'Fines de semana' },
-                        { value: 'everyday', label: 'Todos los días' },
-                    ]}
-                    placeholder="Seleccione preferencia de contacto"
-                />
-                <StyledSelect
-                    name="contactTime"
-                    value={formData.contactTime}
-                    onChange={(selectedOption) => handleChange({ target: { name: 'contactTime', value: selectedOption.value } })}
-                    options={[
-                        { value: 'morning', label: '00:00 - 12:00' },
-                        { value: 'afternoon', label: '12:00 - 18:00' },
-                        { value: 'evening', label: '18:00 - 00:00' },
-                    ]}
-                    placeholder="Seleccione horario de contacto"
-                />
-                <TextArea name="message" value={formData.message} onChange={handleChange} placeholder="Mensaje" required />
-                <ButtonContainer>
-                    <Button type="submit">Enviar</Button>
-                    <Button type="button" onClick={handleReset}>Vaciar</Button>
-                </ButtonContainer>
+              <CheckboxGroup>
+                <CheckboxTitle>Horario de Contacto</CheckboxTitle>
+                <CheckboxContainer>
+                  {['Mañanas', 'Tardes', 'Noches', 'Cualquier Hora'].map(option => (
+                    <CheckboxLabel key={option}>
+                      <input
+                        type="checkbox"
+                        name="contactTime"
+                        value={option.toLowerCase()}
+                        checked={formData.contactTime === option.toLowerCase()}
+                        onChange={handleChange}
+                      />
+                      {option}
+                    </CheckboxLabel>
+                  ))}
+                </CheckboxContainer>
+              </CheckboxGroup>
             </Form>
-        </ContactWrapper>
-    );
-};
+          </SectionContent>
+        </Section>
 
+        <Section>
+          <SectionTitle>Agendar Cita</SectionTitle>
+          <SectionContent>
+            <StyledCalendar onSelectDate={handleDateSelect} />
+            <CheckboxTitle>Horario de Cita</CheckboxTitle>
+            <Input
+              name="appointmentTime"
+              type="time"
+              value={formData.appointmentTime}
+              onChange={handleChange}
+            />
+
+            <CheckboxGroup>
+              <CheckboxTitle>Medio de la Cita</CheckboxTitle>
+              <CheckboxContainer>
+                {['Zoom', 'Google Meet', 'WhatsApp'].map(option => (
+                  <CheckboxLabel key={option}>
+                    <input
+                      type="checkbox"
+                      name="appointmentMedium"
+                      value={option.toLowerCase().replace(' ', '-')}
+                      checked={formData.appointmentMedium === option.toLowerCase().replace(' ', '-')}
+                      onChange={handleChange}
+                    />
+                    {option}
+                  </CheckboxLabel>
+                ))}
+              </CheckboxContainer>
+            </CheckboxGroup>
+
+            <TextArea
+              name="observations"
+              value={formData.observations}
+              onChange={handleChange}
+              placeholder="Observaciones generales"
+            />
+          </SectionContent>
+        </Section>
+      </ContentContainer>
+
+      <ButtonContainer>
+        <Button
+          type="submit"
+          onClick={handleSubmit}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          Enviar
+        </Button>
+        <Button
+          type="button"
+          onClick={handleReset}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          Vaciar
+        </Button>
+      </ButtonContainer>
+    </ContactWrapper>
+  );
+};
 
 export default PageAnimation(Contact);

@@ -82,7 +82,7 @@ const SpaceBackground = ({ isAccelerating }) => {
             }
         }
 
-        const starCount = isLowPerfDevice ? 100 : 200; // Reduce star count for low performance devices
+        const starCount = isLowPerfDevice ? 80 : 120; // Reduce star count for low performance devices
         const stars = Array(starCount).fill().map(() => new Star());
 
         const animate = (currentTime) => {
