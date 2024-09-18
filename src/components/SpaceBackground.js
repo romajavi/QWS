@@ -1,5 +1,6 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
+
 
 const SpaceWrapper = styled.div`
   position: fixed;
@@ -16,13 +17,17 @@ const Canvas = styled.canvas`
   height: 100%;
 `;
 
-const SpaceBackground = () => {
+const SpaceBackground = ({ isAccelerating }) => {
     const canvasRef = useRef(null);
+    const [isLowPerfDevice, setIsLowPerfDevice] = useState(false);
 
     useEffect(() => {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
         let animationFrameId;
+        let lastTime = 0;
+        const fps = 30; // Limit to 30 FPS
+        const fpsInterval = 1000 / fps;
 
         const resizeCanvas = () => {
             canvas.width = window.innerWidth;
@@ -32,23 +37,33 @@ const SpaceBackground = () => {
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
+        // Check if it's a low performance device
+        const checkPerformance = () => {
+            const performance = window.performance || window.mozPerformance || window.msPerformance || window.webkitPerformance || {};
+            if (performance.memory) {
+                setIsLowPerfDevice(performance.memory.jsHeapSizeLimit < 512 * 1024 * 1024); // Less than 512MB
+            } else {
+                setIsLowPerfDevice(false); // Assume it's not a low performance device if we can't check
+            }
+        };
+        checkPerformance();
+
         class Star {
             constructor() {
                 this.x = Math.random() * canvas.width;
                 this.y = Math.random() * canvas.height;
                 this.z = Math.random() * canvas.width;
-                this.size = Math.random() * 0.5 + 0.1; // Reduced size
-                this.blinkSpeed = Math.random() * 0.05 + 0.002;
-                this.brightness = Math.random();
+                this.size = Math.random() * 0.5 + 0.1;
+                this.baseSpeed = 0.2; // Base speed
+                this.speed = this.baseSpeed;
             }
 
-            update() {
-                this.z = this.z - 1;
+            update(isAccelerating) {
+                this.speed = isAccelerating ? this.baseSpeed * 5 : this.baseSpeed;
+                this.z = this.z - this.speed;
                 if (this.z <= 0) {
                     this.z = canvas.width;
                 }
-                this.brightness += Math.sin(Date.now() * this.blinkSpeed) * 0.05;
-                this.brightness = Math.max(0, Math.min(1, this.brightness));
             }
 
             draw() {
@@ -60,32 +75,40 @@ const SpaceBackground = () => {
 
                 let s = this.size * (canvas.width / this.z);
 
-                ctx.fillStyle = `rgba(255, 255, 255, ${this.brightness})`;
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
                 ctx.beginPath();
                 ctx.arc(x, y, s, 0, Math.PI * 2);
                 ctx.fill();
             }
         }
 
-        const stars = Array(400).fill().map(() => new Star());
+        const starCount = isLowPerfDevice ? 100 : 200; // Reduce star count for low performance devices
+        const stars = Array(starCount).fill().map(() => new Star());
 
-        const animate = () => {
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            stars.forEach(star => {
-                star.update();
-                star.draw();
-            });
+        const animate = (currentTime) => {
             animationFrameId = requestAnimationFrame(animate);
+
+            const elapsed = currentTime - lastTime;
+
+            if (elapsed > fpsInterval) {
+                lastTime = currentTime - (elapsed % fpsInterval);
+
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                stars.forEach(star => {
+                    star.update(isAccelerating);
+                    star.draw();
+                });
+            }
         };
 
-        animate();
+        animate(0);
 
         return () => {
             window.removeEventListener('resize', resizeCanvas);
             cancelAnimationFrame(animationFrameId);
         };
-    }, []);
+    }, [isLowPerfDevice, isAccelerating]);
 
     return (
         <SpaceWrapper>

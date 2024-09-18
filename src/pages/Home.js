@@ -1,7 +1,10 @@
-import React from 'react';
-import styled, { keyframes } from 'styled-components';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+import { keyframes } from 'styled-components';
+import { motion, AnimatePresence } from 'framer-motion';
 import SpaceBackground from '../components/SpaceBackground';
+import PageAnimation from '../components/PageAnimation';
 
 const HomeWrapper = styled(motion.div)`
   position: relative;
@@ -13,7 +16,11 @@ const HomeWrapper = styled(motion.div)`
   min-height: 100vh;
   text-align: center;
   padding: 2rem;
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
 `;
+
 
 const blinkingEffect = keyframes`
   0% { opacity: 1; }
@@ -26,6 +33,9 @@ const Title = styled(motion.h1)`
   color: ${props => props.theme.colors.primary};
   margin-bottom: 2rem;
   text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+  @media (max-width: 768px) {
+    font-size: 2.5rem;
+  }
 `;
 
 const BlinkingTitle = styled(Title)`
@@ -63,51 +73,78 @@ const containerVariants = {
       when: "beforeChildren",
       staggerChildren: 0.2
     }
-  }
+  },
+  exit: { opacity: 0, transition: { duration: 0.5 } }
 };
 
 const itemVariants = {
   hidden: { y: 20, opacity: 0 },
-  visible: { y: 0, opacity: 1 }
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      type: "spring",
+      stiffness: 300,
+      damping: 24
+    }
+  }
 };
 
-function Home() {
+const pageVariants = {
+  initial: { opacity: 0, x: "-100vw" },
+  in: { opacity: 1, x: 0 },
+  out: { opacity: 0, x: "100vw" }
+};
+
+const pageTransition = {
+  type: "tween",
+  ease: "anticipate",
+  duration: 0.5
+};
+
+
+
+const Home = () => {
+  const [isAccelerating, setIsAccelerating] = useState(false);
+  const navigate = useNavigate();
+
+  const handleExploreClick = () => {
+    setIsAccelerating(true);
+    setTimeout(() => {
+      navigate('/services');
+    }, 2000);
+  };
+
   return (
     <>
-      <SpaceBackground />
-      <HomeWrapper
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        <BlinkingTitle variants={itemVariants}>
-          Quantum Web Services
-        </BlinkingTitle>
-        <Subtitle variants={itemVariants}>
-        Inteligencia Digital, Innovación sin Límites
-        </Subtitle>
-        <CTAButton
-          variants={itemVariants}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          animate={{
-            boxShadow: [
-              '0 0 2px rgba(255, 215, 0, 0.3)',
-              '0 0 8px rgba(255, 215, 0, 0.5), 0 0 12px rgba(255, 165, 0, 0.3)',
-              '0 0 2px rgba(255, 215, 0, 0.3)'
-            ],
-            transition: {
-              duration: 2,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }
-          }}
-        >
-          Explora Nuestros Servicios
-        </CTAButton>
-      </HomeWrapper>
+      <SpaceBackground isAccelerating={isAccelerating} />
+      <AnimatePresence>
+        {!isAccelerating && (
+          <HomeWrapper
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            <Title variants={itemVariants}>
+              Quantum Web Services
+            </Title>
+            <Subtitle variants={itemVariants}>
+              Especialista en Programción Web
+            </Subtitle>
+            <CTAButton
+              variants={itemVariants}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={handleExploreClick}
+            >
+              Explora Nuestros Servicios
+            </CTAButton>
+          </HomeWrapper>
+        )}
+      </AnimatePresence>
     </>
   );
-}
+};
 
 export default Home;

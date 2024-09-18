@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { motion, useAnimation } from 'framer-motion';
+import PageAnimation from '../components/PageAnimation';
 
 const PortfolioWrapper = styled.div`
   display: flex;
@@ -10,12 +11,18 @@ const PortfolioWrapper = styled.div`
   min-height: 100vh;
   padding: 2rem;
   color: ${props => props.theme.colors.text};
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
 `;
 
 const Title = styled.h1`
   font-size: 2.5rem;
   color: ${props => props.theme.colors.primary};
   margin-bottom: 2rem;
+  @media (max-width: 768px) {
+    font-size: 2.5rem;
+  }
 `;
 
 const ProjectReelContainer = styled.div`
@@ -105,7 +112,6 @@ const ProjectDescription = styled.p`
 
 function Portfolio() {
     const [projects, setProjects] = useState([]);
-    const [isHovering, setIsHovering] = useState(false);
     const controls = useAnimation();
     const reelRef = useRef(null);
 
@@ -118,26 +124,26 @@ function Portfolio() {
 
     useEffect(() => {
         const moveReel = async () => {
-            const reelWidth = reelRef.current.scrollWidth;
-            const moveDistance = reelWidth / 2;
+            if (reelRef.current) {
+                const reelWidth = reelRef.current.scrollWidth;
+                const moveDistance = reelWidth / 2;
 
-            await controls.start({
-                x: [-moveDistance, 0],
-                transition: {
-                    repeat: Infinity,
-                    repeatType: "loop",
-                    duration: 20,
-                    ease: "linear"
-                }
-            });
+                await controls.start({
+                    x: [-moveDistance, 0],
+                    transition: {
+                        repeat: Infinity,
+                        repeatType: "loop",
+                        duration: 20,
+                        ease: "linear"
+                    }
+                });
+            }
         };
 
-        if (!isHovering) {
+        if (projects.length > 0) {
             moveReel();
-        } else {
-            controls.stop();
         }
-    }, [isHovering, controls]);
+    }, [controls, projects]);
 
     const loopedProjects = [...projects, ...projects];
 
@@ -148,20 +154,16 @@ function Portfolio() {
     return (
         <PortfolioWrapper>
             <Title>Nuestro Portfolio</Title>
-            <ProjectReelContainer
-                onMouseEnter={() => setIsHovering(true)}
-                onMouseLeave={() => setIsHovering(false)}
-            >
+            <ProjectReelContainer>
                 <ProjectReel ref={reelRef} animate={controls}>
                     {loopedProjects.map((project, index) => (
                         <ProjectCard
                             key={`${project.id}-${index}`}
                             whileHover={{
-                                scale: 1.4, // Incrementado a 1.4 (40% más grande)
-                                zIndex: 20, // Aumentado para asegurar que esté por encima de todo
+                                scale: 1.4,
+                                zIndex: 20,
                                 transition: { duration: 0.3 }
                             }}
-                            onClick={() => setIsHovering(true)}
                         >
                             <ProjectImage src={`/images/portfolio/${project.image}`} alt={project.name} />
                             <ProjectName>{project.name}</ProjectName>
@@ -203,4 +205,4 @@ function Portfolio() {
     );
 }
 
-export default Portfolio;
+export default PageAnimation(Portfolio);

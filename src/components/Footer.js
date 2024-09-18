@@ -22,7 +22,7 @@ const SocialIcons = styled.div`
 `;
 
 const IconLink = styled(motion.a)`
-  color: ${props => props.theme.colors.text};
+  color: ${props => props.theme.colors.accent};
   font-size: 1.5rem;
 `;
 

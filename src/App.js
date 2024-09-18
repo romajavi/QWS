@@ -1,9 +1,15 @@
-import React, { useState } from 'react';
+import React, { Suspense, lazy, useState } from 'react';
+import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 import GlobalStyles from './styles/GlobalStyles';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import LoadingSpinner from './components/LoadingSpinner'; // Necesitarás crear este componente
+
+
+
+// importacion de pages
 import Home from './pages/Home';
 import Services from './pages/Services';
 import Portfolio from './pages/Portfolio';
@@ -12,22 +18,22 @@ import Contact from './pages/Contact';
 
 const theme = {
     colors: {
-        primary: '#FFD700', // Amarillo dorado
-        secondary: '#FFA500', // Naranja
-        background: '#000', // Negro
-        text: '#F0F0F0', // Gris muy claro
-        accent: '#00FFFF', // Cyan (para un toque futurista)
+        primary: '#FFD700', // Amarillo dorado (sin cambios)
+        secondary: '#FFA500', // Naranja (sin cambios)
+        background: '#000000', // Negro (sin cambios)
+        text: '#FFFFFF', // Blanco puro para mejor contraste
+        accent: '#00FFFF', // Cyan (sin cambios)
+        buttonText: '#000000', // Negro para texto en botones
     },
     fonts: {
         main: "'Orbitron', sans-serif",
         secondary: "'Roboto', sans-serif",
     },
     effects: {
-        glow: '0 0 5px rgba(0, 255, 255, 0.5)', // Brillo cyan
-        gradient: 'linear-gradient(45deg, #FFD700, #00FFFF)', // Gradiente amarillo-cyan
+        glow: '0 0 5px rgba(0, 255, 255, 0.5)',
+        gradient: 'linear-gradient(45deg, #FFD700, #00FFFF)',
     }
 };
-
 const pageVariants = {
     initial: { opacity: 0, x: "-100vw" },
     in: { opacity: 1, x: 0 },
@@ -40,47 +46,45 @@ const pageTransition = {
     duration: 0.5
 };
 
-function App() {
-    const [currentPage, setCurrentPage] = useState('home');
+function AnimatedRoutes() {
+    const location = useLocation();
 
-    const renderPage = () => {
-        switch(currentPage) {
-            case 'home':
-                return <Home />;
-            case 'services':
-                return <Services />;
-            case 'portfolio':
-                return <Portfolio />;
-            case 'blog':
-                return <Blog />;
-            case 'contact':
-                return <Contact />;
-            default:
-                return <Home />;
-        }
-    };
+    return (
+        <AnimatePresence mode="wait">
+            <Suspense fallback={<LoadingSpinner />}>
+                <Routes location={location} key={location.pathname}>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/services" element={<Services />} />
+                    <Route path="/portfolio" element={<Portfolio />} />
+                    <Route path="/blog" element={<Blog />} />
+                    <Route path="/contact" element={<Contact />} />
+                </Routes>
+            </Suspense>
+        </AnimatePresence>
+    );
+}
+
+function App() {
+    const [isExploring, setIsExploring] = useState(false);
 
     return (
         <ThemeProvider theme={theme}>
             <GlobalStyles />
-            <div className="App">
-                <Header setCurrentPage={setCurrentPage} />
-                <main>
-                    <AnimatePresence mode="wait">
-                        <motion.div
-                            key={currentPage}
-                            initial="initial"
-                            animate="in"
-                            exit="out"
-                            variants={pageVariants}
-                            transition={pageTransition}
-                        >
-                            {renderPage()}
-                        </motion.div>
-                    </AnimatePresence>
-                </main>
-                <Footer />
-            </div>
+            <Router>
+                <div className="App">
+                    {!isExploring && <Header />}
+                    <main>
+                        <Routes>
+                            <Route path="/" element={<Home setIsExploring={setIsExploring} />} />
+                            <Route path="/services" element={<Services />} />
+                            <Route path="/portfolio" element={<Portfolio />} />
+                            <Route path="/blog" element={<Blog />} />
+                            <Route path="/contact" element={<Contact />} />
+                        </Routes>
+                    </main>
+                    {!isExploring && <Footer />}
+                </div>
+            </Router>
         </ThemeProvider>
     );
 }

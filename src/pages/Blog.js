@@ -1,4 +1,5 @@
 import React from 'react';
+import PageAnimation from '../components/PageAnimation';
 
 function Blog() {
     return (
@@ -16,4 +17,4 @@ function Blog() {
     );
 }
 
-export default Blog;
+export default PageAnimation(Blog);
