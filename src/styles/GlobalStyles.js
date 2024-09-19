@@ -4,22 +4,19 @@ const GlobalStyles = createGlobalStyle`
   html, body {
     margin: 0;
     padding: 0;
-    min-height: 100vh;
+    height: 100%;
   }
 
-  body {
+   body {
     font-family: ${props => props.theme.fonts.secondary};
     background-color: #000;
     color: ${props => props.theme.colors.text};
     line-height: 1.6;
-    overflow-x: hidden;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
   }
 
+
   #root {
-    flex: 1;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
   }

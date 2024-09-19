@@ -15,22 +15,22 @@ const ContactWrapper = styled.div`
 
 const ContentContainer = styled.div`
   display: flex;
-  width: 56%; // Reduced by 30% from previous 80%
-  max-width: 840px; // Adjusted max-width accordingly
-  margin-bottom: 1rem;
-  border-radius: 10px;
+  width: 80%;
+  max-width: 1200px;
+  margin-bottom: 2rem;
+  border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
   @media (max-width: 768px) {
     flex-direction: column;
-    width: 100%;
+    width: 95%;
   }
 `;
 
 const Section = styled.div`
-  width: 60%;
+  width: 50%;
   padding: 2rem;
-  background-color: ${props => props.primary ? props.theme.colors.primaryBackground : props.theme.colors.secondaryBackground};
+  background-color: ${props => props.primary ? 'rgba(0, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.1)'};
   color: ${props => props.theme.colors.text};
   @media (max-width: 768px) {
     width: 100%;
@@ -47,49 +47,56 @@ const SectionTitle = styled.h2`
   text-align: center;
   margin-bottom: 1.5rem;
   color: ${props => props.theme.colors.primary};
+  font-size: 2rem;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
 `;
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 1rem; // Added space between form elements
+  gap: 1.5rem;
 `;
 
 const Input = styled.input`
-  padding: 0.5rem;
-  background-color: ${props => props.theme.colors.background};
+  padding: 0.8rem;
+  background-color: rgba(255, 255, 255, 0.1);
   color: ${props => props.theme.colors.text};
-  border: 1px solid ${props => props.theme.colors.primary};
-  border-radius: 4px;
-  &:hover, &:focus {
-    border-color: ${props => props.theme.colors.secondary};
+  border: 2px solid ${props => props.theme.colors.primary};
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  &:focus {
     outline: none;
+    box-shadow: 0 0 10px ${props => props.theme.colors.primary};
   }
 `;
 
 const TextArea = styled.textarea`
-  padding: 0.5rem;
-  background-color: ${props => props.theme.colors.background};
+  padding: 0.8rem;
+  background-color: rgba(255, 255, 255, 0.1);
   color: ${props => props.theme.colors.text};
-  border: 1px solid ${props => props.theme.colors.primary};
-  border-radius: 4px;
-  min-height: 100px;
+  border: 2px solid ${props => props.theme.colors.primary};
+  border-radius: 8px;
+  font-size: 1rem;
+  min-height: 120px;
   resize: vertical;
-  &:hover, &:focus {
-    border-color: ${props => props.theme.colors.secondary};
+  transition: all 0.3s ease;
+  &:focus {
     outline: none;
+    box-shadow: 0 0 10px ${props => props.theme.colors.primary};
   }
 `;
 
 const CheckboxGroup = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.8rem;
 `;
 
 const CheckboxTitle = styled.h4`
   color: ${props => props.theme.colors.accent};
   margin-bottom: 0.5rem;
+  font-size: 1.2rem;
 `;
 
 const CheckboxContainer = styled.div`
@@ -102,6 +109,11 @@ const CheckboxLabel = styled.label`
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  &:hover {
+    color: ${props => props.theme.colors.primary};
+  }
 `;
 
 const StyledCalendar = styled(Calendar)`
@@ -113,18 +125,22 @@ const ButtonContainer = styled.div`
   display: flex;
   justify-content: center;
   gap: 1rem;
-  margin-top: 1rem;
+  margin-top: 2rem;
 `;
 
 const Button = styled(motion.button)`
-  padding: 0.5rem 1rem;
+  padding: 0.8rem 2rem;
   background-color: ${props => props.theme.colors.primary};
-  color: ${props => props.theme.colors.buttonText};
+  color: ${props => props.theme.colors.background};
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
   &:hover {
-    background-color: ${props => props.theme.colors.secondary};
+    background-color: ${props => props.theme.colors.accent};
   }
 `;
 

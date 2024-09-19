@@ -1,7 +1,7 @@
 import React, { Suspense, lazy, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
-import { AnimatePresence } from 'framer-motion';
+import styled from 'styled-components';
 import GlobalStyles from './styles/GlobalStyles';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -36,25 +36,21 @@ const theme = {
     }
 };
 
-const pageVariants = {
-    initial: { opacity: 0, x: "-100vw" },
-    in: { opacity: 1, x: 0 },
-    out: { opacity: 0, x: "100vw" }
-};
+const AppWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; // Asegura que la aplicación tenga al menos la altura de la ventana
+`;
 
-const pageTransition = {
-    type: "tween",
-    ease: "anticipate",
-    duration: 0.5
-};
+const MainContent = styled.main`
+  flex: 1; // Esto hará que el contenido principal ocupe todo el espacio disponible
+`;
 
 function AnimatedRoutes({ setIsExploring }) {
-    const location = useLocation();
-
     return (
-        <PageTransition location={location}>
+        <PageTransition>
             <Suspense fallback={<LoadingSpinner />}>
-                <Routes location={location}>
+                <Routes>
                     <Route path="/" element={<Home setIsExploring={setIsExploring} />} />
                     <Route path="/services" element={<Services />} />
                     <Route path="/portfolio" element={<Portfolio />} />
@@ -73,13 +69,13 @@ function App() {
         <ThemeProvider theme={theme}>
             <GlobalStyles />
             <Router>
-                <div className="App">
+                <AppWrapper>
                     {!isExploring && <Header />}
-                    <main>
+                    <MainContent>
                         <AnimatedRoutes setIsExploring={setIsExploring} />
-                    </main>
+                    </MainContent>
                     {!isExploring && <Footer />}
-                </div>
+                </AppWrapper>
             </Router>
         </ThemeProvider>
     );
