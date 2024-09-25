@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 
-
 const SpaceWrapper = styled.div`
   position: fixed;
   top: 0;
@@ -54,7 +53,7 @@ const SpaceBackground = ({ isAccelerating }) => {
                 this.y = Math.random() * canvas.height;
                 this.z = Math.random() * canvas.width;
                 this.size = Math.random() * 0.5 + 0.1;
-                this.baseSpeed = 0.2; // Base speed
+                this.baseSpeed = 0.3; // Increased base speed by 50%
                 this.speed = this.baseSpeed;
             }
 

@@ -3,61 +3,103 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 
 const CalendarWrapper = styled.div`
-  background: ${props => props.theme.colors.background};
+  background: ${props => props.theme.colors.buttonText};
   border: 1px solid ${props => props.theme.colors.primary};
   border-radius: 8px;
-  padding: 1rem;
-  margin-bottom: 1rem;
+  padding: 0.5rem;
+  font-size: 0.8rem;
+  width: 30%;
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
 `;
 
 const CalendarHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 `;
 
 const MonthYear = styled.h3`
   color: ${props => props.theme.colors.primary};
   margin: 0;
+  font-size: 1rem;
 `;
 
 const Button = styled(motion.button)`
   background: ${props => props.theme.colors.primary};
   color: ${props => props.theme.colors.background};
   border: none;
-  padding: 0.5rem 1rem;
+  padding: 0.25rem 0.5rem;
   border-radius: 4px;
   cursor: pointer;
+  font-size: 0.8rem;
 `;
 
 const DaysGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 0.5rem;
+  gap: 0.25rem;
+  flex-grow: 1;
 `;
 
 const DayCell = styled(motion.div)`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 2.5rem;
-  background: ${props => props.isSelected ? props.theme.colors.primary : 'transparent'};
-  color: ${props => props.isSelected ? props.theme.colors.background : props.theme.colors.text};
-  border-radius: 4px;
-  cursor: pointer;
+  aspect-ratio: 1;
+  background: ${props =>
+        props.isSelected
+            ? props.theme.colors.primary
+            : props.isDisabled
+                ? props.theme.colors.background + '40' // Hacemos los días deshabilitados más transparentes
+                : 'transparent'
+    };
+  color: ${props =>
+        props.isSelected
+            ? props.theme.colors.background
+            : props.isDisabled
+                ? props.theme.colors.text + '40'
+                : props.theme.colors.text
+    };
+  border-radius: 50%;
+  cursor: ${props => props.isDisabled ? 'not-allowed' : 'pointer'};
+  font-size: 1rem; // Aumentamos ligeramente el tamaño de la fuente
+  opacity: ${props => props.isDisabled ? 0.5 : 1};
   &:hover {
-    background: ${props => props.theme.colors.primary}40;
+    background: ${props => !props.isDisabled && props.theme.colors.secondaryBackground};
   }
 `;
 
 const WeekdayHeader = styled.div`
   text-align: center;
   font-weight: bold;
-  color: ${props => props.theme.colors.accent};
+  color: ${props => props.theme.colors.text};
+  font-size: 0.7rem;
 `;
 
-const Calendar = ({ onSelectDate }) => {
+const calendarVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: {
+            type: "spring",
+            stiffness: 300,
+            damping: 24,
+            when: "beforeChildren",
+            staggerChildren: 0.1
+        }
+    }
+};
+
+const cellVariants = {
+    hidden: { opacity: 0, scale: 0.8 },
+    visible: { opacity: 1, scale: 1 }
+};
+
+const Calendar = ({ onSelectDate, minDate }) => {
     const [currentDate, setCurrentDate] = useState(new Date());
     const [selectedDate, setSelectedDate] = useState(null);
 
@@ -68,7 +110,10 @@ const Calendar = ({ onSelectDate }) => {
     const weekdays = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
 
     const handlePrevMonth = () => {
-        setCurrentDate(prevDate => new Date(prevDate.getFullYear(), prevDate.getMonth() - 1, 1));
+        setCurrentDate(prevDate => {
+            const newDate = new Date(prevDate.getFullYear(), prevDate.getMonth() - 1, 1);
+            return newDate >= minDate ? newDate : prevDate;
+        });
     };
 
     const handleNextMonth = () => {
@@ -77,8 +122,10 @@ const Calendar = ({ onSelectDate }) => {
 
     const handleDateClick = (day) => {
         const selectedDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
-        setSelectedDate(selectedDate);
-        onSelectDate(selectedDate);
+        if (selectedDate >= minDate) {
+            setSelectedDate(selectedDate);
+            onSelectDate(selectedDate);
+        }
     };
 
     const renderDays = () => {
@@ -93,14 +140,16 @@ const Calendar = ({ onSelectDate }) => {
         for (let day = 1; day <= daysInMonth; day++) {
             const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
             const isSelected = selectedDate && date.toDateString() === selectedDate.toDateString();
+            const isDisabled = date < minDate;
 
             days.push(
                 <DayCell
                     key={day}
-                    onClick={() => handleDateClick(day)}
+                    onClick={() => !isDisabled && handleDateClick(day)}
                     isSelected={isSelected}
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
+                    isDisabled={isDisabled}
+                    whileHover={{ scale: isDisabled ? 1 : 1.1 }}
+                    whileTap={{ scale: isDisabled ? 1 : 0.9 }}
                 >
                     {day}
                 </DayCell>
@@ -111,7 +160,7 @@ const Calendar = ({ onSelectDate }) => {
     };
 
     return (
-        <CalendarWrapper>
+        <CalendarWrapper as={motion.div} variants={calendarVariants} initial="hidden" animate="visible">
             <CalendarHeader>
                 <Button onClick={handlePrevMonth} whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
                     &lt;
@@ -125,7 +174,11 @@ const Calendar = ({ onSelectDate }) => {
                 {weekdays.map(day => (
                     <WeekdayHeader key={day}>{day}</WeekdayHeader>
                 ))}
-                {renderDays()}
+                {renderDays().map((day, index) => (
+                    <motion.div key={index} variants={cellVariants}>
+                        {day}
+                    </motion.div>
+                ))}
             </DaysGrid>
         </CalendarWrapper>
     );

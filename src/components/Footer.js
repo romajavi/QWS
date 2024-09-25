@@ -5,12 +5,11 @@ import { useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebookF, faInstagram, faYoutube, faLinkedinIn, faTiktok } from '@fortawesome/free-brands-svg-icons';
 
-const FooterWrapper = styled(motion.footer)`
-  background-color: ${props => props.theme.colors.background};
-  color: ${props => props.theme.colors.text};
-  padding: 2rem;
-  text-align: center;
-  margin-top: auto; // Esto empujará el footer hacia abajo
+const FooterWrapper = styled.footer`
+background-color: ${props => props.theme.colors.background};
+color: ${props => props.theme.colors.text};
+padding: 2rem;
+text-align: center;
 `;
 
 const Copyright = styled.p`

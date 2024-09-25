@@ -17,7 +17,7 @@ const HeaderWrapper = styled.header`
 `;
 
 const Logo = styled(motion.img)`
-  height: 120px;
+  height: 150px;
   cursor: pointer;
 `;
 

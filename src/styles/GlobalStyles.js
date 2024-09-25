@@ -14,6 +14,45 @@ const GlobalStyles = createGlobalStyle`
     line-height: 1.6;
   }
 
+button {
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #00FFFF, #a5aa9a, #FFD700);
+    z-index: -1;
+    border-radius: 7px;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: -1;
+    border-radius: 5px;
+  }
+
+  &:hover::before {
+    opacity: 0.8;
+  }
+}
 
   #root {
     min-height: 100vh;
@@ -48,6 +87,8 @@ const GlobalStyles = createGlobalStyle`
     padding: 0.2em 0.4em;
     border-radius: 3px;
   }
+
+  
 
   /* Responsive design */
   @media (max-width: 768px) {

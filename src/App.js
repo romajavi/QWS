@@ -39,12 +39,15 @@ const theme = {
 const AppWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  min-height: 100vh; // Asegura que la aplicación tenga al menos la altura de la ventana
+  min-height: 100vh;
 `;
 
 const MainContent = styled.main`
-  flex: 1; // Esto hará que el contenido principal ocupe todo el espacio disponible
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 `;
+
 
 function AnimatedRoutes({ setIsExploring }) {
     return (
@@ -74,11 +77,10 @@ function App() {
                     <MainContent>
                         <AnimatedRoutes setIsExploring={setIsExploring} />
                     </MainContent>
-                    {!isExploring && <Footer />}
+                    <Footer />
                 </AppWrapper>
             </Router>
         </ThemeProvider>
     );
 }
-
 export default App;

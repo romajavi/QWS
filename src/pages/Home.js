@@ -13,14 +13,13 @@ const HomeWrapper = styled(motion.div)`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
+  min-height: 100vh; // Asegura que el contenido ocupe al menos toda la altura de la pantalla
   text-align: center;
   padding: 2rem;
   @media (max-width: 768px) {
     padding: 1rem;
   }
 `;
-
 
 const blinkingEffect = keyframes`
   0% { opacity: 1; }
@@ -62,6 +61,11 @@ const CTAButton = styled(motion.button)`
   text-transform: uppercase;
   letter-spacing: 2px;
   transition: all 0.3s ease;
+  
+  
+  &:hover {
+    color: ${props => props.theme.colors.primary};
+  }
 `;
 
 const containerVariants = {
@@ -112,7 +116,7 @@ const Home = () => {
     setIsAccelerating(true);
     setTimeout(() => {
       navigate('/services');
-    }, 2000);
+    }, 1000); // Cambiado de 2000 a 1000
   };
 
   return (

@@ -50,8 +50,10 @@ const ProjectCard = styled(motion.div)`
 
   &:hover {
     z-index: 10;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
   }
 `;
+
 
 const ProjectImage = styled.img`
   width: 100%;
@@ -111,98 +113,98 @@ const ProjectDescription = styled.p`
 `;
 
 function Portfolio() {
-    const [projects, setProjects] = useState([]);
-    const controls = useAnimation();
-    const reelRef = useRef(null);
+  const [projects, setProjects] = useState([]);
+  const controls = useAnimation();
+  const reelRef = useRef(null);
 
-    useEffect(() => {
-        fetch('/api/projects')
-            .then(response => response.json())
-            .then(data => setProjects(data))
-            .catch(error => console.error("Error loading projects:", error));
-    }, []);
+  useEffect(() => {
+    fetch('/api/projects')
+      .then(response => response.json())
+      .then(data => setProjects(data))
+      .catch(error => console.error("Error loading projects:", error));
+  }, []);
 
-    useEffect(() => {
-        const moveReel = async () => {
-            if (reelRef.current) {
-                const reelWidth = reelRef.current.scrollWidth;
-                const moveDistance = reelWidth / 2;
+  useEffect(() => {
+    const moveReel = async () => {
+      if (reelRef.current) {
+        const reelWidth = reelRef.current.scrollWidth;
+        const moveDistance = reelWidth / 2;
 
-                await controls.start({
-                    x: [-moveDistance, 0],
-                    transition: {
-                        repeat: Infinity,
-                        repeatType: "loop",
-                        duration: 20,
-                        ease: "linear"
-                    }
-                });
-            }
-        };
-
-        if (projects.length > 0) {
-            moveReel();
-        }
-    }, [controls, projects]);
-
-    const loopedProjects = [...projects, ...projects];
-
-    const handleClick = (link) => {
-        window.open(link, '_blank');
+        await controls.start({
+          x: [-moveDistance, 0],
+          transition: {
+            repeat: Infinity,
+            repeatType: "loop",
+            duration: 20,
+            ease: "linear"
+          }
+        });
+      }
     };
 
-    return (
-        <PortfolioWrapper>
-            <Title>Nuestro Portfolio</Title>
-            <ProjectReelContainer>
-                <ProjectReel ref={reelRef} animate={controls}>
-                    {loopedProjects.map((project, index) => (
-                        <ProjectCard
-                            key={`${project.id}-${index}`}
-                            whileHover={{
-                                scale: 1.4,
-                                zIndex: 20,
-                                transition: { duration: 0.3 }
-                            }}
-                        >
-                            <ProjectImage src={`/images/portfolio/${project.image}`} alt={project.name} />
-                            <ProjectName>{project.name}</ProjectName>
-                            <ProjectInfo
-                                initial={{ opacity: 0 }}
-                                whileHover={{ opacity: 1 }}
-                                transition={{ duration: 0.3 }}
-                            >
-                                <h3>{project.name}</h3>
-                                <ProjectDescription>{project.description}</ProjectDescription>
-                                <CTAButton
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleClick(project.link);
-                                    }}
-                                    whileHover={{ scale: 1.15 }}
-                                    whileTap={{ scale: 1.05 }}
-                                    animate={{
-                                        boxShadow: [
-                                            '0 0 1px rgba(255, 215, 0, 0.2)',
-                                            '0 0 4px rgba(255, 215, 0, 0.4), 0 0 6px rgba(255, 165, 0, 0.2)',
-                                            '0 0 1px rgba(255, 215, 0, 0.2)'
-                                        ],
-                                        transition: {
-                                            duration: 2,
-                                            repeat: Infinity,
-                                            ease: "easeInOut"
-                                        }
-                                    }}
-                                >
-                                    Ver Proyecto
-                                </CTAButton>
-                            </ProjectInfo>
-                        </ProjectCard>
-                    ))}
-                </ProjectReel>
-            </ProjectReelContainer>
-        </PortfolioWrapper>
-    );
+    if (projects.length > 0) {
+      moveReel();
+    }
+  }, [controls, projects]);
+
+  const loopedProjects = [...projects, ...projects];
+
+  const handleClick = (link) => {
+    window.open(link, '_blank');
+  };
+
+  return (
+    <PortfolioWrapper>
+      <Title>Nuestro Portfolio</Title>
+      <ProjectReelContainer>
+        <ProjectReel ref={reelRef} animate={controls}>
+          {loopedProjects.map((project, index) => (
+            <ProjectCard
+              key={`${project.id}-${index}`}
+              whileHover={{
+                scale: 1.1,
+                transition: { duration: 0.3 }
+              }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <ProjectImage src={`/images/portfolio/${project.image}`} alt={project.name} />
+              <ProjectName>{project.name}</ProjectName>
+              <ProjectInfo
+                initial={{ opacity: 0 }}
+                whileHover={{ opacity: 1 }}
+                transition={{ duration: 0.3 }}
+              >
+                <h3>{project.name}</h3>
+                <ProjectDescription>{project.description}</ProjectDescription>
+                <CTAButton
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleClick(project.link);
+                  }}
+                  whileHover={{ scale: 1.15 }}
+                  whileTap={{ scale: 1.05 }}
+                  animate={{
+                    boxShadow: [
+                      '0 0 1px rgba(255, 215, 0, 0.2)',
+                      '0 0 4px rgba(255, 215, 0, 0.4), 0 0 6px rgba(255, 165, 0, 0.2)',
+                      '0 0 1px rgba(255, 215, 0, 0.2)'
+                    ],
+                    transition: {
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }
+                  }}
+                >
+                  Ver Proyecto
+                </CTAButton>
+              </ProjectInfo>
+            </ProjectCard>
+          ))}
+        </ProjectReel>
+      </ProjectReelContainer>
+    </PortfolioWrapper>
+  );
 }
 
 export default PageAnimation(Portfolio);
