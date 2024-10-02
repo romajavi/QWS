@@ -3,12 +3,12 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 
 const CalendarWrapper = styled.div`
-  background: ${props => props.theme.colors.buttonText};
+  background: ${props => props.theme.colors.background};
   border: 1px solid ${props => props.theme.colors.primary};
   border-radius: 8px;
   padding: 0.5rem;
   font-size: 0.8rem;
-  width: 30%;
+  width: 100%;
   aspect-ratio: 1;
   display: flex;
   flex-direction: column;
@@ -53,7 +53,7 @@ const DayCell = styled(motion.div)`
         props.isSelected
             ? props.theme.colors.primary
             : props.isDisabled
-                ? props.theme.colors.background + '40' // Hacemos los días deshabilitados más transparentes
+                ? props.theme.colors.background + '40'
                 : 'transparent'
     };
   color: ${props =>
@@ -65,7 +65,7 @@ const DayCell = styled(motion.div)`
     };
   border-radius: 50%;
   cursor: ${props => props.isDisabled ? 'not-allowed' : 'pointer'};
-  font-size: 1rem; // Aumentamos ligeramente el tamaño de la fuente
+  font-size: 0.9rem;
   opacity: ${props => props.isDisabled ? 0.5 : 1};
   &:hover {
     background: ${props => !props.isDisabled && props.theme.colors.secondaryBackground};
@@ -131,12 +131,10 @@ const Calendar = ({ onSelectDate, minDate }) => {
     const renderDays = () => {
         const days = [];
 
-        // Add empty cells for days before the first day of the month
         for (let i = 0; i < firstDayOfMonth; i++) {
             days.push(<DayCell key={`empty-${i}`} />);
         }
 
-        // Add cells for each day of the month
         for (let day = 1; day <= daysInMonth; day++) {
             const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
             const isSelected = selectedDate && date.toDateString() === selectedDate.toDateString();

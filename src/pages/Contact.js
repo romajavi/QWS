@@ -5,13 +5,17 @@ import PageAnimation from '../components/PageAnimation';
 import Calendar from '../components/Calendar';
 
 const ContactWrapper = styled.div`
-  padding: 1rem;
-  background-color: ${props => props.theme.colors.background};
-  color: ${props => props.theme.colors.text};
+  flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  font-size: 0.8em;
+  width: 100%;
+  padding: 2rem;
+  max-width: 1200px; // Ajusta según tus necesidades
+  margin: 0 auto;
+  background-color: ${props => props.theme.colors.background};
+  color: ${props => props.theme.colors.text};
+  min-height: 100%;
+  padding-top: 80px; // Ajusta según la altura de tu header
 `;
 
 const ContentContainer = styled.div`
@@ -19,10 +23,11 @@ const ContentContainer = styled.div`
   flex-direction: column;
   width: 80%;
   max-width: 800px;
-  margin: 1rem auto;
-  border-radius: 10px;
-  overflow: hidden;
+  margin: 1.5rem auto;
+  padding: 1.5rem;
+  border-radius: 20px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
 `;
 
 const Section = styled.div`
@@ -30,6 +35,14 @@ const Section = styled.div`
   padding: 1rem;
   background-color: ${props => props.theme.colors.primaryBackground};
   color: ${props => props.theme.colors.text};
+
+  &:first-child {
+    border-radius: 50px 50px 0 0;
+  }
+
+  &:last-child {
+    border-radius: 0 0 50px 50px;
+  }
 `;
 
 const SectionContent = styled.div`
@@ -58,14 +71,14 @@ const Form = styled.form`
 const InputGroup = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 2rem; // Aumentamos la separación entre los campos
-  width: 80%;
-  margin-bottom: 1rem; // Añadimos margen inferior para separar los grupos
+  gap: 2rem; 
+  width: 80%; 
+  margin-bottom: 1.5rem;
 `;
 
 const Input = styled.input`
   padding: 0.4rem;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: ${props => props.theme.colors.primaryBackground} !important;
   color: ${props => props.theme.colors.text};
   border: 1px solid ${props => props.theme.colors.primary};
   border-radius: 4px;
@@ -75,16 +88,24 @@ const Input = styled.input`
     outline: none;
     box-shadow: 0 0 5px ${props => props.theme.colors.primary};
   }
+  &:-webkit-autofill,
+  &:-webkit-autofill:hover,
+  &:-webkit-autofill:focus,
+  &:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px ${props => props.theme.colors.primaryBackground} inset !important;
+    -webkit-text-fill-color: ${props => props.theme.colors.text} !important;
+    transition: background-color 5000s ease-in-out 0s;
+  }
 `;
 
 const TextArea = styled.textarea`
   padding: 0.4rem;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: ${props => props.theme.colors.primaryBackground};
   color: ${props => props.theme.colors.text};
   border: 1px solid ${props => props.theme.colors.primary};
   border-radius: 4px;
   font-size: 0.8rem;
-  min-height: 60px;
+  min-height: 90px;
   resize: vertical;
   width: 80%;
   &:focus {
@@ -108,8 +129,8 @@ const CheckboxColumns = styled.div`
   width: 80%;
   justify-content: center;
   align-items: start;
+  text-align: center;
 `;
-
 
 const CheckboxTitle = styled.h4`
   color: ${props => props.theme.colors.accent};
@@ -136,10 +157,20 @@ const CheckboxLabel = styled.label`
   }
 `;
 
+const CalendarContainer = styled.div`
+  width: 40%;
+  margin: 0 auto;
+`;
+
 const StyledCalendar = styled(Calendar)`
-  width: 50%; // Reducimos el tamaño al 50% del tamaño anterior
+  width: 100%;
   aspect-ratio: 1;
-  margin: 0 auto; // Centramos el calendario
+  margin: 0 auto;
+  padding: 10px;
+  box-sizing: border-box;
+  background-color: ${props => props.theme.colors.background};
+  border: 1px solid ${props => props.theme.colors.primary};
+  border-radius: 8px;
 `;
 
 const ButtonContainer = styled.div`
@@ -164,7 +195,7 @@ const Button = styled(motion.button)`
   }
 `;
 
-const SelectedDate = styled.p`
+const SelectedDateTime = styled.p`
   color: ${props => props.theme.colors.accent};
   font-size: 0.8rem;
   margin-top: 0.5rem;
@@ -175,13 +206,10 @@ const AppointmentGroup = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  gap: 1.5rem;
   width: 100%;
-  margin-top: 1rem; // Añadimos margen superior para separar del calendario
-`;
-
-const TimeInput = styled(Input)`
-  width: auto;
+  padding: 1.5rem;
+  margin-top: 1.5rem;
 `;
 
 const TimeSelector = styled.select`
@@ -192,19 +220,17 @@ const TimeSelector = styled.select`
   border-radius: 4px;
   font-size: 0.8rem;
   width: auto;
+  display: block;
+  margin: 0 auto;
   &:focus {
     outline: none;
     box-shadow: 0 0 5px ${props => props.theme.colors.primary};
   }
   option {
     background-color: ${props => props.theme.colors.background};
-    color: ${props => props.theme.colors.text};
+color: ${props => props.theme.colors.text};
   }
 `;
-
-
-
-
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -228,7 +254,6 @@ const Contact = () => {
 
     if (type === 'checkbox') {
       if (name === 'appointmentMedium') {
-        // Para appointmentMedium, solo permitimos una selección
         setFormData(prevData => ({
           ...prevData,
           [name]: checked ? value : ''
@@ -282,7 +307,7 @@ const Contact = () => {
 
   const generateTimeOptions = () => {
     const options = [];
-    for (let hour = 0; hour < 24; hour++) {
+    for (let hour = 7; hour <= 20; hour++) {
       for (let minute = 0; minute < 60; minute += 30) {
         const time = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
         options.push(<option key={time} value={time}>{time}</option>);
@@ -294,6 +319,20 @@ const Contact = () => {
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
   tomorrow.setHours(0, 0, 0, 0);
+
+  const calendarVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 300,
+        damping: 24,
+        duration: 0.5
+      }
+    }
+  };
 
   return (
     <ContactWrapper>
@@ -404,11 +443,21 @@ const Contact = () => {
         <Section>
           <SectionTitle>Agendar Cita</SectionTitle>
           <SectionContent>
-            <StyledCalendar onSelectDate={handleDateSelect} minDate={tomorrow} />
+            <CalendarContainer>
+              <motion.div
+                variants={calendarVariants}
+                initial="hidden"
+                animate="visible"
+              >
+                <StyledCalendar onSelectDate={handleDateSelect} minDate={tomorrow} />
+              </motion.div>
+            </CalendarContainer>
             {selectedDate && (
-              <SelectedDate>
+              <SelectedDateTime>
                 Fecha seleccionada: {selectedDate.toLocaleDateString()}
-              </SelectedDate>
+                <br />
+                Hora seleccionada: {formData.appointmentTime}
+              </SelectedDateTime>
             )}
             <AppointmentGroup>
               <CheckboxColumns>
@@ -443,7 +492,6 @@ const Contact = () => {
             </AppointmentGroup>
           </SectionContent>
         </Section>
-
       </ContentContainer>
 
       <ButtonContainer>
@@ -467,6 +515,5 @@ const Contact = () => {
     </ContactWrapper>
   );
 };
-
 
 export default PageAnimation(Contact);

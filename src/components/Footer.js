@@ -1,15 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
-import { motion } from 'framer-motion';
-import { useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebookF, faInstagram, faYoutube, faLinkedinIn, faTiktok } from '@fortawesome/free-brands-svg-icons';
 
 const FooterWrapper = styled.footer`
-background-color: ${props => props.theme.colors.background};
-color: ${props => props.theme.colors.text};
-padding: 2rem;
-text-align: center;
+  background-color: ${props => props.theme.colors.background};
+  color: ${props => props.theme.colors.text};
+  padding: 1rem;
+  text-align: center;
+  width: 100%;
+  margin-top: auto;
 `;
 
 const Copyright = styled.p`
@@ -22,9 +22,15 @@ const SocialIcons = styled.div`
   gap: 1rem;
 `;
 
-const IconLink = styled(motion.a)`
+const IconLink = styled.a`
   color: ${props => props.theme.colors.accent};
   font-size: 1.5rem;
+  transition: color 0.3s ease, transform 0.3s ease;
+
+  &:hover {
+    color: #FFD700;
+    transform: scale(1.2);
+  }
 `;
 
 const socialLinks = [
@@ -36,15 +42,8 @@ const socialLinks = [
 ];
 
 function Footer() {
-  const location = useLocation();
-  const isHomePage = location.pathname === '/';
-
   return (
-    <FooterWrapper
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ delay: 0.5, duration: 0.5 }}
-    >
+    <FooterWrapper>
       <Copyright>&copy; 2024 Quantum Web Services</Copyright>
       <SocialIcons>
         {socialLinks.map((link, index) => (
@@ -53,7 +52,6 @@ function Footer() {
             href={link.url}
             target="_blank"
             rel="noopener noreferrer"
-            whileHover={{ scale: 1.2, color: '#FFD700' }}
           >
             <FontAwesomeIcon icon={link.icon} />
           </IconLink>

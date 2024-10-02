@@ -6,14 +6,10 @@ import PageAnimation from '../components/PageAnimation';
 const PortfolioWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
+  min-height: 100%;
   padding: 2rem;
-  color: ${props => props.theme.colors.text};
-  @media (max-width: 768px) {
-    padding: 1rem;
-  }
+  padding-top: 80px; // Ajusta este valor según la altura de tu header
+  
 `;
 
 const Title = styled.h1`

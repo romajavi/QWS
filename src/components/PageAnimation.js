@@ -16,6 +16,7 @@ const pageTransition = {
 const PageAnimation = (WrappedComponent) => {
     return (props) => (
         <motion.div
+            style={{ flex: 1, display: 'flex', flexDirection: 'column', width: '100%' }}
             initial="initial"
             animate="in"
             exit="out"

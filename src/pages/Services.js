@@ -11,9 +11,14 @@ const ServicesWrapper = styled.div`
   justify-content: center;
   padding: 2rem;
   gap: 2rem;
+  width: 100%;
+  max-width: 1200px; // Ajusta según tus necesidades
+  margin: 0 auto;
   @media (max-width: 768px) {
     padding: 1rem;
   }
+  min-height: 100%;
+  padding-top: 80px; // Ajusta según la altura de tu header
 `;
 
 //// Para definir la lista de servicios
@@ -82,9 +87,9 @@ function Services() {
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            setIsDiscountPopupOpen(true);  
+            setIsDiscountPopupOpen(true);
         }, 1000); //1. segundos
-        
+
     }, []);
 
     const handleContactClick = (serviceName) => {

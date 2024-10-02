@@ -1,17 +1,22 @@
 import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyles = createGlobalStyle`
-  html, body {
-    margin: 0;
-    padding: 0;
+  html, body, #root {
     height: 100%;
   }
 
-   body {
+  body {
+    margin: 0;
+    padding: 0;
     font-family: ${props => props.theme.fonts.secondary};
     background-color: #000;
     color: ${props => props.theme.colors.text};
     line-height: 1.6;
+  }
+
+  #root {
+    display: flex;
+    flex-direction: column;
   }
 
 button {
@@ -64,9 +69,14 @@ button {
     flex: 1;
     display: flex;
     flex-direction: column;
+    padding-top: 80px;
+    padding-left: 2rem;
+    padding-rigth: 2rem;
+    padding-bottom: 2rem;
   }
 
   h1, h2, h3, h4, h5, h6 {
+    text-aling: center;
     font-family: ${props => props.theme.fonts.main};
     color: ${props => props.theme.colors.primary};
     margin-bottom: 1rem;

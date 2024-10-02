@@ -1,52 +1,59 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { keyframes } from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
-import SpaceBackground from '../components/SpaceBackground';
-import PageAnimation from '../components/PageAnimation';
+import EntanglementBackground from '../components/EntanglementBackground';
 
 const HomeWrapper = styled(motion.div)`
-  position: relative;
-  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh; // Asegura que el contenido ocupe al menos toda la altura de la pantalla
-  text-align: center;
+  min-height: 100vh;
   padding: 2rem;
-  @media (max-width: 768px) {
-    padding: 1rem;
-  }
+  text-align: center;
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-top: 80px;
 `;
 
-const blinkingEffect = keyframes`
-  0% { opacity: 1; }
-  50% { opacity: 0.5; }
-  100% { opacity: 1; }
+const ContentWrapper = styled(motion.div)`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 800px;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 2rem;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center; // Añade esta línea
+  justify-content: center; // Añade esta línea
 `;
 
 const Title = styled(motion.h1)`
-  font-size: 3.5rem;
+  font-size: 3rem;
   color: ${props => props.theme.colors.primary};
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
   @media (max-width: 768px) {
-    font-size: 2.5rem;
+    font-size: 2.2rem;
   }
 `;
 
-const BlinkingTitle = styled(Title)`
-  animation: ${blinkingEffect} 2s linear infinite;
-`;
-
 const Subtitle = styled(motion.p)`
-  font-size: 1.4rem;
+  font-size: 1.2rem;
+  font-weight: 300;
   color: ${props => props.theme.colors.text};
   max-width: 700px;
   margin-bottom: 3rem;
   line-height: 1.6;
+  text-align: center;
+  width: 100%;
 `;
 
 const CTAButton = styled(motion.button)`
@@ -62,9 +69,9 @@ const CTAButton = styled(motion.button)`
   letter-spacing: 2px;
   transition: all 0.3s ease;
   
-  
   &:hover {
     color: ${props => props.theme.colors.primary};
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
   }
 `;
 
@@ -94,20 +101,6 @@ const itemVariants = {
   }
 };
 
-const pageVariants = {
-  initial: { opacity: 0, x: "-100vw" },
-  in: { opacity: 1, x: 0 },
-  out: { opacity: 0, x: "100vw" }
-};
-
-const pageTransition = {
-  type: "tween",
-  ease: "anticipate",
-  duration: 0.5
-};
-
-
-
 const Home = () => {
   const [isAccelerating, setIsAccelerating] = useState(false);
   const navigate = useNavigate();
@@ -116,37 +109,39 @@ const Home = () => {
     setIsAccelerating(true);
     setTimeout(() => {
       navigate('/services');
-    }, 1000); // Cambiado de 2000 a 1000
+    }, 1000);
   };
 
   return (
     <>
-      <SpaceBackground isAccelerating={isAccelerating} />
-      <AnimatePresence>
-        {!isAccelerating && (
-          <HomeWrapper
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-          >
-            <Title variants={itemVariants}>
-              Quantum Web Services
-            </Title>
-            <Subtitle variants={itemVariants}>
-              Especialista en Programción Web
-            </Subtitle>
-            <CTAButton
-              variants={itemVariants}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={handleExploreClick}
+      <EntanglementBackground isAccelerating={isAccelerating} />
+      <HomeWrapper>
+        <AnimatePresence>
+          {!isAccelerating && (
+            <ContentWrapper
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
             >
-              Explora Nuestros Servicios
-            </CTAButton>
-          </HomeWrapper>
-        )}
-      </AnimatePresence>
+              <Title variants={itemVariants}>
+                Quantum Web Services
+              </Title>
+              <Subtitle variants={itemVariants}>
+                Soluciones innovadoras en Programación Web Full Stack
+              </Subtitle>
+              <CTAButton
+                variants={itemVariants}
+                whileHover={{ scale: 1.05, boxShadow: "0 0 15px rgba(255, 215, 0, 0.7)" }}
+                whileTap={{ scale: 0.95 }}
+                onClick={handleExploreClick}
+              >
+                Explora Nuestros Servicios
+              </CTAButton>
+            </ContentWrapper>
+          )}
+        </AnimatePresence>
+      </HomeWrapper>
     </>
   );
 };

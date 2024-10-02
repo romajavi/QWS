@@ -1,4 +1,4 @@
-import React, { Suspense, lazy, useState } from 'react';
+import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import styled from 'styled-components';
@@ -43,18 +43,17 @@ const AppWrapper = styled.div`
 `;
 
 const MainContent = styled.main`
-  flex: 1;
+  flex: 1 0 auto;
   display: flex;
   flex-direction: column;
 `;
 
-
-function AnimatedRoutes({ setIsExploring }) {
+function AnimatedRoutes() {
     return (
         <PageTransition>
             <Suspense fallback={<LoadingSpinner />}>
                 <Routes>
-                    <Route path="/" element={<Home setIsExploring={setIsExploring} />} />
+                    <Route path="/" element={<Home />} />
                     <Route path="/services" element={<Services />} />
                     <Route path="/portfolio" element={<Portfolio />} />
                     <Route path="/blog" element={<Blog />} />
@@ -65,22 +64,32 @@ function AnimatedRoutes({ setIsExploring }) {
     );
 }
 
-function App() {
-    const [isExploring, setIsExploring] = useState(false);
+function FooterWrapper() {
+    const location = useLocation();
+    return location.pathname !== '/' ? <Footer /> : null;
+}
 
+function MainApp() {
+    return (
+        <AppWrapper>
+            <Header />
+            <MainContent>
+                <AnimatedRoutes />
+            </MainContent>
+            <FooterWrapper />
+        </AppWrapper>
+    );
+}
+
+function App() {
     return (
         <ThemeProvider theme={theme}>
             <GlobalStyles />
             <Router>
-                <AppWrapper>
-                    {!isExploring && <Header />}
-                    <MainContent>
-                        <AnimatedRoutes setIsExploring={setIsExploring} />
-                    </MainContent>
-                    <Footer />
-                </AppWrapper>
+                <MainApp />
             </Router>
         </ThemeProvider>
     );
 }
+
 export default App;

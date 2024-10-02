@@ -8,9 +8,12 @@ const BlogWrapper = styled.div`
   display: flex;
   flex-direction: column;
   padding: 2rem;
+  width: 100%;
+  max-width: 1200px; // Ajusta según tus necesidades
+  margin: 0 auto;
+  min-height: 100%;
+  padding-top: 80px; // Ajusta según la altura de tu header
 `;
-
-
 
 const blogPosts = [
     {
