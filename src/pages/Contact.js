@@ -4,18 +4,17 @@ import { motion } from 'framer-motion';
 import PageAnimation from '../components/PageAnimation';
 import Calendar from '../components/Calendar';
 
-const ContactWrapper = styled.div`
-  flex: 1;
+const PageContainer = styled.div`
+  flex: 1 0 auto;
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: 2rem;
-  max-width: 1200px; // Ajusta según tus necesidades
+  max-width: 1200px;
   margin: 0 auto;
-  background-color: ${props => props.theme.colors.background};
-  color: ${props => props.theme.colors.text};
-  min-height: 100%;
-  padding-top: 80px; // Ajusta según la altura de tu header
+`;
+
+const ContactWrapper = styled.div`
+  padding: 2rem;
 `;
 
 const ContentContainer = styled.div`
@@ -335,184 +334,186 @@ const Contact = () => {
   };
 
   return (
-    <ContactWrapper>
-      <ContentContainer>
-        <Section>
-          <SectionTitle>Información de Contacto</SectionTitle>
-          <SectionContent>
-            <Form>
-              <InputGroup>
-                <Input
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  placeholder="Nombre"
-                  required
-                />
-                <Input
-                  name="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder="Email"
-                  required
-                />
-              </InputGroup>
-              <InputGroup>
-                <Input
-                  name="phone"
-                  type="tel"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  placeholder="Teléfono"
-                />
-                <Input
-                  name="company"
-                  value={formData.company}
-                  onChange={handleChange}
-                  placeholder="Empresa"
-                />
-              </InputGroup>
-
-              <CheckboxGroup>
-                <CheckboxTitle>Preferencias de Contacto</CheckboxTitle>
-                <CheckboxContainer>
-                  {['Teléfono', 'Email', 'Indistinto'].map(option => (
-                    <CheckboxLabel key={option}>
-                      <input
-                        type="checkbox"
-                        name="contactPreference"
-                        value={option.toLowerCase()}
-                        checked={formData.contactPreference.includes(option.toLowerCase())}
-                        onChange={handleChange}
-                      />
-                      {option}
-                    </CheckboxLabel>
-                  ))}
-                </CheckboxContainer>
-              </CheckboxGroup>
-
-              <CheckboxColumns>
-                <CheckboxGroup>
-                  <CheckboxTitle>Días de Contacto</CheckboxTitle>
-                  <CheckboxContainer>
-                    {['Lunes a Viernes', 'Fines de Semana', 'Todos los días'].map(option => (
-                      <CheckboxLabel key={option}>
-                        <input
-                          type="checkbox"
-                          name="contactDays"
-                          value={option.toLowerCase().replace(/ /g, '-')}
-                          checked={formData.contactDays.includes(option.toLowerCase().replace(/ /g, '-'))}
-                          onChange={handleChange}
-                        />
-                        {option}
-                      </CheckboxLabel>
-                    ))}
-                  </CheckboxContainer>
-                </CheckboxGroup>
-
-                <CheckboxGroup>
-                  <CheckboxTitle>Horario de Contacto</CheckboxTitle>
-                  <CheckboxContainer>
-                    {['Mañanas', 'Tardes', 'Noches', 'Cualquier Hora'].map(option => (
-                      <CheckboxLabel key={option}>
-                        <input
-                          type="checkbox"
-                          name="contactTime"
-                          value={option.toLowerCase()}
-                          checked={formData.contactTime.includes(option.toLowerCase())}
-                          onChange={handleChange}
-                        />
-                        {option}
-                      </CheckboxLabel>
-                    ))}
-                  </CheckboxContainer>
-                </CheckboxGroup>
-              </CheckboxColumns>
-
-              <TextArea
-                name="observations"
-                value={formData.observations}
-                onChange={handleChange}
-                placeholder="Observaciones generales"
-              />
-            </Form>
-          </SectionContent>
-        </Section>
-
-        <Section>
-          <SectionTitle>Agendar Cita</SectionTitle>
-          <SectionContent>
-            <CalendarContainer>
-              <motion.div
-                variants={calendarVariants}
-                initial="hidden"
-                animate="visible"
-              >
-                <StyledCalendar onSelectDate={handleDateSelect} minDate={tomorrow} />
-              </motion.div>
-            </CalendarContainer>
-            {selectedDate && (
-              <SelectedDateTime>
-                Fecha seleccionada: {selectedDate.toLocaleDateString()}
-                <br />
-                Hora seleccionada: {formData.appointmentTime}
-              </SelectedDateTime>
-            )}
-            <AppointmentGroup>
-              <CheckboxColumns>
-                <div>
-                  <CheckboxTitle style={{ fontSize: '0.8rem', marginBottom: '0.5rem' }}>Horario de Cita</CheckboxTitle>
-                  <TimeSelector
-                    name="appointmentTime"
-                    value={formData.appointmentTime}
+    <PageContainer>
+      <ContactWrapper>
+        <ContentContainer>
+          <Section>
+            <SectionTitle>Información de Contacto</SectionTitle>
+            <SectionContent>
+              <Form>
+                <InputGroup>
+                  <Input
+                    name="name"
+                    value={formData.name}
                     onChange={handleChange}
-                  >
-                    {generateTimeOptions()}
-                  </TimeSelector>
-                </div>
-                <div>
-                  <CheckboxTitle>Medio de la Cita</CheckboxTitle>
+                    placeholder="Nombre"
+                    required
+                  />
+                  <Input
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="Email"
+                    required
+                  />
+                </InputGroup>
+                <InputGroup>
+                  <Input
+                    name="phone"
+                    type="tel"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    placeholder="Teléfono"
+                  />
+                  <Input
+                    name="company"
+                    value={formData.company}
+                    onChange={handleChange}
+                    placeholder="Empresa"
+                  />
+                </InputGroup>
+
+                <CheckboxGroup>
+                  <CheckboxTitle>Preferencias de Contacto</CheckboxTitle>
                   <CheckboxContainer>
-                    {['Zoom', 'Google Meet', 'WhatsApp'].map(option => (
+                    {['Teléfono', 'Email', 'Indistinto'].map(option => (
                       <CheckboxLabel key={option}>
                         <input
                           type="checkbox"
-                          name="appointmentMedium"
-                          value={option.toLowerCase().replace(' ', '-')}
-                          checked={formData.appointmentMedium === option.toLowerCase().replace(' ', '-')}
+                          name="contactPreference"
+                          value={option.toLowerCase()}
+                          checked={formData.contactPreference.includes(option.toLowerCase())}
                           onChange={handleChange}
                         />
                         {option}
                       </CheckboxLabel>
                     ))}
                   </CheckboxContainer>
-                </div>
-              </CheckboxColumns>
-            </AppointmentGroup>
-          </SectionContent>
-        </Section>
-      </ContentContainer>
+                </CheckboxGroup>
 
-      <ButtonContainer>
-        <Button
-          type="submit"
-          onClick={handleSubmit}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          Enviar
-        </Button>
-        <Button
-          type="button"
-          onClick={handleReset}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          Vaciar
-        </Button>
-      </ButtonContainer>
-    </ContactWrapper>
+                <CheckboxColumns>
+                  <CheckboxGroup>
+                    <CheckboxTitle>Días de Contacto</CheckboxTitle>
+                    <CheckboxContainer>
+                      {['Lunes a Viernes', 'Fines de Semana', 'Todos los días'].map(option => (
+                        <CheckboxLabel key={option}>
+                          <input
+                            type="checkbox"
+                            name="contactDays"
+                            value={option.toLowerCase().replace(/ /g, '-')}
+                            checked={formData.contactDays.includes(option.toLowerCase().replace(/ /g, '-'))}
+                            onChange={handleChange}
+                          />
+                          {option}
+                        </CheckboxLabel>
+                      ))}
+                    </CheckboxContainer>
+                  </CheckboxGroup>
+
+                  <CheckboxGroup>
+                    <CheckboxTitle>Horario de Contacto</CheckboxTitle>
+                    <CheckboxContainer>
+                      {['Mañanas', 'Tardes', 'Noches', 'Cualquier Hora'].map(option => (
+                        <CheckboxLabel key={option}>
+                          <input
+                            type="checkbox"
+                            name="contactTime"
+                            value={option.toLowerCase()}
+                            checked={formData.contactTime.includes(option.toLowerCase())}
+                            onChange={handleChange}
+                          />
+                          {option}
+                        </CheckboxLabel>
+                      ))}
+                    </CheckboxContainer>
+                  </CheckboxGroup>
+                </CheckboxColumns>
+
+                <TextArea
+                  name="observations"
+                  value={formData.observations}
+                  onChange={handleChange}
+                  placeholder="Observaciones generales"
+                />
+              </Form>
+            </SectionContent>
+          </Section>
+
+          <Section>
+            <SectionTitle>Agendar Cita</SectionTitle>
+            <SectionContent>
+              <CalendarContainer>
+                <motion.div
+                  variants={calendarVariants}
+                  initial="hidden"
+                  animate="visible"
+                >
+                  <StyledCalendar onSelectDate={handleDateSelect} minDate={tomorrow} />
+                </motion.div>
+              </CalendarContainer>
+              {selectedDate && (
+                <SelectedDateTime>
+                  Fecha seleccionada: {selectedDate.toLocaleDateString()}
+                  <br />
+                  Hora seleccionada: {formData.appointmentTime}
+                </SelectedDateTime>
+              )}
+              <AppointmentGroup>
+                <CheckboxColumns>
+                  <div>
+                    <CheckboxTitle style={{ fontSize: '0.8rem', marginBottom: '0.5rem' }}>Horario de Cita</CheckboxTitle>
+                    <TimeSelector
+                      name="appointmentTime"
+                      value={formData.appointmentTime}
+                      onChange={handleChange}
+                    >
+                      {generateTimeOptions()}
+                    </TimeSelector>
+                  </div>
+                  <div>
+                    <CheckboxTitle>Medio de la Cita</CheckboxTitle>
+                    <CheckboxContainer>
+                      {['Zoom', 'Google Meet', 'WhatsApp'].map(option => (
+                        <CheckboxLabel key={option}>
+                          <input
+                            type="checkbox"
+                            name="appointmentMedium"
+                            value={option.toLowerCase().replace(' ', '-')}
+                            checked={formData.appointmentMedium === option.toLowerCase().replace(' ', '-')}
+                            onChange={handleChange}
+                          />
+                          {option}
+                        </CheckboxLabel>
+                      ))}
+                    </CheckboxContainer>
+                  </div>
+                </CheckboxColumns>
+              </AppointmentGroup>
+            </SectionContent>
+          </Section>
+        </ContentContainer>
+
+        <ButtonContainer>
+          <Button
+            type="submit"
+            onClick={handleSubmit}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            Enviar
+          </Button>
+          <Button
+            type="button"
+            onClick={handleReset}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            Vaciar
+          </Button>
+        </ButtonContainer>
+      </ContactWrapper>
+    </PageContainer>
   );
 };
 

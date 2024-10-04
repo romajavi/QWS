@@ -3,16 +3,29 @@ import styled from 'styled-components';
 import PageAnimation from '../components/PageAnimation';
 import BlogPost from '../components/BlogPost';
 
+const PageContainer = styled.div`
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+`;
+
 const BlogWrapper = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 2rem;
   width: 100%;
-  max-width: 1200px; // Ajusta según tus necesidades
+  max-width: 1200px;
   margin: 0 auto;
-  min-height: 100%;
-  padding-top: 80px; // Ajusta según la altura de tu header
+  padding: 2rem;
+`;
+
+const BlogTitle = styled.h1`
+  color: ${props => props.theme.colors.secondaryBackground};
+  margin-bottom: 2rem;
+  text-align: center;
 `;
 
 const blogPosts = [
@@ -56,12 +69,14 @@ const blogPosts = [
 
 function Blog() {
     return (
-        <BlogWrapper>
-            <h1>Blog</h1>
-            {blogPosts.map((post, index) => (
-                <BlogPost key={index} {...post} />
-            ))}
-        </BlogWrapper>
+        <PageContainer>
+            <BlogWrapper>
+                <BlogTitle>Blog</BlogTitle>
+                {blogPosts.map((post, index) => (
+                    <BlogPost key={index} {...post} />
+                ))}
+            </BlogWrapper>
+        </PageContainer>
     );
 }
 

@@ -1,96 +1,160 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import ServiceCard from '../components/ServiceCard';
-import DiscountPopup from '../components/DiscountPopup';
 import ContactPopup from '../components/ContactPopup';
 import PageAnimation from '../components/PageAnimation';
 
+const PageContainer = styled.div`
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+`;
+
 const ServicesWrapper = styled.div`
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+
+const ServicesContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  padding: 2rem;
   gap: 2rem;
   width: 100%;
-  max-width: 1200px; // Ajusta según tus necesidades
-  margin: 0 auto;
-  @media (max-width: 768px) {
-    padding: 1rem;
-  }
-  min-height: 100%;
-  padding-top: 80px; // Ajusta según la altura de tu header
+  max-width: 1200px;
 `;
 
-//// Para definir la lista de servicios
+const Title = styled.h1`
+  text-align: center;
+  color: ${props => props.theme.colors.secondaryBackground};
+  margin-bottom: 2rem;
+  font-size: 2.5rem;
+  padding-top: 80px;
+`;
+
 const services = [
     {
-        name: "Plan Silver",
-        image: "/assets/silver-plan.jpg",
-        price: 99,
+        name: "Desarrollo Web",
+        image: "/assets/web-development.jpg",
+        price: "10",
         features: [
             {
                 name: "Diseño Responsivo",
                 included: true,
-                description: "Tu sitio web se verá genial en cualquier dispositivo, ya sea un celular, una tableta o una computadora."
+                description: "Tu sitio se verá perfecto en todos los dispositivos, desde móviles hasta computadoras de escritorio."
+            },
+            {
+                name: "Personalización Total",
+                included: true,
+                description: "Diseño a medida que refleja la identidad única de tu marca o proyecto."
             },
             {
                 name: "SEO Básico",
                 included: true,
-                description: "Optimizamos tu sitio para que los motores de búsqueda como Google puedan encontrarlo más fácilmente."
+                description: "Optimización inicial para motores de búsqueda para mejorar tu visibilidad online."
             },
             {
-                name: "Soporte 24/7",
-                included: false,
-                description: "Atención al cliente disponible todo el día, todos los días de la semana."
+                name: "Integración de Redes Sociales",
+                included: true,
+                description: "Conexión seamless con tus perfiles en redes sociales para ampliar tu alcance."
             },
             {
-                name: "Dominio Personalizado",
-                included: false,
-                description: "Un nombre único para tu sitio web, como www.tuempresa.com."
+                name: "Formulario de Contacto",
+                included: true,
+                description: "Facilita la comunicación con tus clientes o visitantes."
             },
+            {
+                name: "Galería de Imágenes",
+                included: true,
+                description: "Muestra tus productos o servicios de manera atractiva."
+            }
         ]
     },
     {
-        name: "Plan Gold",
-        image: "/assets/gold-plan.jpg",
-        price: 199,
+        name: "Mantenimiento Web",
+        image: "/assets/web-maintenance.jpg",
+        price: "10",
         features: [
             {
-                name: "Diseño Responsivo Premium",
+                name: "Actualizaciones de Seguridad",
                 included: true,
-                description: "Diseño personalizado y avanzado para cualquier dispositivo."
+                description: "Mantenemos tu sitio protegido contra las últimas amenazas y vulnerabilidades."
             },
             {
-                name: "SEO Avanzado",
+                name: "Backups Regulares",
                 included: true,
-                description: "Posicionamos tu sitio en los primeros lugares de los motores de búsqueda."
+                description: "Copias de seguridad programadas para proteger tu contenido y datos."
             },
             {
-                name: "Soporte 24/7",
+                name: "Monitoreo de Rendimiento",
                 included: true,
-                description: "Soporte técnico continuo sin límites."
+                description: "Seguimiento constante para asegurar que tu sitio funcione de manera óptima."
             },
             {
-                name: "Dominio Personalizado",
+                name: "Actualizaciones de Contenido",
                 included: true,
-                description: "Obtén tu propio dominio único sin costo adicional."
+                description: "Mantén tu sitio fresco y relevante con actualizaciones periódicas."
             },
+            {
+                name: "Soporte Técnico",
+                included: true,
+                description: "Asistencia rápida y eficiente para resolver cualquier problema."
+            },
+            {
+                name: "Informes Mensuales",
+                included: true,
+                description: "Recibe informes detallados sobre el estado y rendimiento de tu sitio."
+            }
         ]
     },
-    //// para gregar otros planes aquí según sea necesario
+    {
+        name: "Optimización Web",
+        image: "/assets/performance-optimization.jpg",
+        price: "10",
+        features: [
+            {
+                name: "Mejora de Velocidad de Carga",
+                included: true,
+                description: "Optimizamos tu sitio para que cargue rápidamente, mejorando la experiencia del usuario."
+            },
+            {
+                name: "Optimización de Imágenes",
+                included: true,
+                description: "Reducimos el tamaño de las imágenes sin perder calidad para mejorar el rendimiento."
+            },
+            {
+                name: "Minificación de Código",
+                included: true,
+                description: "Optimizamos tu código HTML, CSS y JavaScript para una carga más rápida."
+            },
+            {
+                name: "Implementación de CDN",
+                included: true,
+                description: "Utilizamos redes de distribución de contenido para mejorar la velocidad global."
+            },
+            {
+                name: "Optimización para Móviles",
+                included: true,
+                description: "Aseguramos que tu sitio esté perfectamente optimizado para dispositivos móviles."
+            },
+            {
+                name: "Análisis de Rendimiento",
+                included: true,
+                description: "Realizamos pruebas exhaustivas y proporcionamos informes detallados de mejoras."
+            }
+        ]
+    }
 ];
 
 function Services() {
-    const [isDiscountPopupOpen, setIsDiscountPopupOpen] = useState(false);
     const [isContactPopupOpen, setIsContactPopupOpen] = useState(false);
     const [selectedService, setSelectedService] = useState(null);
-
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setIsDiscountPopupOpen(true);
-        }, 1000); //1. segundos
-
-    }, []);
 
     const handleContactClick = (serviceName) => {
         setSelectedService(serviceName);
@@ -99,10 +163,8 @@ function Services() {
 
     const handleContact = (type) => {
         if (type === 'schedule') {
-            // Redirigir a la página de contacto
             console.log('Redirigir a la página de contacto');
         } else if (type === 'whatsapp') {
-            // Abrir WhatsApp con un mensaje predefinido
             const message = `Hola, estoy interesado en el servicio "${selectedService}". ¿Podrían darme más información?`;
             window.open(`https://wa.me/+541164762132?text=${encodeURIComponent(message)}`, '_blank');
         }
@@ -110,26 +172,25 @@ function Services() {
     };
 
     return (
-        <>
+        <PageContainer>
             <ServicesWrapper>
-                {services.map((service, index) => (
-                    <ServiceCard
-                        key={index}
-                        {...service}
-                        onContactClick={handleContactClick}
-                    />
-                ))}
+                <Title>Nuestros Servicios</Title>
+                <ServicesContainer>
+                    {services.map((service, index) => (
+                        <ServiceCard
+                            key={index}
+                            {...service}
+                            onContactClick={handleContactClick}
+                        />
+                    ))}
+                </ServicesContainer>
+                <ContactPopup
+                    isOpen={isContactPopupOpen}
+                    onClose={() => setIsContactPopupOpen(false)}
+                    onContact={handleContact}
+                />
             </ServicesWrapper>
-            <DiscountPopup
-                isOpen={isDiscountPopupOpen}
-                onClose={() => setIsDiscountPopupOpen(false)}
-            />
-            <ContactPopup
-                isOpen={isContactPopupOpen}
-                onClose={() => setIsContactPopupOpen(false)}
-                onContact={handleContact}
-            />
-        </>
+        </PageContainer>
     );
 }
 

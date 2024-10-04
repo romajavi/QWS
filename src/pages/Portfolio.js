@@ -3,18 +3,23 @@ import styled from 'styled-components';
 import { motion, useAnimation } from 'framer-motion';
 import PageAnimation from '../components/PageAnimation';
 
-const PortfolioWrapper = styled.div`
+const PageContainer = styled.div`
+  flex: 1 0 auto;
   display: flex;
   flex-direction: column;
-  min-height: 100%;
-  padding: 2rem;
-  padding-top: 80px; // Ajusta este valor según la altura de tu header
-  
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
 `;
+
+const PortfolioWrapper = styled.div`
+  padding: 2rem;
+`;
+
 
 const Title = styled.h1`
   font-size: 2.5rem;
-  color: ${props => props.theme.colors.primary};
+  color: ${props => props.theme.colors.secondaryBackground};
   margin-bottom: 2rem;
   @media (max-width: 768px) {
     font-size: 2.5rem;
@@ -150,56 +155,58 @@ function Portfolio() {
   };
 
   return (
-    <PortfolioWrapper>
-      <Title>Nuestro Portfolio</Title>
-      <ProjectReelContainer>
-        <ProjectReel ref={reelRef} animate={controls}>
-          {loopedProjects.map((project, index) => (
-            <ProjectCard
-              key={`${project.id}-${index}`}
-              whileHover={{
-                scale: 1.1,
-                transition: { duration: 0.3 }
-              }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <ProjectImage src={`/images/portfolio/${project.image}`} alt={project.name} />
-              <ProjectName>{project.name}</ProjectName>
-              <ProjectInfo
-                initial={{ opacity: 0 }}
-                whileHover={{ opacity: 1 }}
-                transition={{ duration: 0.3 }}
+    <PageContainer>
+      <PortfolioWrapper>
+        <Title>Nuestro Portfolio</Title>
+        <ProjectReelContainer>
+          <ProjectReel ref={reelRef} animate={controls}>
+            {loopedProjects.map((project, index) => (
+              <ProjectCard
+                key={`${project.id}-${index}`}
+                whileHover={{
+                  scale: 1.1,
+                  transition: { duration: 0.3 }
+                }}
+                whileTap={{ scale: 0.95 }}
               >
-                <h3>{project.name}</h3>
-                <ProjectDescription>{project.description}</ProjectDescription>
-                <CTAButton
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleClick(project.link);
-                  }}
-                  whileHover={{ scale: 1.15 }}
-                  whileTap={{ scale: 1.05 }}
-                  animate={{
-                    boxShadow: [
-                      '0 0 1px rgba(255, 215, 0, 0.2)',
-                      '0 0 4px rgba(255, 215, 0, 0.4), 0 0 6px rgba(255, 165, 0, 0.2)',
-                      '0 0 1px rgba(255, 215, 0, 0.2)'
-                    ],
-                    transition: {
-                      duration: 2,
-                      repeat: Infinity,
-                      ease: "easeInOut"
-                    }
-                  }}
+                <ProjectImage src={`/images/portfolio/${project.image}`} alt={project.name} />
+                <ProjectName>{project.name}</ProjectName>
+                <ProjectInfo
+                  initial={{ opacity: 0 }}
+                  whileHover={{ opacity: 1 }}
+                  transition={{ duration: 0.3 }}
                 >
-                  Ver Proyecto
-                </CTAButton>
-              </ProjectInfo>
-            </ProjectCard>
-          ))}
-        </ProjectReel>
-      </ProjectReelContainer>
-    </PortfolioWrapper>
+                  <h3>{project.name}</h3>
+                  <ProjectDescription>{project.description}</ProjectDescription>
+                  <CTAButton
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleClick(project.link);
+                    }}
+                    whileHover={{ scale: 1.15 }}
+                    whileTap={{ scale: 1.05 }}
+                    animate={{
+                      boxShadow: [
+                        '0 0 1px rgba(255, 215, 0, 0.2)',
+                        '0 0 4px rgba(255, 215, 0, 0.4), 0 0 6px rgba(255, 165, 0, 0.2)',
+                        '0 0 1px rgba(255, 215, 0, 0.2)'
+                      ],
+                      transition: {
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                      }
+                    }}
+                  >
+                    Ver Proyecto
+                  </CTAButton>
+                </ProjectInfo>
+              </ProjectCard>
+            ))}
+          </ProjectReel>
+        </ProjectReelContainer>
+      </PortfolioWrapper>
+    </PageContainer>
   );
 }
 

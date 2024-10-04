@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from 'react';
-import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import styled from 'styled-components';
 import GlobalStyles from './styles/GlobalStyles';
@@ -43,9 +43,10 @@ const AppWrapper = styled.div`
 `;
 
 const MainContent = styled.main`
-  flex: 1 0 auto;
+  flex: 1;
   display: flex;
   flex-direction: column;
+  padding-top: 80px; // Ajusta esto según la altura de tu header
 `;
 
 function AnimatedRoutes() {
@@ -64,29 +65,26 @@ function AnimatedRoutes() {
     );
 }
 
-function FooterWrapper() {
-    const location = useLocation();
-    return location.pathname !== '/' ? <Footer /> : null;
-}
-
-function MainApp() {
-    return (
-        <AppWrapper>
-            <Header />
-            <MainContent>
-                <AnimatedRoutes />
-            </MainContent>
-            <FooterWrapper />
-        </AppWrapper>
-    );
-}
-
 function App() {
     return (
         <ThemeProvider theme={theme}>
             <GlobalStyles />
             <Router>
-                <MainApp />
+                <AppWrapper>
+                    <Header />
+                    <MainContent>
+                        <Suspense fallback={<LoadingSpinner />}>
+                            <Routes>
+                                <Route path="/" element={<Home />} />
+                                <Route path="/services" element={<Services />} />
+                                <Route path="/portfolio" element={<Portfolio />} />
+                                <Route path="/blog" element={<Blog />} />
+                                <Route path="/contact" element={<Contact />} />
+                            </Routes>
+                        </Suspense>
+                    </MainContent>
+                    <Footer />
+                </AppWrapper>
             </Router>
         </ThemeProvider>
     );

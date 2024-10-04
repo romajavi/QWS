@@ -1,4 +1,13 @@
-import { createGlobalStyle } from 'styled-components';
+import { createGlobalStyle, keyframes } from 'styled-components';
+
+const shineAnimation = keyframes`
+  0% {
+    background-position: 200% center;
+  }
+  100% {
+    background-position: -200% center;
+  }
+`;
 
 const GlobalStyles = createGlobalStyle`
   html, body, #root {
@@ -15,49 +24,50 @@ const GlobalStyles = createGlobalStyle`
   }
 
   #root {
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
   }
 
-button {
-  background: rgba(0, 0, 0, 0.5);
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 0.8rem 1.5rem;
-  font-size: 1rem;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
 
-  &::before {
-    content: '';
-    position: absolute;
-    top: -2px;
-    left: -2px;
-    right: -2px;
-    bottom: -2px;
-    background: linear-gradient(45deg, #00FFFF, #a5aa9a, #FFD700);
-    z-index: -1;
-    border-radius: 7px;
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: -1;
+  button {
+    background-color: #FFD700;
+    color: #000;
+    border: none;
     border-radius: 5px;
-  }
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
 
-  &:hover::before {
-    opacity: 0.8;
+    &::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(90deg, #00FFFF, #FFD700, #00FFFF);
+      background-size: 400% 400%;
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    &:hover::before {
+      opacity: 1;
+      animation: ${shineAnimation} 3s linear infinite;
+    }
+
+    &:hover {
+      color: #000;
+      text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+    }
   }
-}
 
   #root {
     min-height: 100vh;
@@ -66,12 +76,12 @@ button {
   }
 
   main {
-    flex: 1;
+    flex: 1 0 auto;
     display: flex;
     flex-direction: column;
     padding-top: 80px;
     padding-left: 2rem;
-    padding-rigth: 2rem;
+    padding-right: 2rem;
     padding-bottom: 2rem;
   }
 

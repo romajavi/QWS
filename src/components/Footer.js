@@ -8,8 +8,6 @@ const FooterWrapper = styled.footer`
   color: ${props => props.theme.colors.text};
   padding: 1rem;
   text-align: center;
-  width: 100%;
-  margin-top: auto;
 `;
 
 const Copyright = styled.p`

@@ -37,9 +37,23 @@ const ContentWrapper = styled(motion.div)`
 
 const Title = styled(motion.h1)`
   font-size: 3rem;
-  color: ${props => props.theme.colors.primary};
+  color: ${props => props.theme.colors.text};
   margin-bottom: 1.5rem;
-  text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+  text-shadow: 0 0 5px rgba(127, 255, 212, 0.5),
+               0 0 10px rgba(127, 255, 212, 0.3);
+  animation: gentleGlow 3s ease-in-out infinite alternate;
+
+  @keyframes gentleGlow {
+    from {
+      text-shadow: 0 0 5px rgba(127, 255, 212, 0.5),
+                   0 0 10px rgba(127, 255, 212, 0.3);
+    }
+    to {
+      text-shadow: 0 0 7px rgba(127, 255, 212, 0.6),
+                   0 0 14px rgba(127, 255, 212, 0.4);
+    }
+  }
+
   @media (max-width: 768px) {
     font-size: 2.2rem;
   }
@@ -60,20 +74,10 @@ const CTAButton = styled(motion.button)`
   font-family: ${props => props.theme.fonts.main};
   font-size: 1rem;
   padding: 0.8rem 1.5rem;
-  background: ${props => props.theme.effects.gradient};
-  color: ${props => props.theme.colors.background};
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
   text-transform: uppercase;
   letter-spacing: 2px;
-  transition: all 0.3s ease;
-  
-  &:hover {
-    color: ${props => props.theme.colors.primary};
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
-  }
 `;
+
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -132,7 +136,7 @@ const Home = () => {
               </Subtitle>
               <CTAButton
                 variants={itemVariants}
-                whileHover={{ scale: 1.05, boxShadow: "0 0 15px rgba(255, 215, 0, 0.7)" }}
+                whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={handleExploreClick}
               >
