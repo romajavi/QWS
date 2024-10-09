@@ -3,36 +3,34 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import EntanglementBackground from '../components/EntanglementBackground';
+import PageContainer from '../components/PageContainer';
+import { pageContainerStyle } from '../styles/GlobalStyles';
+
 
 const HomeWrapper = styled(motion.div)`
+  ${pageContainerStyle}
+  min-height: calc(100vh - 120px);
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
-  min-height: 100vh;
-  padding: 2rem;
-  text-align: center;
-  position: relative;
+  align-items: center;
+  padding: 60px 0;
   width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding-top: 80px;
+  max-width: 100vw; // Asegura que no exceda el ancho de la ventana
+  overflow-x: hidden; // Previene scroll horizontal
 `;
 
 const ContentWrapper = styled(motion.div)`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  position: relative; // Cambiado de absolute a relative
   width: 100%;
   max-width: 800px;
-  background: rgba(0, 0, 0, 0.7);
   padding: 2rem;
   border-radius: 10px;
   display: flex;
   flex-direction: column;
-  align-items: center; // Añade esta línea
-  justify-content: center; // Añade esta línea
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box; // Asegura que el padding no añada al ancho total
 `;
 
 const Title = styled(motion.h1)`
@@ -117,7 +115,7 @@ const Home = () => {
   };
 
   return (
-    <>
+    <PageContainer>
       <EntanglementBackground isAccelerating={isAccelerating} />
       <HomeWrapper>
         <AnimatePresence>
@@ -140,13 +138,13 @@ const Home = () => {
                 whileTap={{ scale: 0.95 }}
                 onClick={handleExploreClick}
               >
-                Explora Nuestros Servicios
+                Explorar Servicios
               </CTAButton>
             </ContentWrapper>
           )}
         </AnimatePresence>
       </HomeWrapper>
-    </>
+    </PageContainer>
   );
 };
 

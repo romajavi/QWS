@@ -1,4 +1,4 @@
-import { createGlobalStyle, keyframes } from 'styled-components';
+import { createGlobalStyle, css, keyframes } from 'styled-components';
 
 const shineAnimation = keyframes`
   0% {
@@ -9,26 +9,56 @@ const shineAnimation = keyframes`
   }
 `;
 
-const GlobalStyles = createGlobalStyle`
-  html, body, #root {
-    height: 100%;
-  }
+export const pageContainerStyle = css`
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+`;
 
-  body {
+const GlobalStyles = createGlobalStyle`
+  * {
     margin: 0;
     padding: 0;
-    font-family: ${props => props.theme.fonts.secondary};
-    background-color: #000;
-    color: ${props => props.theme.colors.text};
-    line-height: 1.6;
+    box-sizing: border-box;
   }
 
-  #root {
+  body, #root {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
   }
 
+  body {
+    font-family: ${props => props.theme.fonts.secondary};
+    background-color: #000;
+    color: ${props => props.theme.colors.text};
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  #root {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  footer {
+    flex-shrink: 0;  // Evita que el footer se reduzca en páginas cortas
+  }
 
   button {
     background-color: #FFD700;
@@ -60,7 +90,10 @@ const GlobalStyles = createGlobalStyle`
 
     &:hover::before {
       opacity: 1;
-      animation: ${shineAnimation} 3s linear infinite;
+      animation: ${keyframes`
+        0% { background-position: 200% center; }
+        100% { background-position: -200% center; }
+      `} 3s linear infinite;
     }
 
     &:hover {
@@ -69,24 +102,8 @@ const GlobalStyles = createGlobalStyle`
     }
   }
 
-  #root {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
-
-  main {
-    flex: 1 0 auto;
-    display: flex;
-    flex-direction: column;
-    padding-top: 80px;
-    padding-left: 2rem;
-    padding-right: 2rem;
-    padding-bottom: 2rem;
-  }
-
   h1, h2, h3, h4, h5, h6 {
-    text-aling: center;
+    text-align: center;
     font-family: ${props => props.theme.fonts.main};
     color: ${props => props.theme.colors.primary};
     margin-bottom: 1rem;
@@ -107,8 +124,6 @@ const GlobalStyles = createGlobalStyle`
     padding: 0.2em 0.4em;
     border-radius: 3px;
   }
-
-  
 
   /* Responsive design */
   @media (max-width: 768px) {

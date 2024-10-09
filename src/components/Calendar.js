@@ -22,7 +22,7 @@ const CalendarHeader = styled.div`
 `;
 
 const MonthYear = styled.h3`
-  color: ${props => props.theme.colors.primary};
+  color: ${props => props.theme.colors.text};
   margin: 0;
   font-size: 1rem;
 `;
@@ -75,7 +75,7 @@ const DayCell = styled(motion.div)`
 const WeekdayHeader = styled.div`
   text-align: center;
   font-weight: bold;
-  color: ${props => props.theme.colors.text};
+  color: ${props => props.theme.colors.accent};
   font-size: 0.7rem;
 `;
 

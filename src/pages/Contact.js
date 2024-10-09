@@ -3,52 +3,54 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import PageAnimation from '../components/PageAnimation';
 import Calendar from '../components/Calendar';
-
-const PageContainer = styled.div`
-  flex: 1 0 auto;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-`;
+import PageContainer from '../components/PageContainer';
+import { pageContainerStyle } from '../styles/GlobalStyles';
 
 const ContactWrapper = styled.div`
-  padding: 2rem;
-`;
-
-const ContentContainer = styled.div`
+  ${pageContainerStyle}
+  min-height: calc(100vh - 120px);
   display: flex;
   flex-direction: column;
-  width: 80%;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 0;
+`;
+
+const FormContainer = styled.div`
+  width: 100%;
   max-width: 800px;
-  margin: 1.5rem auto;
-  padding: 1.5rem;
-  border-radius: 20px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+  background-color: ${props => props.theme.colors.primaryBackground};
+  border-radius: 50px;
   overflow: hidden;
+  margin: 1rem 0;
 `;
 
 const Section = styled.div`
   width: 100%;
-  padding: 1rem;
-  background-color: ${props => props.theme.colors.primaryBackground};
+  padding: 1.5rem;
   color: ${props => props.theme.colors.text};
+  background-color: ${props => props.theme.colors.primaryBackground};
 
-  &:first-child {
-    border-radius: 50px 50px 0 0;
+  &:not(:last-child) {
+    border-bottom: 1px solid ${props => props.theme.colors.primaryBackground}; // Cambia el color del borde al mismo color del fondo
   }
+`;
 
-  &:last-child {
-    border-radius: 0 0 50px 50px;
+const Title = styled.h1`
+  font-size: 2rem;
+  color: ${props => props.theme.colors.secondaryBackground};
+  margin-bottom: 2rem;
+  text-align: center;
+  @media (max-width: 768px) {
+    font-size: 1.5rem;
   }
 `;
 
 const SectionContent = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
   align-items: center;
+  width: 100%;
 `;
 
 const SectionTitle = styled.h2`
@@ -336,9 +338,10 @@ const Contact = () => {
   return (
     <PageContainer>
       <ContactWrapper>
-        <ContentContainer>
+        <Title>Contacto</Title>
+        <FormContainer>
           <Section>
-            <SectionTitle>Información de Contacto</SectionTitle>
+            <SectionTitle>Información</SectionTitle>
             <SectionContent>
               <Form>
                 <InputGroup>
@@ -492,7 +495,7 @@ const Contact = () => {
               </AppointmentGroup>
             </SectionContent>
           </Section>
-        </ContentContainer>
+        </FormContainer>
 
         <ButtonContainer>
           <Button

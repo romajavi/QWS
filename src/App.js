@@ -42,11 +42,12 @@ const AppWrapper = styled.div`
   min-height: 100vh;
 `;
 
-const MainContent = styled.main`
-  flex: 1;
+const ContentWrapper = styled.main`
+  flex: 1 0 auto;
   display: flex;
   flex-direction: column;
-  padding-top: 80px; // Ajusta esto según la altura de tu header
+  width: 100%;
+  padding-top: 80px; // Ajustado para el header fijo
 `;
 
 function AnimatedRoutes() {
@@ -72,17 +73,9 @@ function App() {
             <Router>
                 <AppWrapper>
                     <Header />
-                    <MainContent>
-                        <Suspense fallback={<LoadingSpinner />}>
-                            <Routes>
-                                <Route path="/" element={<Home />} />
-                                <Route path="/services" element={<Services />} />
-                                <Route path="/portfolio" element={<Portfolio />} />
-                                <Route path="/blog" element={<Blog />} />
-                                <Route path="/contact" element={<Contact />} />
-                            </Routes>
-                        </Suspense>
-                    </MainContent>
+                    <ContentWrapper>
+                        <AnimatedRoutes />
+                    </ContentWrapper>
                     <Footer />
                 </AppWrapper>
             </Router>

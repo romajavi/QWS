@@ -2,30 +2,24 @@ import React from 'react';
 import styled from 'styled-components';
 import PageAnimation from '../components/PageAnimation';
 import BlogPost from '../components/BlogPost';
-
-const PageContainer = styled.div`
-  flex: 1 0 auto;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-`;
+import PageContainer from '../components/PageContainer';
+import pageContainerStyle from '../styles/GlobalStyles'; //
 
 const BlogWrapper = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
+  ${pageContainerStyle}
+  min-height: calc(100vh - 120px);
+  justify-content: flex-start;
+  padding-top: 100px; // Ajustado para dar espacio al título
 `;
 
 const BlogTitle = styled.h1`
   color: ${props => props.theme.colors.secondaryBackground};
   margin-bottom: 2rem;
   text-align: center;
+  font-size: 2rem;
+  @media (max-width: 768px) {
+    font-size: 1.5rem;
+  }
 `;
 
 const blogPosts = [

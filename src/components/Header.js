@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import logoImage from '../assets/logo.png';
 
 const HeaderWrapper = styled.header`
@@ -9,9 +9,9 @@ const HeaderWrapper = styled.header`
   top: 0;
   left: 0;
   width: 100%;
-  height: 80px;
+  height: 120px;
   background-color: ${props => props.theme.colors.background};
-  padding: 1rem;
+  padding: 0 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -22,18 +22,30 @@ const HeaderWrapper = styled.header`
 const Logo = styled(motion.img)`
   height: 100px;
   cursor: pointer;
+  z-index: 1; // Aseguramos que el z-index sea bajo para el logo
+
+  @media (max-width: 768px) {
+    height: 100px;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 1rem;
+    z-index: 1; // Aseguramos que en móviles tampoco sobrepase al menú
+  }
 `;
 
 const Nav = styled.nav`
   display: flex;
   gap: 1.5rem;
+  margin-right: 2rem;
 
   @media (max-width: 768px) {
     display: none;
+    
   }
 `;
 
-const NavLink = styled(motion(Link))`
+const NavLink = styled(motion.div)`
   font-family: ${props => props.theme.fonts.main};
   color: ${props => props.theme.colors.text};
   cursor: pointer;
@@ -43,10 +55,10 @@ const NavLink = styled(motion(Link))`
   padding: 0.5rem 1rem;
   border-radius: 5px;
   transition: all 0.3s ease;
-  text-decoration: none;
 
-  &:hover {
+  &:hover, &.active {
     background-color: rgba(255, 255, 255, 0.1);
+    color: ${props => props.theme.colors.primary};
   }
 `;
 
@@ -54,29 +66,54 @@ const MobileMenuButton = styled.button`
   display: none;
   background: none;
   border: none;
-  color: ${props => props.theme.colors.text};
-  font-size: 1.5rem;
+  color: ${props => props.theme.colors.primary};
+  font-size: 1.8rem;
   cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    color: ${props => props.theme.colors.accent};
+  }
 
   @media (max-width: 768px) {
     display: block;
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
   }
 `;
 
-const MobileMenu = styled.div`
+const MobileMenu = styled(motion.div)`
   display: none;
-  position: absolute;
-  top: 80px;
+  position: fixed;
+  top: 120px;  // Ajustamos la posición top para que el menú se vea más abajo del botón de cerrar
   left: 0;
   right: 0;
   background: ${props => props.theme.colors.background};
   padding: 1rem;
   border-bottom: 2px solid ${props => props.theme.colors.primary};
+  z-index: 1001;
 
   @media (max-width: 768px) {
-    display: ${props => props.isOpen ? 'flex' : 'none'};
+    display: flex;
     flex-direction: column;
     align-items: center;
+  }
+`;
+
+const Overlay = styled(motion.div)`
+  display: none;
+  position: fixed;
+  top: 120px;  // Ajustamos la posición para que coincida con el nuevo top del menú
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+
+  @media (max-width: 768px) {
+    display: block;
   }
 `;
 
@@ -88,6 +125,8 @@ const linkVariants = {
 
 function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -95,29 +134,41 @@ function Header() {
 
   const navItems = ['home', 'services', 'portfolio', 'blog', 'contact'];
 
+  const handleNavClick = (page) => {
+    setIsMobileMenuOpen(false);
+    navigate(page === 'home' ? '/' : `/${page}`);
+  };
+
   const renderNavLinks = () => (
     navItems.map((page) => (
       <NavLink
         key={page}
-        to={page === 'home' ? '/' : `/${page}`}
         variants={linkVariants}
-        whileHover={{
-          scale: 1.05,
-          color: '#00FFFF'
-        }}
-        whileFocus={{
-          scale: 1.05,
-          color: '#DAA520'
-        }}
-        onClick={() => setIsMobileMenuOpen(false)}
+        whileHover="hover"
+        className={location.pathname === (page === 'home' ? '/' : `/${page}`) ? 'active' : ''}
+        onClick={() => handleNavClick(page)}
       >
         {page}
       </NavLink>
     ))
   );
 
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 768) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <HeaderWrapper>
+      <MobileMenuButton onClick={toggleMobileMenu} aria-label="Toggle mobile menu">
+        {isMobileMenuOpen ? '✕' : '☰'}
+      </MobileMenuButton>
       <Link to="/" aria-label="Home">
         <Logo
           src={logoImage}
@@ -129,12 +180,27 @@ function Header() {
       <Nav aria-label="Main Navigation">
         {renderNavLinks()}
       </Nav>
-      <MobileMenuButton onClick={toggleMobileMenu} aria-label="Toggle mobile menu">
-        ☰
-      </MobileMenuButton>
-      <MobileMenu isOpen={isMobileMenuOpen}>
-        {renderNavLinks()}
-      </MobileMenu>
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <>
+            <MobileMenu
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              {renderNavLinks()}
+            </MobileMenu>
+            <Overlay
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              onClick={toggleMobileMenu}
+            />
+          </>
+        )}
+      </AnimatePresence>
     </HeaderWrapper>
   );
 }

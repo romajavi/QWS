@@ -2,46 +2,40 @@ import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { motion, useAnimation } from 'framer-motion';
 import PageAnimation from '../components/PageAnimation';
-
-const PageContainer = styled.div`
-  flex: 1 0 auto;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-`;
+import PageContainer from '../components/PageContainer';
 
 const PortfolioWrapper = styled.div`
-  padding: 2rem;
+  ${({ theme }) => theme.pageContainerStyle}
+  min-height: calc(100vh - 120px);
+  justify-content: flex-start;
+  padding-top: 100px; // Ajustado para dar espacio al título
 `;
 
-
 const Title = styled.h1`
-  font-size: 2.5rem;
+  font-size: 2rem;
   color: ${props => props.theme.colors.secondaryBackground};
   margin-bottom: 2rem;
   @media (max-width: 768px) {
-    font-size: 2.5rem;
+    font-size: 1.5rem;
   }
 `;
 
 const ProjectReelContainer = styled.div`
-  width: 100%;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
   overflow: hidden;
-  padding: 2rem 0;
-  position: relative;
 `;
 
 const ProjectReel = styled(motion.div)`
   display: flex;
   width: fit-content;
+  padding: 2rem 0;
 `;
 
 const ProjectCard = styled(motion.div)`
   flex: 0 0 400px;
   height: 225px;
-  margin: 0 1rem;
+  margin: 0 1.5rem;
   background-color: rgba(255, 255, 255, 0.1);
   border-radius: 10px;
   overflow: hidden;
@@ -157,7 +151,7 @@ function Portfolio() {
   return (
     <PageContainer>
       <PortfolioWrapper>
-        <Title>Nuestro Portfolio</Title>
+        <Title>Portfolio</Title>
         <ProjectReelContainer>
           <ProjectReel ref={reelRef} animate={controls}>
             {loopedProjects.map((project, index) => (

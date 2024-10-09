@@ -9,7 +9,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "@fortawesome/react-fontawesome": "^0.2.2",
     "concurrently": "^8.2.2",
-    "express": "^4.18.2",
+    "express": "^4.21.0",
     "framer-motion": "^11.5.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
