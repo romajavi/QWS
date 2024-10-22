@@ -20,7 +20,7 @@ const Card = styled(motion.div)`
 
 const ServiceName = styled.h3`
   color: ${props => props.theme.colors.text};
-  font-size: 1rem;
+  font-size: 0.9rem;
   margin-bottom: 1rem;
   position: relative;
   z-index: 2;
@@ -59,7 +59,7 @@ const FeatureHeader = styled.div`
 const FeatureDescription = styled(motion.div)`
   position: absolute;
   left: 0;
-  bottom: 100%; // Cambiado de top: 100% a bottom: 100%
+  bottom: 100%;
   background: rgba(0, 0, 0, 0.9);
   color: ${props => props.theme.colors.text};
   padding: 0.5rem;
@@ -70,7 +70,7 @@ const FeatureDescription = styled(motion.div)`
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   white-space: normal;
   word-wrap: break-word;
-  margin-bottom: 5px; // Añadido para dar un pequeño espacio entre la descripción y el texto
+  margin-bottom: 5px; 
 `;
 
 const Icon = styled(FontAwesomeIcon)`
@@ -87,7 +87,7 @@ const ContactButton = styled(motion.button)`
   cursor: pointer;
   font-size: 1rem;
   font-weight: bold;
-  margin-top: auto;
+  margin-top: 20px;
 `;
 
 const Feature = ({ feature }) => {

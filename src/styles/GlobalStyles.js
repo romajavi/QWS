@@ -10,13 +10,14 @@ const shineAnimation = keyframes`
 `;
 
 export const pageContainerStyle = css`
-  flex: 1 0 auto;
   display: flex;
   flex-direction: column;
+  flex: 1 0 auto;
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 0 2rem;
+  min-height: calc(100vh - 120px); // Ajuste para considerar el header fijo
 `;
 
 const GlobalStyles = createGlobalStyle`
@@ -26,38 +27,38 @@ const GlobalStyles = createGlobalStyle`
     box-sizing: border-box;
   }
 
-  body, #root {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+  html, body {
+    height: 100%;
   }
 
   body {
     font-family: ${props => props.theme.fonts.secondary};
-    background-color: #000;
+    background-color: ${props => props.theme.colors.background};
     color: ${props => props.theme.colors.text};
     line-height: 1.6;
-    min-height: 100vh;
     display: flex;
     flex-direction: column;
+    min-height: 100vh;
   }
 
   #root {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    flex-grow: 1; // Añadido para asegurar que crezca y ocupe todo el espacio
   }
 
   main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    box-sizing: border-box;
+    flex-grow: 1; // Asegura que el contenido principal crezca para llenar el espacio disponible
   }
 
   footer {
-    flex-shrink: 0;  // Evita que el footer se reduzca en páginas cortas
+    flex-shrink: 0;
+    width: 100%;
+    position: relative;
+    background-color: ${props => props.theme.colors.footerBackground};
+    padding: 1rem 0;
+    text-align: center;
   }
 
   button {
@@ -90,10 +91,7 @@ const GlobalStyles = createGlobalStyle`
 
     &:hover::before {
       opacity: 1;
-      animation: ${keyframes`
-        0% { background-position: 200% center; }
-        100% { background-position: -200% center; }
-      `} 3s linear infinite;
+      animation: ${shineAnimation} 3s linear infinite;
     }
 
     &:hover {

@@ -1,17 +1,22 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import ServiceCard from '../components/ServiceCard';
-import ContactPopup from '../components/ContactPopup';
-import PageAnimation from '../components/PageAnimation';
-import PageContainer from '../components/PageContainer'; //
-import pageContainerStyle from '../styles/GlobalStyles'; //
+import ServiceCard from '../components/ServiceCard.js';
+import StandardPopup from '../components/StandardPopup.js';
+import PageAnimation from '../components/PageAnimation.js';
+import PageContainer from '../components/PageContainer.js';
+import pageContainerStyle from '../styles/GlobalStyles.js';
+import { ReactTyped } from 'react-typed';
+import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+
+
 
 
 const ServicesWrapper = styled.div`
   ${pageContainerStyle}
   min-height: calc(100vh - 120px);
   justify-content: flex-start;
-  padding-top: 100px; // Ajustado para dar espacio al título
+  padding-top: 100px;
 `;
 
 const ServicesContainer = styled.div`
@@ -32,9 +37,46 @@ const Title = styled.h1`
   }
 `;
 
+const Button = styled(motion.button)`
+  background-color: ${props => props.theme.colors.primary};
+  color: ${props => props.theme.colors.background};
+  border: none;
+  border-radius: 5px;
+  padding: 0.6rem 1.3rem;
+  font-size: 0.8rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    background-color: ${props => props.theme.colors.accent};
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 255, 255, 0.5);
+  }
+
+  @media (max-width: 768px) {
+    font-size: 0.9rem;
+    padding: 0.7rem 1.2rem;
+  }
+`;
+
 const services = [
     {
-        name: "Desarrollo Web",
+        name: "Creación y Diseño de Páginas Web Personalizadas",
         image: "/assets/web-development.jpg",
         price: "10",
         features: [
@@ -71,7 +113,7 @@ const services = [
         ]
     },
     {
-        name: "Mantenimiento Web",
+        name: "Mantenimiento y Soporte Web Integral",
         image: "/assets/web-maintenance.jpg",
         price: "10",
         features: [
@@ -108,7 +150,7 @@ const services = [
         ]
     },
     {
-        name: "Optimización Web",
+        name: "Optimización Web para SEO y Velocidad de Carga",
         image: "/assets/performance-optimization.jpg",
         price: "10",
         features: [
@@ -147,12 +189,12 @@ const services = [
 ];
 
 function Services() {
-    const [isContactPopupOpen, setIsContactPopupOpen] = useState(false);
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [selectedService, setSelectedService] = useState(null);
 
     const handleContactClick = (serviceName) => {
         setSelectedService(serviceName);
-        setIsContactPopupOpen(true);
+        setIsPopupOpen(true);
     };
 
     const handleContact = (type) => {
@@ -160,15 +202,22 @@ function Services() {
             console.log('Redirigir a la página de contacto');
         } else if (type === 'whatsapp') {
             const message = `Hola, estoy interesado en el servicio "${selectedService}". ¿Podrían darme más información?`;
-            window.open(`https://wa.me/+541164762132?text=${encodeURIComponent(message)}`, '_blank');
+            window.open(`https://wa.me/1234567890?text=${encodeURIComponent(message)}`, '_blank');
         }
-        setIsContactPopupOpen(false);
+        setIsPopupOpen(false);
     };
 
     return (
         <PageContainer>
             <ServicesWrapper>
-                <Title>Servicios</Title>
+                <Title>
+                    <ReactTyped
+                        strings={['Servicios de Desarrollo Web']}
+                        typeSpeed={50}
+                        showCursor={true}
+                        cursorChar="|"
+                    />
+                </Title>
                 <ServicesContainer>
                     {services.map((service, index) => (
                         <ServiceCard
@@ -178,11 +227,18 @@ function Services() {
                         />
                     ))}
                 </ServicesContainer>
-                <ContactPopup
-                    isOpen={isContactPopupOpen}
-                    onClose={() => setIsContactPopupOpen(false)}
-                    onContact={handleContact}
-                />
+                <StandardPopup
+                    isOpen={isPopupOpen}
+                    onClose={() => setIsPopupOpen(false)}
+                    title="¿Cómo deseas seguir?"
+                >
+                    <Link to="/contact">
+                        <Button onClick={() => handleContact('schedule')}>Agendar cita</Button>
+                    </Link>
+                    <Button onClick={() => handleContact('whatsapp')}>
+                        Contacto Directo
+                    </Button>
+                </StandardPopup>
             </ServicesWrapper>
         </PageContainer>
     );

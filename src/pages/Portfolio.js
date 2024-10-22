@@ -1,110 +1,97 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { motion, useAnimation } from 'framer-motion';
-import PageAnimation from '../components/PageAnimation';
-import PageContainer from '../components/PageContainer';
+import { ReactTyped } from 'react-typed';
+import PageAnimation from '../components/PageAnimation.js';
+import PageContainer from '../components/PageContainer.js';
 
 const PortfolioWrapper = styled.div`
   ${({ theme }) => theme.pageContainerStyle}
   min-height: calc(100vh - 120px);
   justify-content: flex-start;
-  padding-top: 100px; // Ajustado para dar espacio al título
+  padding-top: 50px;
 `;
 
 const Title = styled.h1`
   font-size: 2rem;
   color: ${props => props.theme.colors.secondaryBackground};
   margin-bottom: 2rem;
+  text-align: center;
   @media (max-width: 768px) {
     font-size: 1.5rem;
   }
 `;
 
 const ProjectReelContainer = styled.div`
-  width: 100vw;
-  margin-left: calc(-50vw + 50%);
+  width: 100%;
   overflow: hidden;
+  padding: 2rem 0;
 `;
 
 const ProjectReel = styled(motion.div)`
   display: flex;
   width: fit-content;
-  padding: 2rem 0;
 `;
 
 const ProjectCard = styled(motion.div)`
-  flex: 0 0 400px;
-  height: 225px;
-  margin: 0 1.5rem;
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
+  flex: 0 0 250px;
+  height: 350px;
+  margin: 0 1rem;
+  border-radius: 15px;
   overflow: hidden;
-  cursor: pointer;
   position: relative;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid ${props => props.theme.colors.secondaryBackground};
+  box-shadow: 0 4px 10px 0 ${props => `${props.theme.colors.secondaryBackground}40`};
   transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
 
   &:hover {
-    z-index: 10;
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+    transform: translateY(10px);
   }
 `;
 
-
 const ProjectImage = styled.img`
   width: 100%;
-  height: 100%;
+  height: 180px;
   object-fit: cover;
 `;
 
-const ProjectName = styled.h3`
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  padding: 0.5rem;
-  background-color: rgba(0, 0, 0, 0.8);
-  color: ${props => props.theme.colors.primary};
-  margin: 0;
-  font-size: 1.1rem;
-  text-align: center;
-  text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
-`;
-
-const ProjectInfo = styled(motion.div)`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+const ProjectContent = styled.div`
   padding: 1rem;
-  background-color: rgba(0, 0, 0, 0.9);
-  color: ${props => props.theme.colors.text};
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  align-items: center;
-  text-align: center;
-  box-sizing: border-box;
+  flex-grow: 1;
 `;
 
-const CTAButton = styled(motion.button)`
-  font-family: ${props => props.theme.fonts.main};
-  font-size: 0.7rem;
-  padding: 0.3rem 0.6rem;
-  background: ${props => props.theme.effects.gradient};
-  color: ${props => props.theme.colors.background};
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  transition: all 0.3s ease;
-  margin-top: 0.5rem;
+const ProjectName = styled.h3`
+  color: ${props => props.theme.colors.accent};
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
 `;
 
 const ProjectDescription = styled.p`
+  color: ${props => props.theme.colors.text};
+  font-size: 0.8rem;
+  line-height: 1.4;
+  flex-grow: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+`;
+
+const CTAButton = styled.button`
+  ${({ theme }) => theme.button}
   font-size: 0.9rem;
-  margin-bottom: 0.5rem;
+  padding: 0.3rem 0.8rem;
+  width: fit-content;
+  align-self: center;
+  margin-top: 1rem;
 `;
 
 function Portfolio() {
@@ -124,7 +111,6 @@ function Portfolio() {
       if (reelRef.current) {
         const reelWidth = reelRef.current.scrollWidth;
         const moveDistance = reelWidth / 2;
-
         await controls.start({
           x: [-moveDistance, 0],
           transition: {
@@ -136,13 +122,10 @@ function Portfolio() {
         });
       }
     };
-
     if (projects.length > 0) {
       moveReel();
     }
   }, [controls, projects]);
-
-  const loopedProjects = [...projects, ...projects];
 
   const handleClick = (link) => {
     window.open(link, '_blank');
@@ -151,50 +134,34 @@ function Portfolio() {
   return (
     <PageContainer>
       <PortfolioWrapper>
-        <Title>Portfolio</Title>
+        <Title>
+          <ReactTyped
+            strings={['Portafolio de Proyectos Web']}
+            typeSpeed={50}
+            showCursor={true}
+            cursorChar="|"
+          />
+        </Title>
         <ProjectReelContainer>
           <ProjectReel ref={reelRef} animate={controls}>
-            {loopedProjects.map((project, index) => (
+            {[...projects, ...projects].map((project, index) => (
               <ProjectCard
                 key={`${project.id}-${index}`}
-                whileHover={{
-                  scale: 1.1,
-                  transition: { duration: 0.3 }
-                }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={{ y: -10 }}
+                transition={{ duration: 0.3 }}
               >
                 <ProjectImage src={`/images/portfolio/${project.image}`} alt={project.name} />
-                <ProjectName>{project.name}</ProjectName>
-                <ProjectInfo
-                  initial={{ opacity: 0 }}
-                  whileHover={{ opacity: 1 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <h3>{project.name}</h3>
+                <ProjectContent>
+                  <ProjectName>{project.name}</ProjectName>
                   <ProjectDescription>{project.description}</ProjectDescription>
                   <CTAButton
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleClick(project.link);
-                    }}
-                    whileHover={{ scale: 1.15 }}
-                    whileTap={{ scale: 1.05 }}
-                    animate={{
-                      boxShadow: [
-                        '0 0 1px rgba(255, 215, 0, 0.2)',
-                        '0 0 4px rgba(255, 215, 0, 0.4), 0 0 6px rgba(255, 165, 0, 0.2)',
-                        '0 0 1px rgba(255, 215, 0, 0.2)'
-                      ],
-                      transition: {
-                        duration: 2,
-                        repeat: Infinity,
-                        ease: "easeInOut"
-                      }
-                    }}
+                    onClick={() => handleClick(project.link)}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                   >
-                    Ver Proyecto
+                    Ir al sitio
                   </CTAButton>
-                </ProjectInfo>
+                </ProjectContent>
               </ProjectCard>
             ))}
           </ProjectReel>

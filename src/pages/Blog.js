@@ -1,15 +1,19 @@
 import React from 'react';
 import styled from 'styled-components';
-import PageAnimation from '../components/PageAnimation';
-import BlogPost from '../components/BlogPost';
-import PageContainer from '../components/PageContainer';
-import pageContainerStyle from '../styles/GlobalStyles'; //
+import PageAnimation from '../components/PageAnimation.js';
+import BlogPost from '../components/BlogPost.js';
+import PageContainer from '../components/PageContainer.js';
 
 const BlogWrapper = styled.div`
-  ${pageContainerStyle}
-  min-height: calc(100vh - 120px);
-  justify-content: flex-start;
-  padding-top: 100px; // Ajustado para dar espacio al título
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  padding-top: 50px;
+`;
+
+const BlogContent = styled.div`
+  flex: 1 0 auto;
+  padding: 2rem 0;
 `;
 
 const BlogTitle = styled.h1`
@@ -65,10 +69,12 @@ function Blog() {
     return (
         <PageContainer>
             <BlogWrapper>
-                <BlogTitle>Blog</BlogTitle>
-                {blogPosts.map((post, index) => (
-                    <BlogPost key={index} {...post} />
-                ))}
+                <BlogContent>
+                    <BlogTitle>Blog</BlogTitle>
+                    {blogPosts.map((post, index) => (
+                        <BlogPost key={index} {...post} />
+                    ))}
+                </BlogContent>
             </BlogWrapper>
         </PageContainer>
     );

@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Link } from 'react-router-dom';
 
 const PopupOverlay = styled(motion.div)`
   position: fixed;
@@ -23,25 +22,13 @@ const PopupContent = styled(motion.div)`
   border-radius: 10px;
   max-width: 500px;
   text-align: center;
-  box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
-  position: relative; // Añadido para posicionar el botón de cierre
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+  position: relative;
 `;
 
 const PopupTitle = styled.h2`
-  color: ${props => props.theme.colors.primary};
+  color: ${props => props.theme.colors.secondaryBackground};
   margin-bottom: 1rem;
-`;
-
-const Button = styled(motion.button)`
-  background: ${props => props.theme.colors.primary};
-  color: ${props => props.theme.colors.background};
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: bold;
-  margin: 0.5rem;
 `;
 
 const CloseButton = styled(motion.button)`
@@ -51,13 +38,13 @@ const CloseButton = styled(motion.button)`
   background: none;
   border: none;
   font-size: 1.5rem;
-  color: #00FFFF; // Cyan
+  color: #00FFFF;
   cursor: pointer;
   padding: 0;
   line-height: 1;
 `;
 
-const ContactPopup = ({ isOpen, onClose, onContact }) => {
+const StandardPopup = ({ isOpen, onClose, title, children }) => {
     return (
         <AnimatePresence>
             {isOpen && (
@@ -69,13 +56,8 @@ const ContactPopup = ({ isOpen, onClose, onContact }) => {
                 >
                     <PopupContent onClick={(e) => e.stopPropagation()}>
                         <CloseButton onClick={onClose}>×</CloseButton>
-                        <PopupTitle>Contacto</PopupTitle>
-                        <Link to="/contact">
-                            <Button>Agendar cita</Button>
-                        </Link>
-                        <Button onClick={() => onContact('whatsapp')}>
-                            Contacto Directo
-                        </Button>
+                        <PopupTitle>{title}</PopupTitle>
+                        {children}
                     </PopupContent>
                 </PopupOverlay>
             )}
@@ -83,4 +65,4 @@ const ContactPopup = ({ isOpen, onClose, onContact }) => {
     );
 };
 
-export default ContactPopup;
+export default StandardPopup;

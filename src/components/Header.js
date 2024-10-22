@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import logoImage from '../assets/logo.png';
+import logoImage2 from '../assets/logor.png'; // Importamos el segundo logo
 
 const HeaderWrapper = styled.header`
   position: fixed;
@@ -22,7 +23,7 @@ const HeaderWrapper = styled.header`
 const Logo = styled(motion.img)`
   height: 100px;
   cursor: pointer;
-  z-index: 1; // Aseguramos que el z-index sea bajo para el logo
+  z-index: 1;
 
   @media (max-width: 768px) {
     height: 100px;
@@ -30,7 +31,7 @@ const Logo = styled(motion.img)`
     top: 1rem;
     right: 1rem;
     padding: 1rem;
-    z-index: 1; // Aseguramos que en móviles tampoco sobrepase al menú
+    z-index: 1;
   }
 `;
 
@@ -41,7 +42,6 @@ const Nav = styled.nav`
 
   @media (max-width: 768px) {
     display: none;
-    
   }
 `;
 
@@ -87,7 +87,7 @@ const MobileMenuButton = styled.button`
 const MobileMenu = styled(motion.div)`
   display: none;
   position: fixed;
-  top: 120px;  // Ajustamos la posición top para que el menú se vea más abajo del botón de cerrar
+  top: 120px;
   left: 0;
   right: 0;
   background: ${props => props.theme.colors.background};
@@ -105,7 +105,7 @@ const MobileMenu = styled(motion.div)`
 const Overlay = styled(motion.div)`
   display: none;
   position: fixed;
-  top: 120px;  // Ajustamos la posición para que coincida con el nuevo top del menú
+  top: 120px;
   left: 0;
   right: 0;
   bottom: 0;
@@ -125,6 +125,7 @@ const linkVariants = {
 
 function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [logoSrc, setLogoSrc] = useState(logoImage); // Estado para el logo
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -132,7 +133,7 @@ function Header() {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
-  const navItems = ['home', 'services', 'portfolio', 'blog', 'contact'];
+  const navItems = ['home', 'services', 'portfolio', 'contact']; ///// + 'blog', cuandom se complete la página. 
 
   const handleNavClick = (page) => {
     setIsMobileMenuOpen(false);
@@ -155,10 +156,15 @@ function Header() {
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth > 768) {
-        setIsMobileMenuOpen(false);
+      if (window.innerWidth <= 768) {
+        setLogoSrc(logoImage2); // Usamos logo2 en pantallas pequeñas
+      } else {
+        setLogoSrc(logoImage); // Usamos logo original en pantallas grandes
       }
     };
+
+    // Ejecutamos la función inmediatamente para detectar el tamaño de pantalla al cargar
+    handleResize();
 
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
@@ -171,7 +177,7 @@ function Header() {
       </MobileMenuButton>
       <Link to="/" aria-label="Home">
         <Logo
-          src={logoImage}
+          src={logoSrc} // Mostramos el logo dependiendo del tamaño de la pantalla
           alt="QWS Logo"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
