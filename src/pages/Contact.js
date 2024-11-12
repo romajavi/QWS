@@ -1,159 +1,711 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import { motion } from 'framer-motion';
-import emailjs from '@emailjs/browser';
-import PageAnimation from '../components/PageAnimation';
-import Select from 'react-select';
+import React, { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import styled, { keyframes } from 'styled-components';
+import { ReactTyped } from 'react-typed';
+import Calendar from '../components/Calendar.js';
+import StandardPopup from '../components/StandardPopup.js';
+import LoadingSpinner from '../components/LoadingSpinner.js';
+import PageContainer from '../components/PageContainer.js';
+import Footer from '../components/Footer.js';
 
 const ContactWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 2rem;
-  background-color: #333; // Fondo gris oscuro
-`;
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
+  min-height: calc(100vh - 120px);
   width: 100%;
-  max-width: 500px;
+  padding-bottom: 5rem;
 `;
 
-const Input = styled.input`
-  margin-bottom: 1rem;
-  padding: 0.5rem;
-  border: none;
-  border-radius: 4px;
-  background-color: #444; // Fondo gris más claro
-  color: white;
-`;
+const Title = styled.h1`
+  font-size: 2rem;
+  color: ${props => props.theme.colors.secondaryBackground};
+  margin-bottom: 2rem;
+  text-align: center;
+  position: relative;
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
 
-
-
-const StyledSelect = styled(Select)`
-  margin-bottom: 1rem;
-  .react-select__control {
-    background-color: #444;
-    border: none;
-  }
-  .react-select__single-value {
-    color: white;
-  }
-  .react-select__menu {
-    background-color: #444;
-  }
-  .react-select__option {
-    color: white;
+  @media (max-width: 768px) {
+    font-size: 1.5rem;
   }
 `;
 
 const TextArea = styled.textarea`
+  width: 100%;
+  padding: 0.8rem;
   margin-bottom: 1rem;
-  padding: 0.5rem;
-  border: none;
-  border-radius: 4px;
-  background-color: #444;
-  color: white;
-  min-height: 150px;
+  background: rgba(30, 30, 30, 0.7);
+  border: 1px solid ${props => props.theme.colors.primary}40;
+  border-radius: 8px;
+  color: ${props => props.theme.colors.text};
+  min-height: 100px;
+  resize: vertical;
+  transition: all 0.3s ease;
+
+  &:focus {
+    outline: none;
+    border-color: ${props => props.theme.colors.accent};
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+  }
 `;
 
-const ButtonContainer = styled.div`
+const Select = styled.select`
+  width: 100%;
+  padding: 0.8rem;
+  background: rgba(30, 30, 30, 0.7);
+  border: 1px solid ${props => props.theme.colors.primary}40;
+  border-radius: 8px;
+  color: ${props => props.theme.colors.text};
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:focus {
+    outline: none;
+    border-color: ${props => props.theme.colors.accent};
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+  }
+
+  option {
+    background: ${props => props.theme.colors.background};
+    color: ${props => props.theme.colors.text};
+    padding: 0.5rem;
+  }
+`;
+
+
+const pulseGlow = keyframes`
+  0% { box-shadow: 0 0 5px rgba(0, 255, 255, 0.3); }
+  50% { box-shadow: 0 0 20px rgba(0, 255, 255, 0.5); }
+  100% { box-shadow: 0 0 5px rgba(0, 255, 255, 0.3); }
+`;
+
+const FormContainer = styled.div`
+  width: 90%;
+  max-width: 1200px;
+  margin: 2rem auto;
+  background: linear-gradient(
+    45deg,
+    rgba(40, 40, 40, 0.95),
+    rgba(50, 50, 50, 0.95),
+    rgba(45, 45, 45, 0.95)
+  );
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  border: 1px solid rgba(255, 215, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+
+  @media (max-width: 768px) {
+    width: 95%;
+    padding: 1.5rem;
+  }
+`;
+
+const FormGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 2px 1fr;
+  gap: 2rem;
+  position: relative;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+`;
+
+const Section = styled.div`
+  width: 100%;
+  padding: 1rem;
+  
+  h2 {
+    color: ${props => props.theme.colors.primary};
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    text-align: left;
+    position: relative;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(
+        90deg,
+        ${props => props.theme.colors.primary},
+        ${props => props.theme.colors.accent},
+        transparent
+      );
+    }
+  }
+`;
+
+const Input = styled.input`
+  width: 100%;
+  padding: 0.8rem;
+  background: rgba(30, 30, 30, 0.7) !important;
+  border: 1px solid ${props => props.hasError ? '#ff3333' : props.theme.colors.primary}40;
+  border-radius: 8px;
+  color: ${props => props.theme.colors.text} !important;
+  transition: all 0.3s ease;
+  margin-bottom: 1rem;
+
+  &:-webkit-autofill,
+  &:-webkit-autofill:hover,
+  &:-webkit-autofill:focus {
+    -webkit-text-fill-color: ${props => props.theme.colors.text};
+    -webkit-box-shadow: 0 0 0 1000px ${props => props.theme.colors.background} inset !important;
+    transition: background-color 5000s ease-in-out 0s;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: ${props => props.theme.colors.accent};
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+  }
+`;
+
+const PreferenceGroup = styled.div`
+  background: rgba(30, 30, 30, 0.5);
+  padding: 1.2rem;
+  border-radius: 8px;
+  margin-bottom: 1.2rem;
+  border: 1px solid rgba(0, 255, 255, 0.1);
+`;
+
+const RadioGroup = styled.div`
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 0.8rem;
+  width: 100%;
+  padding: 1rem;
+  background: ${props => props.error ? 'rgba(255, 51, 51, 0.1)' : 'rgba(40, 40, 40, 0.95)'};
+  border-radius: 10px;
+  border: 1px solid ${props => props.error ? '#ff3333' : 'rgba(0, 255, 255, 0.1)'};
+`;
+
+const RadioContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+`;
+
+const CheckboxTitle = styled.h3`
+  color: ${props => props.error ? '#ff3333' : props.theme.colors.accent};
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+`;
+
+const RadioLabel = styled.label`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: ${props => props.theme.colors.text};
+  cursor: pointer;
+  padding: 0.8rem 1.2rem;
+  background: rgba(30, 30, 30, 0.7);
+  border-radius: 5px;
+  border: 1px solid ${props => props.error ? '#ff3333' : 'rgba(255, 215, 0, 0.1)'};
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: rgba(0, 255, 255, 0.1);
+    transform: translateY(-2px);
+  }
+
+  input[type="radio"] {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid ${props => props.error ? '#ff3333' : props.theme.colors.primary};
+    border-radius: 50%;
+    position: relative;
+    transition: all 0.3s ease;
+
+    &:checked {
+      background: ${props => props.theme.colors.primary};
+      border-color: ${props => props.theme.colors.accent};
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+
+      &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: ${props => props.theme.colors.background};
+      }
+    }
+  }
+`;
+
+const Divider = styled.div`
+  width: 2px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    ${props => props.theme.colors.primary},
+    ${props => props.theme.colors.accent},
+    ${props => props.theme.colors.primary},
+    transparent
+  );
+  margin: 0 1rem;
+  opacity: 0.6;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  padding: 1rem 2rem;
 `;
 
 const Button = styled.button`
-  padding: 0.5rem 1rem;
+  padding: 0.8rem 2rem;
+  font-size: 0.9rem;
   border: none;
-  border-radius: 4px;
-  background-color: ${props => props.theme.colors.primary};
-  color: black;
+  border-radius: 8px;
+  font-weight: bold;
   cursor: pointer;
-  flex: 1;
-  margin: 0 0.5rem;
+  transition: all 0.3s ease;
+
+  &.submit {
+    background: ${props => props.theme.colors.primary};
+    color: ${props => props.theme.colors.background};
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+    }
+  }
+
+  &.clear {
+    background: rgba(255, 255, 255, 0.1);
+    color: ${props => props.theme.colors.text};
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+  }
+`;
+
+const MessageText = styled.p`
+  font-size: 1.1rem;
+  line-height: 1.5;
+  color: ${props => props.theme.colors.text};
+  margin: 0.5rem 0;
+`;
+
+const StatusIcon = styled.span`
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+`;
+
+const PopupMessage = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 0;
 `;
 
 const Contact = () => {
-    const [formData, setFormData] = useState({
-        name: '',
-        email: '',
-        phone: '',
-        message: '',
-        contactPreference: '',
-        contactTime: ''
-    });
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    company: '',
+    contactPreference: [],
+    contactDays: [],
+    contactTime: [],
+    appointmentDate: '',
+    appointmentTime: '10:00',
+    appointmentMedium: '',
+    observations: ''
+  });
 
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
+  const [errors, setErrors] = useState({});
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState({ success: false, message: '' });
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        emailjs.send(
-            'YOUR_SERVICE_ID',
-            'YOUR_TEMPLATE_ID',
-            formData,
-            'YOUR_USER_ID'
-        )
-            .then((result) => {
-                console.log(result.text);
-                alert('Mensaje enviado con éxito!');
-            }, (error) => {
-                console.log(error.text);
-                alert('Hubo un error al enviar el mensaje. Por favor, intenta de nuevo.');
-            });
-    };
+  const navigate = useNavigate();
+  const formRef = useRef(null);
 
-    const handleReset = () => {
-        setFormData({
-            name: '',
-            email: '',
-            phone: '',
-            message: '',
-            contactPreference: '',
-            contactTime: ''
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.name) newErrors.name = true;
+    if (!formData.email) newErrors.email = true;
+    if (!formData.phone) newErrors.phone = true;
+    if (!formData.contactPreference.length) newErrors.contactPreference = true;
+    if (!formData.contactDays.length) newErrors.contactDays = true;
+    if (!formData.contactTime.length) newErrors.contactTime = true;
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!validateForm()) {
+      setSubmitStatus({
+        success: false,
+        message: 'Por favor, complete todos los campos requeridos.'
+      });
+      setShowPopup(true);
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        setSubmitStatus({
+          success: true,
+          message: '¡Gracias por contactarnos! Te responderemos pronto.'
         });
-    };
+        handleReset();
+      } else {
+        throw new Error('Error al enviar el formulario');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      setSubmitStatus({
+        success: false,
+        message: 'Hubo un error al enviar el formulario. Por favor, intenta nuevamente.'
+      });
+    } finally {
+      setIsLoading(false);
+      setShowPopup(true);
+    }
+  };
 
-    return (
-        <ContactWrapper>
-            <h1>Contacto</h1>
-            <Form onSubmit={handleSubmit}>
-                <Input name="name" value={formData.name} onChange={handleChange} placeholder="Nombre" required />
-                <Input name="email" type="email" value={formData.email} onChange={handleChange} placeholder="Email" required />
-                <Input name="phone" type="tel" value={formData.phone} onChange={handleChange} placeholder="Teléfono" required />
-                <StyledSelect
-                    name="contactPreference"
-                    value={formData.contactPreference}
-                    onChange={(selectedOption) => handleChange({ target: { name: 'contactPreference', value: selectedOption.value } })}
-                    options={[
-                        { value: 'weekdays', label: 'Lunes a Viernes' },
-                        { value: 'weekends', label: 'Fines de semana' },
-                        { value: 'everyday', label: 'Todos los días' },
-                    ]}
-                    placeholder="Seleccione preferencia de contacto"
+  const handleReset = () => {
+    setFormData({
+      name: '',
+      email: '',
+      phone: '',
+      company: '',
+      contactPreference: [],
+      contactDays: [],
+      contactTime: [],
+      appointmentDate: '',
+      appointmentTime: '10:00',
+      appointmentMedium: '',
+      observations: ''
+    });
+    setSelectedDate(null);
+    setErrors({});
+    if (formRef.current) {
+      formRef.current.reset();
+    }
+  };
+
+  const handleDateSelect = (date) => {
+    setSelectedDate(date);
+    setFormData(prev => ({
+      ...prev,
+      appointmentDate: date.toISOString().split('T')[0]
+    }));
+  };
+
+  const handleClosePopup = () => {
+    setShowPopup(false);
+    if (submitStatus.success) {
+      setTimeout(() => navigate('/'), 500);
+    }
+  };
+
+  return (
+    <PageContainer>
+      {isLoading && <LoadingSpinner />}
+      <ContactWrapper>
+        <Title>
+          <ReactTyped
+            strings={['Contacto']}
+            typeSpeed={50}
+            showCursor={true}
+            cursorChar="|"
+          />
+        </Title>
+        <FormContainer>
+          <form onSubmit={handleSubmit} ref={formRef}>
+            <FormGrid>
+              <Section>
+                <h2>Información</h2>
+                <Input
+                  type="text"
+                  name="name"
+                  placeholder="Nombre *"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  hasError={errors.name}
+                  autoComplete="name"
                 />
-                <StyledSelect
-                    name="contactTime"
-                    value={formData.contactTime}
-                    onChange={(selectedOption) => handleChange({ target: { name: 'contactTime', value: selectedOption.value } })}
-                    options={[
-                        { value: 'morning', label: '00:00 - 12:00' },
-                        { value: 'afternoon', label: '12:00 - 18:00' },
-                        { value: 'evening', label: '18:00 - 00:00' },
-                    ]}
-                    placeholder="Seleccione horario de contacto"
+                <Input
+                  type="email"
+                  name="email"
+                  placeholder="Email *"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  hasError={errors.email}
+                  autoComplete="email"
                 />
-                <TextArea name="message" value={formData.message} onChange={handleChange} placeholder="Mensaje" required />
-                <ButtonContainer>
-                    <Button type="submit">Enviar</Button>
-                    <Button type="button" onClick={handleReset}>Vaciar</Button>
-                </ButtonContainer>
-            </Form>
-        </ContactWrapper>
-    );
-};
+                <Input
+                  type="tel"
+                  name="phone"
+                  placeholder="Teléfono *"
+                  value={formData.phone}
+                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  hasError={errors.phone}
+                  autoComplete="tel"
+                />
+                <Input
+                  type="text"
+                  name="company"
+                  placeholder="Empresa"
+                  value={formData.company}
+                  onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                  autoComplete="organization"
+                />
 
+                <PreferenceGroup>
+                  <CheckboxTitle error={errors.contactPreference}>
+                    Preferencias de Contacto *
+                  </CheckboxTitle>
+                  <RadioContainer>
+                    <RadioLabel error={errors.contactPreference}>
+                      <input
+                        type="radio"
+                        name="contactPreference"
+                        value="telefono"
+                        checked={formData.contactPreference.includes('telefono')}
+                        onChange={(e) => setFormData({
+                          ...formData,
+                          contactPreference: [e.target.value]
+                        })}
+                      />
+                      Teléfono
+                    </RadioLabel>
+                    <RadioLabel error={errors.contactPreference}>
+                      <input
+                        type="radio"
+                        name="contactPreference"
+                        value="email"
+                        checked={formData.contactPreference.includes('email')}
+                        onChange={(e) => setFormData({
+                          ...formData,
+                          contactPreference: [e.target.value]
+                        })}
+                      />
+                      Email
+                    </RadioLabel>
+                  </RadioContainer>
+                </PreferenceGroup>
 
-export default PageAnimation(Contact);
+                <PreferenceGroup>
+                  <CheckboxTitle error={errors.contactDays}>
+                    Días de Contacto *
+                  </CheckboxTitle>
+                  <RadioContainer>
+                    <RadioLabel error={errors.contactDays}>
+                      <input
+                        type="radio"
+                        name="contactDays"
+                        value="lunVier"
+                        checked={formData.contactDays.includes('lunVier')}
+                        onChange={(e) => setFormData({
+                          ...formData,
+                          contactDays: [e.target.value]
+                        })}
+                      />
+                      Lun-Vier
+                    </RadioLabel>
+                    <RadioLabel error={errors.contactDays}>
+                      <input
+                        type="radio"
+                        name="contactDays"
+                        value="fSemana"
+                        checked={formData.contactDays.includes('fSemana')}
+                        onChange={(e) => setFormData({
+                          ...formData,
+                          contactDays: [e.target.value]
+                        })}
+                      />
+                      F/Semana
+                    </RadioLabel>
+                  </RadioContainer>
+                </PreferenceGroup>
+
+                <PreferenceGroup>
+                  <CheckboxTitle error={errors.contactTime}>
+                    Horario de Contacto *
+                  </CheckboxTitle>
+                  <RadioContainer>
+                    <RadioLabel error={errors.contactTime}>
+                      <input
+                        type="radio"
+                        name="contactTime"
+                        value="manana"
+                        checked={formData.contactTime.includes('manana')}
+                        onChange={(e) => setFormData({
+                          ...formData,
+                          contactTime: [e.target.value]
+                        })}
+                      />
+                      Mañana
+                    </RadioLabel>
+                    <RadioLabel error={errors.contactTime}>
+                      <input
+                        type="radio"
+                        name="contactTime"
+                        value="tarde"
+                        checked={formData.contactTime.includes('tarde')}
+                        onChange={(e) => setFormData({
+                          ...formData,
+                          contactTime: [e.target.value]
+                        })}
+                      />
+                      Tarde
+                    </RadioLabel>
+                  </RadioContainer>
+                </PreferenceGroup>
+
+                <TextArea
+                  name="observations"
+                  placeholder="Observaciones generales"
+                  value={formData.observations}
+                  onChange={(e) => setFormData({ ...formData, observations: e.target.value })}
+                />
+              </Section>
+
+              <Divider />
+
+              <Section>
+                <h2>Agendar una Cita</h2>
+                <Calendar
+                  onSelectDate={handleDateSelect}
+                  selectedDate={selectedDate}
+                />
+
+                <PreferenceGroup>
+                  <CheckboxTitle>Horario de Cita</CheckboxTitle>
+                  <Select
+                    name="appointmentTime"
+                    value={formData.appointmentTime}
+                    onChange={(e) => setFormData({
+                      ...formData,
+                      appointmentTime: e.target.value
+                    })}
+                  >
+                    <option value="09:00">09:00</option>
+                    <option value="10:00">10:00</option>
+                    <option value="11:00">11:00</option>
+                    <option value="12:00">12:00</option>
+                    <option value="13:00">13:00</option>
+                    <option value="14:00">14:00</option>
+                    <option value="15:00">15:00</option>
+                    <option value="16:00">16:00</option>
+                    <option value="17:00">17:00</option>
+                  </Select>
+                </PreferenceGroup>
+
+                <PreferenceGroup>
+                  <CheckboxTitle>Medio de la Cita</CheckboxTitle>
+                  <RadioContainer>
+                    <RadioLabel>
+                      <input
+                        type="radio"
+                        name="appointmentMedium"
+                        value="zoom"
+                        checked={formData.appointmentMedium === 'zoom'}
+                        onChange={(e) => setFormData({
+                          ...formData,
+                          appointmentMedium: e.target.value
+                        })}
+                      />
+                      Zoom
+                    </RadioLabel>
+                    <RadioLabel>
+                      <input
+                        type="radio"
+                        name="appointmentMedium"
+                        value="meet"
+                        checked={formData.appointmentMedium === 'meet'}
+                        onChange={(e) => setFormData({
+                          ...formData,
+                          appointmentMedium: e.target.value
+                        })}
+                      />
+                      Google Meet
+                    </RadioLabel>
+                    <RadioLabel>
+                      <input
+                        type="radio"
+                        name="appointmentMedium"
+                        value="whatsapp"
+                        checked={formData.appointmentMedium === 'whatsapp'}
+                        onChange={(e) => setFormData({
+                          ...formData,
+                          appointmentMedium: e.target.value
+                        })}
+                      />
+                      WhatsApp
+                    </RadioLabel>
+                  </RadioContainer>
+                </PreferenceGroup>
+              </Section>
+            </FormGrid>
+
+            <ButtonGroup>
+              <Button type="button" className="clear" onClick={handleReset}>
+                Vaciar
+              </Button>
+              <Button type="submit" className="submit">
+                Enviar
+              </Button>
+            </ButtonGroup>
+          </form>
+        </FormContainer>
+      </ContactWrapper>
+
+      <StandardPopup
+        isOpen={showPopup}
+        onClose={handleClosePopup}
+        title={submitStatus.success ? "¡Envío Exitoso!" : "Error"}
+      >
+        <PopupMessage>
+          <StatusIcon>{submitStatus.success ? "✅" : "❌"}</StatusIcon>
+          <MessageText>{submitStatus.message}</MessageText>
+        </PopupMessage>
+      </StandardPopup>
+    </PageContainer>
+  );
+}
+
+export default Contact;

@@ -2,143 +2,166 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faTimes, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
-import Select from 'react-select';
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
 
 const Card = styled(motion.div)`
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-  padding: 2rem;
-  width: 300px;
+  background: ${props => props.theme.colors.primaryBackground};
+  border: 1px solid ${props => props.theme.colors.secondaryBackground};
+  border-radius: 15px;
+  padding: 1.5rem 1.2rem;
+  width: 320px;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  margin: 1rem;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
+  box-shadow: 0 8px 32px rgba(0, 255, 255, 0.1);
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 8px 32px rgba(0, 255, 255, 0.2);
+    border-color: ${props => props.theme.colors.accent};
+  }
 `;
 
 const ServiceName = styled.h3`
-  color: ${props => props.theme.colors.primary};
-  font-size: 1.5rem;
+  color: ${props => props.theme.colors.background};
+  font-size: 1.1rem;
+  font-family: ${props => props.theme.fonts.secondary};
   margin-bottom: 1rem;
   position: relative;
   z-index: 2;
-  background: rgba(0, 0, 0, 0.7);
-  padding: 0.5rem;
-  border-radius: 5px;
+  background: ${props => props.theme.colors.accent};
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
   width: 100%;
-`;
-
-const ServiceImage = styled.img`
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-  border-radius: 50%;
-  margin-bottom: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 255, 255, 0.2);
 `;
 
 const Price = styled.p`
-  font-size: 1.2rem;
-  color: ${props => props.theme.colors.accent};
+  font-size: 1.4rem;
+  color: ${props => props.theme.colors.primary};
   margin-bottom: 1rem;
+  font-weight: bold;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
 `;
 
 const FeatureList = styled.ul`
   list-style-type: none;
   padding: 0;
   text-align: left;
+  width: 100%;
+  margin: 1rem 0;
 `;
 
 const FeatureItem = styled.li`
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.8rem;
+  font-size: 0.9rem;
+  position: relative;
+  color: ${props => props.theme.colors.text};
+`;
+
+const FeatureHeader = styled.div`
   display: flex;
   align-items: center;
-  position: relative;
-`;
-
-const Icon = styled(FontAwesomeIcon)`
-  margin-right: 0.5rem;
-`;
-
-const ContactButton = styled(motion.button)`
-  background: ${props => props.theme.colors.primary};
-  color: ${props => props.theme.colors.background};
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 5px;
+  padding: 0.4rem;
+  border-radius: 6px;
   cursor: pointer;
-  font-size: 1rem;
-  font-weight: bold;
-  margin-top: 1rem;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.05);
+  }
+`;
+
+const FeatureIcon = styled(FontAwesomeIcon)`
+  color: ${props => props.theme.colors.primary};
+  margin-right: 0.8rem;
+  font-size: 0.8rem;
 `;
 
 const FeatureDescription = styled(motion.div)`
   position: absolute;
-  right: 100%; //// Cambiado de left a right
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(0, 0, 0, 0.8);
+  left: 0;
+  bottom: 100%;
+  background: ${props => props.theme.colors.background};
   color: ${props => props.theme.colors.text};
-  padding: 0.5rem;
-  border-radius: 5px;
-  font-size: 0.9rem;
-  max-width: 200px;
+  padding: 0.8rem;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  width: 200px;
   z-index: 10;
-  margin-right: 10px; // Añadido para dar un poco de espacio
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  border: 1px solid ${props => props.theme.colors.accent};
+  margin-bottom: 5px;
 `;
 
-const InfoIcon = styled(FontAwesomeIcon)`
-  margin-left: 0.5rem;
-  cursor: help;
+const ContactButton = styled(motion.button)`
+  background: ${props => props.theme.colors.primary};
+  color: ${props => props.theme.colors.buttonText};
+  border: none;
+  padding: 0.7rem 1.3rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin-top: 1rem;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
+
+  &:hover {
+    background: ${props => props.theme.colors.accent};
+    box-shadow: 0 4px 20px rgba(0, 255, 255, 0.3);
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
 `;
 
-const Feature = ({ feature, index, activeDescription, setActiveDescription }) => (
-  <FeatureItem>
-    <Icon icon={feature.included ? faCheck : faTimes} color={feature.included ? "green" : "red"} />
-    {feature.name}
-    {feature.description && (
-      <InfoIcon
-        icon={faInfoCircle}
-        onMouseEnter={() => setActiveDescription(index)}
-        onMouseLeave={() => setActiveDescription(null)}
-      />
-    )}
-    <AnimatePresence>
-      {activeDescription === index && feature.description && (
-        <FeatureDescription
-          initial={{ opacity: 0, x: -10 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -10 }}
-        >
-          {feature.description}
-        </FeatureDescription>
-      )}
-    </AnimatePresence>
-  </FeatureItem>
-);
-
-const ServiceCard = ({ name, image, price, features, onContactClick }) => {
-  const [activeDescription, setActiveDescription] = useState(null);
+const Feature = ({ feature }) => {
+  const [showDescription, setShowDescription] = useState(false);
 
   return (
+    <FeatureItem>
+      <FeatureHeader
+        onMouseEnter={() => setShowDescription(true)}
+        onMouseLeave={() => setShowDescription(false)}
+      >
+        <FeatureIcon icon={faCheck} />
+        {feature.name}
+      </FeatureHeader>
+      <AnimatePresence>
+        {showDescription && (
+          <FeatureDescription
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            transition={{ duration: 0.2 }}
+          >
+            {feature.description}
+          </FeatureDescription>
+        )}
+      </AnimatePresence>
+    </FeatureItem>
+  );
+};
+
+const ServiceCard = ({ name, price, features, onContactClick }) => {
+  return (
     <Card
-      whileHover={{ scale: 1.05 }}
+      whileHover={{ scale: 1.02 }}
       transition={{ type: "spring", stiffness: 300 }}
     >
       <ServiceName>{name}</ServiceName>
-      {/* <ServiceImage src={image} alt={name} /> */}
-      <Price>Desde ${price}</Price>
+      <Price>{price}</Price>
       <FeatureList>
         {features.map((feature, index) => (
-          <Feature
-            key={index}
-            feature={feature}
-            index={index}
-            activeDescription={activeDescription}
-            setActiveDescription={setActiveDescription}
-          />
+          <Feature key={index} feature={feature} />
         ))}
       </FeatureList>
       <ContactButton
@@ -146,7 +169,7 @@ const ServiceCard = ({ name, image, price, features, onContactClick }) => {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
       >
-        Mas información
+        Más información
       </ContactButton>
     </Card>
   );

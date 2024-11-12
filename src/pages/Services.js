@@ -1,130 +1,247 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import ServiceCard from '../components/ServiceCard';
-import DiscountPopup from '../components/DiscountPopup';
-import ContactPopup from '../components/ContactPopup';
-import PageAnimation from '../components/PageAnimation';
+import ServiceCard from '../components/ServiceCard.js';
+import StandardPopup from '../components/StandardPopup.js';
+import PageAnimation from '../components/PageAnimation.js';
+import PageContainer from '../components/PageContainer.js';
+import pageContainerStyle from '../styles/GlobalStyles.js';
+import { ReactTyped } from 'react-typed';
+import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+
+
+
 
 const ServicesWrapper = styled.div`
   display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  width: 100%;
+  padding-bottom: 5rem; // space before the footer
+`;
+
+const ServicesContainer = styled.div`
+  display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  padding: 2rem;
-  gap: 2rem;
+  gap: 3rem;
+  margin: 1.5rem 0;
+`;
+
+const Title = styled.h1`
+  text-align: center;
+  color: ${props => props.theme.colors.secondaryBackground};
+  margin-bottom: 2rem;
+  font-size: 2rem;
   @media (max-width: 768px) {
-    padding: 1rem;
+    font-size: 1.5rem;
   }
 `;
 
-//// Para definir la lista de servicios
+const Button = styled(motion.button)`
+  background-color: ${props => props.theme.colors.primary};
+  color: ${props => props.theme.colors.background};
+  border: none;
+  border-radius: 5px;
+  padding: 0.6rem 1.3rem;
+  font-size: 0.8rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    background-color: ${props => props.theme.colors.accent};
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 255, 255, 0.5);
+  }
+
+  @media (max-width: 768px) {
+    font-size: 0.9rem;
+    padding: 0.7rem 1.2rem;
+  }
+`;
+
 const services = [
     {
-        name: "Plan Silver",
-        image: "/assets/silver-plan.jpg",
-        price: 99,
+        name: "Landing Pages y Sitios Web",
+        image: "/assets/web-development.jpg",
+        price: "Desde $299",
         features: [
             {
                 name: "Diseño Responsivo",
                 included: true,
-                description: "Tu sitio web se verá genial en cualquier dispositivo, ya sea un celular, una tableta o una computadora."
+                description: "Sitio web adaptable a móviles, tablets y computadoras."
+            },
+            {
+                name: "Hasta 5 Secciones",
+                included: true,
+                description: "Inicio, Acerca de, Servicios, Galería y Contacto."
+            },
+            {
+                name: "Formulario de Contacto",
+                included: true,
+                description: "Formulario funcional conectado a tu email."
             },
             {
                 name: "SEO Básico",
                 included: true,
-                description: "Optimizamos tu sitio para que los motores de búsqueda como Google puedan encontrarlo más fácilmente."
+                description: "Optimización básica para buscadores y metadata."
             },
             {
-                name: "Soporte 24/7",
-                included: false,
-                description: "Atención al cliente disponible todo el día, todos los días de la semana."
+                name: "Enlaces a Redes Sociales",
+                included: true,
+                description: "Integración con tus perfiles sociales."
             },
             {
-                name: "Dominio Personalizado",
-                included: false,
-                description: "Un nombre único para tu sitio web, como www.tuempresa.com."
-            },
+                name: "Entrega a convenir",
+                included: true,
+                description: "Desarrollo y ajustes en tiempo óptimo."
+            }
         ]
     },
     {
-        name: "Plan Gold",
-        image: "/assets/gold-plan.jpg",
-        price: 199,
+        name: "Mantenimiento WordPress",
+        image: "/assets/wordpress-maintenance.jpg",
+        price: "Desde $99/mes",
         features: [
             {
-                name: "Diseño Responsivo Premium",
+                name: "Actualizaciones de Seguridad",
                 included: true,
-                description: "Diseño personalizado y avanzado para cualquier dispositivo."
+                description: "Mantenimiento mensual de plugins y WordPress core."
             },
             {
-                name: "SEO Avanzado",
+                name: "Backups Regulares",
                 included: true,
-                description: "Posicionamos tu sitio en los primeros lugares de los motores de búsqueda."
+                description: "Copias de seguridad semanales de tu sitio."
             },
             {
-                name: "Soporte 24/7",
+                name: "Actualizaciones de Contenido",
                 included: true,
-                description: "Soporte técnico continuo sin límites."
+                description: "Hasta 4 actualizaciones mensuales de contenido."
             },
             {
-                name: "Dominio Personalizado",
+                name: "Monitoreo de Uptime",
                 included: true,
-                description: "Obtén tu propio dominio único sin costo adicional."
+                description: "Supervisión del tiempo de actividad del sitio."
             },
+            {
+                name: "Soporte por Email",
+                included: true,
+                description: "Respuesta en 24-48 horas hábiles."
+            },
+            {
+                name: "Informes Mensuales",
+                included: true,
+                description: "Reporte de actualizaciones y estado del sitio."
+            }
         ]
     },
-    //// para gregar otros planes aquí según sea necesario
+    {
+        name: "Optimización Web Básica",
+        image: "/assets/optimization.jpg",
+        price: "Desde $199",
+        features: [
+            {
+                name: "Optimización de Imágenes",
+                included: true,
+                description: "Mejora del rendimiento de imágenes y tiempo de carga."
+            },
+            {
+                name: "Meta Descripciones",
+                included: true,
+                description: "Optimización de títulos y descripciones para SEO."
+            },
+            {
+                name: "Mejoras de Velocidad",
+                included: true,
+                description: "Optimizaciones básicas de rendimiento."
+            },
+            {
+                name: "Implementación de SSL",
+                included: true,
+                description: "Configuración de certificado de seguridad básico."
+            },
+            {
+                name: "Mobile-Friendly",
+                included: true,
+                description: "Ajustes para mejor experiencia en móviles."
+            },
+            {
+                name: "Informe de Mejoras",
+                included: true,
+                description: "Informe detallado de optimizaciones realizadas."
+            }
+        ]
+    }
 ];
 
 function Services() {
-    const [isDiscountPopupOpen, setIsDiscountPopupOpen] = useState(false);
-    const [isContactPopupOpen, setIsContactPopupOpen] = useState(false);
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [selectedService, setSelectedService] = useState(null);
-
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setIsDiscountPopupOpen(true);  
-        }, 1000); //1. segundos
-        
-    }, []);
 
     const handleContactClick = (serviceName) => {
         setSelectedService(serviceName);
-        setIsContactPopupOpen(true);
+        setIsPopupOpen(true);
     };
 
     const handleContact = (type) => {
         if (type === 'schedule') {
-            // Redirigir a la página de contacto
             console.log('Redirigir a la página de contacto');
         } else if (type === 'whatsapp') {
-            // Abrir WhatsApp con un mensaje predefinido
             const message = `Hola, estoy interesado en el servicio "${selectedService}". ¿Podrían darme más información?`;
-            window.open(`https://wa.me/+541164762132?text=${encodeURIComponent(message)}`, '_blank');
+            window.open(`https://wa.me/5491168805604?text=${encodeURIComponent(message)}`, '_blank');
         }
-        setIsContactPopupOpen(false);
+        setIsPopupOpen(false);
     };
 
     return (
-        <>
+        <PageContainer>
             <ServicesWrapper>
-                {services.map((service, index) => (
-                    <ServiceCard
-                        key={index}
-                        {...service}
-                        onContactClick={handleContactClick}
+                <Title>
+                    <ReactTyped
+                        strings={['Servicios de Desarrollo Web']}
+                        typeSpeed={50}
+                        showCursor={true}
+                        cursorChar="|"
                     />
-                ))}
+                </Title>
+                <ServicesContainer>
+                    {services.map((service, index) => (
+                        <ServiceCard
+                            key={index}
+                            {...service}
+                            onContactClick={handleContactClick}
+                        />
+                    ))}
+                </ServicesContainer>
+                <StandardPopup
+                    isOpen={isPopupOpen}
+                    onClose={() => setIsPopupOpen(false)}
+                    title="¿Cómo deseas seguir?"
+                >
+                    <Link to="/contact">
+                        <Button onClick={() => handleContact('schedule')}>Agendar cita</Button>
+                    </Link>
+                    <Button onClick={() => handleContact('whatsapp')}>
+                        Contacto Directo
+                    </Button>
+                </StandardPopup>
             </ServicesWrapper>
-            <DiscountPopup
-                isOpen={isDiscountPopupOpen}
-                onClose={() => setIsDiscountPopupOpen(false)}
-            />
-            <ContactPopup
-                isOpen={isContactPopupOpen}
-                onClose={() => setIsContactPopupOpen(false)}
-                onContact={handleContact}
-            />
-        </>
+        </PageContainer>
     );
 }
 

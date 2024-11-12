@@ -1,29 +1,31 @@
-import React, { Suspense, lazy, useState } from 'react';
+import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
-import { AnimatePresence } from 'framer-motion';
-import GlobalStyles from './styles/GlobalStyles';
-import Header from './components/Header';
-import Footer from './components/Footer';
-import LoadingSpinner from './components/LoadingSpinner'; // Necesitarás crear este componente
+import Layout from './components/Layout.js';
+import LoadingSpinner from './components/LoadingSpinner.js';
+import PageTransition from './components/PageTransition.js';
+import GlobalStyles from './styles/GlobalStyles.js';
+import styled from 'styled-components';
 
+// Lazy loading para las páginas
+const Home = lazy(() => import('./pages/Home.js'));
+const Services = lazy(() => import('./pages/Services.js'));
+const Portfolio = lazy(() => import('./pages/Portfolio.js'));
+const Blog = lazy(() => import('./pages/Blog.js'));
+const Contact = lazy(() => import('./pages/Contact.js'));
+const UnderConstruction = lazy(() => import('./components/UnderConstruction.js'));
 
-
-// importacion de pages
-import Home from './pages/Home';
-import Services from './pages/Services';
-import Portfolio from './pages/Portfolio';
-import Blog from './pages/Blog';
-import Contact from './pages/Contact';
-
-const theme = {
+export const theme = {
     colors: {
-        primary: '#FFD700', // Amarillo dorado (sin cambios)
-        secondary: '#FFA500', // Naranja (sin cambios)
-        background: '#000000', // Negro (sin cambios)
-        text: '#FFFFFF', // Blanco puro para mejor contraste
-        accent: '#00FFFF', // Cyan (sin cambios)
-        buttonText: '#000000', // Negro para texto en botones
+        primary: '#FFD700',
+        secondary: '#FFA500',
+        background: '#000000',
+        text: '#FFFFFF',
+        accent: '#00FFFF',
+        buttonText: '#000000',
+        primaryBackground: '#333333',
+        secondaryBackground: '#a5aa9a',
+        footerBackground: '#000000',
     },
     fonts: {
         main: "'Orbitron', sans-serif",
@@ -34,56 +36,52 @@ const theme = {
         gradient: 'linear-gradient(45deg, #FFD700, #00FFFF)',
     }
 };
-const pageVariants = {
-    initial: { opacity: 0, x: "-100vw" },
-    in: { opacity: 1, x: 0 },
-    out: { opacity: 0, x: "100vw" }
-};
 
-const pageTransition = {
-    type: "tween",
-    ease: "anticipate",
-    duration: 0.5
-};
+const AppWrapper = styled.div`
+  position: relative;
+  min-height: 100vh;
+  background-color: ${props => props.theme.colors.background};
+`;
 
-function AnimatedRoutes() {
+const AppContent = () => {
     const location = useLocation();
+    const isHome = location.pathname === '/';
 
     return (
-        <AnimatePresence mode="wait">
-            <Suspense fallback={<LoadingSpinner />}>
-                <Routes location={location} key={location.pathname}>
+        <Layout hideFooter={isHome}>
+            <PageTransition>
+                <Routes>
                     <Route path="/" element={<Home />} />
+                    <Route path="/blog" element={<UnderConstruction pageName="Blog" />} />
                     <Route path="/services" element={<Services />} />
                     <Route path="/portfolio" element={<Portfolio />} />
-                    <Route path="/blog" element={<Blog />} />
                     <Route path="/contact" element={<Contact />} />
+                    <Route path="/about-us" element={<UnderConstruction pageName="Sobre Nosotros" />} />
+                    <Route path="/faq" element={<UnderConstruction pageName="Preguntas Frecuentes" />} />
                 </Routes>
-            </Suspense>
-        </AnimatePresence>
+            </PageTransition>
+        </Layout>
     );
-}
+};
 
 function App() {
-    const [isExploring, setIsExploring] = useState(false);
-
     return (
         <ThemeProvider theme={theme}>
-            <GlobalStyles />
             <Router>
-                <div className="App">
-                    {!isExploring && <Header />}
-                    <main>
+                <GlobalStyles />
+                <Layout>
+                    <Suspense fallback={<LoadingSpinner />}>
                         <Routes>
-                            <Route path="/" element={<Home setIsExploring={setIsExploring} />} />
+                            <Route path="/" element={<Home />} />
+                            <Route path="/blog" element={<UnderConstruction pageName="Blog" />} />
                             <Route path="/services" element={<Services />} />
                             <Route path="/portfolio" element={<Portfolio />} />
-                            <Route path="/blog" element={<Blog />} />
                             <Route path="/contact" element={<Contact />} />
+                            <Route path="/about-us" element={<UnderConstruction pageName="Sobre Nosotros" />} />
+                            <Route path="/faq" element={<UnderConstruction pageName="Preguntas Frecuentes" />} />
                         </Routes>
-                    </main>
-                    {!isExploring && <Footer />}
-                </div>
+                    </Suspense>
+                </Layout>
             </Router>
         </ThemeProvider>
     );

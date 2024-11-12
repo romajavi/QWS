@@ -1,108 +1,50 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { keyframes } from 'styled-components';
-import { motion, AnimatePresence } from 'framer-motion';
-import SpaceBackground from '../components/SpaceBackground';
-import PageAnimation from '../components/PageAnimation';
+import { motion } from 'framer-motion';
+import { ReactTyped } from 'react-typed';
+import EntanglementBackground from '../components/EntanglementBackground.js';
+import AnimatedSubtitle from '../components/AnimatedSubtitle.js';
 
 const HomeWrapper = styled(motion.div)`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 120px);
+  padding: 2rem 20px;
+  box-sizing: border-box;
   position: relative;
   z-index: 1;
+`;
+
+const ContentWrapper = styled(motion.div)`
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  min-height: 100vh;
   text-align: center;
-  padding: 2rem;
-  @media (max-width: 768px) {
-    padding: 1rem;
-  }
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  gap: 3.5rem;
 `;
 
-
-const blinkingEffect = keyframes`
-  0% { opacity: 1; }
-  50% { opacity: 0.5; }
-  100% { opacity: 1; }
-`;
-
-const Title = styled(motion.h1)`
-  font-size: 3.5rem;
-  color: ${props => props.theme.colors.primary};
+const Title = styled.h1`
+  font-size: 4rem;
+  margin-top: 2rem;
   margin-bottom: 2rem;
-  text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+  
   @media (max-width: 768px) {
-    font-size: 2.5rem;
+    font-size: 3rem;
   }
-`;
-
-const BlinkingTitle = styled(Title)`
-  animation: ${blinkingEffect} 2s linear infinite;
-`;
-
-const Subtitle = styled(motion.p)`
-  font-size: 1.4rem;
-  color: ${props => props.theme.colors.text};
-  max-width: 700px;
-  margin-bottom: 3rem;
-  line-height: 1.6;
 `;
 
 const CTAButton = styled(motion.button)`
-  font-family: ${props => props.theme.fonts.main};
-  font-size: 1rem;
-  padding: 0.8rem 1.5rem;
-  background: ${props => props.theme.effects.gradient};
-  color: ${props => props.theme.colors.background};
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  transition: all 0.3s ease;
+  font-size: 1.2rem;
+  padding: 1rem 2rem;
+  margin-top: 2rem;
 `;
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      delay: 0.3,
-      when: "beforeChildren",
-      staggerChildren: 0.2
-    }
-  },
-  exit: { opacity: 0, transition: { duration: 0.5 } }
-};
-
-const itemVariants = {
-  hidden: { y: 20, opacity: 0 },
-  visible: {
-    y: 0,
-    opacity: 1,
-    transition: {
-      type: "spring",
-      stiffness: 300,
-      damping: 24
-    }
-  }
-};
-
-const pageVariants = {
-  initial: { opacity: 0, x: "-100vw" },
-  in: { opacity: 1, x: 0 },
-  out: { opacity: 0, x: "100vw" }
-};
-
-const pageTransition = {
-  type: "tween",
-  ease: "anticipate",
-  duration: 0.5
-};
-
-
 
 const Home = () => {
   const [isAccelerating, setIsAccelerating] = useState(false);
@@ -112,37 +54,33 @@ const Home = () => {
     setIsAccelerating(true);
     setTimeout(() => {
       navigate('/services');
-    }, 2000);
+    }, 1000);
   };
 
   return (
     <>
-      <SpaceBackground isAccelerating={isAccelerating} />
-      <AnimatePresence>
-        {!isAccelerating && (
-          <HomeWrapper
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
+      <EntanglementBackground />
+      <HomeWrapper>
+        <ContentWrapper>
+          <Title>
+            <ReactTyped
+              strings={['<span style="color: #a5aa9a;">Axion</span><span style="color: #00FFFF;">Dev</span>']}
+              typeSpeed={100}
+              showCursor={true}
+              cursorChar="|"
+              html={true}
+            />
+          </Title>
+          <AnimatedSubtitle />
+          <CTAButton
+            onClick={handleExploreClick}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
-            <Title variants={itemVariants}>
-              Quantum Web Services
-            </Title>
-            <Subtitle variants={itemVariants}>
-              Especialista en Programción Web
-            </Subtitle>
-            <CTAButton
-              variants={itemVariants}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={handleExploreClick}
-            >
-              Explora Nuestros Servicios
-            </CTAButton>
-          </HomeWrapper>
-        )}
-      </AnimatePresence>
+            Descubre más
+          </CTAButton>
+        </ContentWrapper>
+      </HomeWrapper>
     </>
   );
 };

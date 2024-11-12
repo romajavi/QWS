@@ -1,20 +1,64 @@
 import React from 'react';
-import PageAnimation from '../components/PageAnimation';
+import styled from 'styled-components';
+import BlogPost from '../components/BlogPost.js';
 
-function Blog() {
+const BlogContainer = styled.div`
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+`;
+
+const BlogTitle = styled.h1`
+  color: ${props => props.theme.colors.secondaryBackground};
+  margin-bottom: 2rem;
+  text-align: center;
+`;
+
+const BlogGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  width: 100%;
+`;
+
+const Blog = () => {
     return (
-        <div className="blog">
-            <h1>Blog</h1>
-            <article>
-                <h2>Título del Post 1</h2>
-                <p>Contenido del post...</p>
-            </article>
-            <article>
-                <h2>Título del Post 2</h2>
-                <p>Contenido del post...</p>
-            </article>
-        </div>
+        <BlogContainer>
+            <BlogTitle>Blog</BlogTitle>
+            <BlogGrid>
+                <BlogPost
+                    title="Título del Post 1"
+                    date="22 de noviembre, 2024"
+                    excerpt="Lorem ipsum dolor sit amet..."
+                />
+                <BlogPost
+                    title="Título del Post 2"
+                    date="22 de noviembre, 2024"
+                    excerpt="Lorem ipsum dolor sit amet..."
+                />                <BlogPost
+                    title="Título del Post 1"
+                    date="22 de noviembre, 2024"
+                    excerpt="Lorem ipsum dolor sit amet..."
+                />
+                <BlogPost
+                    title="Título del Post 2"
+                    date="22 de noviembre, 2024"
+                    excerpt="Lorem ipsum dolor sit amet..."
+                />                <BlogPost
+                    title="Título del Post 1"
+                    date="22 de noviembre, 2024"
+                    excerpt="Lorem ipsum dolor sit amet..."
+                />
+                <BlogPost
+                    title="Título del Post 2"
+                    date="22 de noviembre, 2024"
+                    excerpt="Lorem ipsum dolor sit amet..."
+                />
+                {/* Más BlogPosts aquí */}
+            </BlogGrid>
+        </BlogContainer>
     );
-}
+};
 
-export default PageAnimation(Blog);
+export default Blog;
