@@ -1,6 +1,6 @@
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Facebook, Twitter, Instagram, Linkedin, Clock, Mail, Phone, MapPin, ExternalLink } from 'lucide-react';
 
 const gradientAnimation = keyframes`
@@ -118,8 +118,15 @@ const Copyright = styled.div`
 `;
 
 const Footer = () => {
+  const navigate = useNavigate();
+  
   const handleWhatsAppClick = () => {
     window.open('https://wa.me/5491168805604', '_blank');
+  };
+
+  const handleFAQClick = (e) => {
+    e.preventDefault();
+    navigate('/services#faq');
   };
 
   return (
@@ -150,7 +157,7 @@ const Footer = () => {
               <ExternalLink size={16} />
               Blog
             </NavLink>
-            <NavLink to="/faq">
+            <NavLink to="#" onClick={handleFAQClick}>
               <ExternalLink size={16} />
               Preguntas Frecuentes
             </NavLink>

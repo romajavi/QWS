@@ -3,12 +3,13 @@ import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const PopupOverlay = styled(motion.div)`
-  position: absolute;
+  position: fixed;
+  top: 0;
   left: 0;
   right: 0;
-  top: ${props => props.scrollY}px;
+  bottom: 0;
   width: 100%;
-  height: 100%;
+  height: 100vh;
   background: rgba(0, 0, 0, 0.8);
   display: flex;
   justify-content: center;
@@ -42,7 +43,6 @@ const CloseButton = styled.button`
   padding: 0.5rem;
   line-height: 1;
   z-index: 1;
-  
   &:hover {
     color: ${props => props.theme.colors.primary};
   }
@@ -53,18 +53,14 @@ const PopupTitle = styled.h2`
   margin-bottom: 1.5rem;
   font-size: 1.5rem;
   text-shadow: 0 0 1px rgba(0, 255, 255, 0.3);
-
   @media (max-width: 768px) {
     font-size: 1.3rem;
   }
 `;
 
 const StandardPopup = ({ isOpen, onClose, title, children }) => {
-  const [scrollY, setScrollY] = useState(0);
-
   useEffect(() => {
     if (isOpen) {
-      setScrollY(window.scrollY);
       document.body.style.overflow = 'hidden';
     }
     return () => {
@@ -81,7 +77,6 @@ const StandardPopup = ({ isOpen, onClose, title, children }) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        scrollY={scrollY}
       >
         <PopupContainer
           onClick={e => e.stopPropagation()}

@@ -16,7 +16,7 @@ const ContentWrapper = styled.main`
   flex: 1;
   width: 100%;
   min-height: ${props => props.isHome ? '100vh' : 'calc(100vh - 120px)'};
-  padding-top: 100px;
+  padding-top: 100px; 
   padding-bottom: ${props => props.showFooter ? '2rem' : '0'};
   position: relative;
   z-index: 1;

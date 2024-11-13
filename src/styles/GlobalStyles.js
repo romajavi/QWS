@@ -5,6 +5,18 @@ const shineAnimation = keyframes`
   100% { background-position: -200% center; }
 `;
 
+const gradientAnimation = keyframes`
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+`;
+
+const buttonAnimation = keyframes`
+  0% { transform: scale(1); box-shadow: 0 0 0 rgba(0, 255, 255, 0); }
+  50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(0, 255, 255, 0.3); }
+  100% { transform: scale(1); box-shadow: 0 0 0 rgba(0, 255, 255, 0); }
+`;
+
 export const pageContainerStyle = css`
   display: flex;
   flex-direction: column;
@@ -13,6 +25,70 @@ export const pageContainerStyle = css`
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 2rem;
+`;
+
+export const StyledButton = css`
+  background: linear-gradient(45deg, 
+    ${props => props.theme.colors.primary}, 
+    ${props => props.theme.colors.accent}
+  );
+  color: ${props => props.theme.colors.buttonText};
+  border: none;
+  border-radius: 8px;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(90deg, 
+      ${props => props.theme.colors.accent},
+      ${props => props.theme.colors.primary},
+      ${props => props.theme.colors.accent}
+    );
+    background-size: 200% 200%;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  &:hover::before {
+    opacity: 1;
+    animation: ${gradientAnimation} 3s linear infinite;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 255, 255, 0.3);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &.primary {
+    background: ${props => props.theme.colors.primary};
+  }
+
+  &.secondary {
+    background: ${props => props.theme.colors.accent};
+  }
+
+  &.animated {
+    animation: ${buttonAnimation} 2s infinite ease-in-out;
+  }
 `;
 
 const GlobalStyles = createGlobalStyle`
@@ -41,51 +117,11 @@ const GlobalStyles = createGlobalStyle`
   }
 
   .main-container {
-  flex: 1;
-}
+    flex: 1;
+  }
 
   button {
-    background-color: ${props => props.theme.colors.primary};
-    color: ${props => props.theme.colors.buttonText};
-    border: none;
-    border-radius: 5px;
-    padding: 0.8rem 1.5rem;
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-    z-index: 1;
-
-    &::before {
-      content: '';
-      position: absolute;
-      top: -2px;
-      left: -2px;
-      right: -2px;
-      bottom: -2px;
-      background: linear-gradient(90deg, #00FFFF, #FFD700, #00FFFF);
-      background-size: 400% 400%;
-      z-index: -1;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    &:hover::before {
-      opacity: 1;
-      animation: ${shineAnimation} 3s linear infinite;
-    }
-
-    &:hover {
-      color: ${props => props.theme.colors.buttonText};
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(0, 255, 255, 0.3);
-    }
-
-    &:active {
-      transform: translateY(0);
-    }
+    ${StyledButton}
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -105,7 +141,6 @@ const GlobalStyles = createGlobalStyle`
     }
   }
 
-  /* Responsive design */
   @media (max-width: 768px) {
     body {
       font-size: 14px;

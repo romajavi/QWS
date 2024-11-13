@@ -26,6 +26,7 @@ export const theme = {
         primaryBackground: '#333333',
         secondaryBackground: '#a5aa9a',
         footerBackground: '#000000',
+        cardBackground: 'rgba(51, 51, 51, 0.95)', // Color cards
     },
     fonts: {
         main: "'Orbitron', sans-serif",

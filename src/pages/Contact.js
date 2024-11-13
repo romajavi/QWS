@@ -50,7 +50,10 @@ const TextArea = styled.textarea`
 `;
 
 const Select = styled.select`
-  width: 100%;
+  width: fit-content; // Ajustar al contenido
+  min-width: 120px; // Ancho mínimo
+  margin: 0 auto; // Centrar
+  display: block;
   padding: 0.8rem;
   background: rgba(30, 30, 30, 0.7);
   border: 1px solid ${props => props.theme.colors.primary}40;
@@ -83,12 +86,7 @@ const FormContainer = styled.div`
   width: 90%;
   max-width: 1200px;
   margin: 2rem auto;
-  background: linear-gradient(
-    45deg,
-    rgba(40, 40, 40, 0.95),
-    rgba(50, 50, 50, 0.95),
-    rgba(45, 45, 45, 0.95)
-  );
+  background: ${props => props.theme.colors.cardBackground};
   backdrop-filter: blur(10px);
   border-radius: 20px;
   padding: 2rem;
@@ -116,6 +114,9 @@ const FormGrid = styled.div`
 `;
 
 const Section = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.1em; // Espaciado uniforme
   width: 100%;
   padding: 1rem;
   
@@ -172,7 +173,8 @@ const PreferenceGroup = styled.div`
   background: rgba(30, 30, 30, 0.5);
   padding: 1.2rem;
   border-radius: 8px;
-  margin-bottom: 1.2rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
   border: 1px solid rgba(0, 255, 255, 0.1);
 `;
 
@@ -612,7 +614,6 @@ const Contact = () => {
                   onSelectDate={handleDateSelect}
                   selectedDate={selectedDate}
                 />
-
                 <PreferenceGroup>
                   <CheckboxTitle>Horario de Cita</CheckboxTitle>
                   <Select

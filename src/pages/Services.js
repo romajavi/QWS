@@ -4,7 +4,7 @@ import ServiceCard from '../components/ServiceCard.js';
 import StandardPopup from '../components/StandardPopup.js';
 import PageAnimation from '../components/PageAnimation.js';
 import PageContainer from '../components/PageContainer.js';
-import pageContainerStyle from '../styles/GlobalStyles.js';
+import FAQSection from '../components/FAQSection.js';
 import { ReactTyped } from 'react-typed';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -240,6 +240,7 @@ function Services() {
                         Contacto Directo
                     </Button>
                 </StandardPopup>
+                <FAQSection />
             </ServicesWrapper>
         </PageContainer>
     );

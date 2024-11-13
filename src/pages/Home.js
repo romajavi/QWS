@@ -7,6 +7,7 @@ import EntanglementBackground from '../components/EntanglementBackground.js';
 import AnimatedSubtitle from '../components/AnimatedSubtitle.js';
 
 const HomeWrapper = styled(motion.div)`
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -14,7 +15,6 @@ const HomeWrapper = styled(motion.div)`
   min-height: calc(100vh - 120px);
   padding: 2rem 20px;
   box-sizing: border-box;
-  position: relative;
   z-index: 1;
 `;
 
@@ -41,9 +41,30 @@ const Title = styled.h1`
 `;
 
 const CTAButton = styled(motion.button)`
+  ${props => props.theme.StyledButton}
   font-size: 1.2rem;
-  padding: 1rem 2rem;
+  padding: 1.2rem 2.5rem;
   margin-top: 2rem;
+  animation: ${props => props.theme.buttonAnimation} 2s infinite ease-in-out;
+  background: linear-gradient(45deg,
+    ${props => props.theme.colors.primary},
+    ${props => props.theme.colors.accent}
+  );
+  border-radius: 12px;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 255, 255, 0.4);
+  }
+`;
+
+const BackgroundWrapper = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
 `;
 
 const Home = () => {
@@ -59,7 +80,9 @@ const Home = () => {
 
   return (
     <>
-      <EntanglementBackground />
+      <BackgroundWrapper>
+        <EntanglementBackground />
+      </BackgroundWrapper>
       <HomeWrapper>
         <ContentWrapper>
           <Title>
@@ -76,6 +99,7 @@ const Home = () => {
             onClick={handleExploreClick}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
+            className="animated"
           >
             Descubre más
           </CTAButton>

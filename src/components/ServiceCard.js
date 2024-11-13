@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 
 const Card = styled(motion.div)`
-  background: ${props => props.theme.colors.primaryBackground};
+  background: ${props => props.theme.colors.cardBackground};
   border: 1px solid ${props => props.theme.colors.secondaryBackground};
   border-radius: 15px;
   padding: 1.5rem 1.2rem;

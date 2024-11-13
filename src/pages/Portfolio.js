@@ -23,14 +23,18 @@ const Title = styled.h1`
 `;
 
 const ProjectReelContainer = styled.div`
-  width: 100%;
+  width: 100vw; // Cambiado a viewport width
   overflow: hidden;
   padding: 2rem 0;
+  margin-left: calc(-50vw + 50%); // Esto centra el contenedor
+  margin-right: calc(-50vw + 50%);
 `;
 
 const ProjectReel = styled(motion.div)`
   display: flex;
   width: fit-content;
+  padding: 0; // Eliminar padding
+  margin: 0; // Eliminar margin
 `;
 
 const ProjectCard = styled(motion.div)`
@@ -40,7 +44,7 @@ const ProjectCard = styled(motion.div)`
   border-radius: 15px;
   overflow: hidden;
   position: relative;
-  background: rgba(255, 255, 255, 0.1);
+  background: ${props => props.theme.colors.cardBackground};
   backdrop-filter: blur(10px);
   border: 1px solid ${props => props.theme.colors.secondaryBackground};
   box-shadow: 0 8px 32px rgba(0, 255, 255, 0.1);
@@ -110,9 +114,8 @@ function Portfolio() {
     const moveReel = async () => {
       if (reelRef.current) {
         const reelWidth = reelRef.current.scrollWidth;
-        const moveDistance = reelWidth / 2;
         await controls.start({
-          x: [-moveDistance, 0],
+          x: [-reelWidth/2, 0],
           transition: {
             repeat: Infinity,
             repeatType: "loop",
@@ -126,6 +129,7 @@ function Portfolio() {
       moveReel();
     }
   }, [controls, projects]);
+
 
   const handleClick = (link) => {
     window.open(link, '_blank');

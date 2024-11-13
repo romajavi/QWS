@@ -17,82 +17,124 @@ const Canvas = styled.canvas`
 `;
 
 const EntanglementBackground = () => {
-    const canvasRef = useRef(null);
+  const canvasRef = useRef(null);
+  const animationFrameId = useRef(null);
+  const particles = useRef([]);
 
-    useEffect(() => {
-        const canvas = canvasRef.current;
-        const ctx = canvas.getContext('2d');
-        let animationFrameId;
+  const initParticles = (width, height) => {
+    const particleCount = 50;
+    particles.current = [];
+    
+    for (let i = 0; i < particleCount; i++) {
+      particles.current.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        radius: Math.random() * 1.5 + 0.5,
+        vx: (Math.random() - 0.5) * 0.5,
+        vy: (Math.random() - 0.5) * 0.5,
+      });
+    }
+  };
 
-        const resizeCanvas = () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        };
+  const resizeCanvas = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
 
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
+    const dpr = window.devicePixelRatio || 1;
+    const displayWidth = window.innerWidth;
+    const displayHeight = window.innerHeight;
 
-        const particles = [];
-        const particleCount = 50;
-        const maxDistance = 150;
+    canvas.width = displayWidth * dpr;
+    canvas.height = displayHeight * dpr;
+    canvas.style.width = `${displayWidth}px`;
+    canvas.style.height = `${displayHeight}px`;
 
-        for (let i = 0; i < particleCount; i++) {
-            particles.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                radius: Math.random() * 1.5 + 0.5,
-                vx: (Math.random() - 0.5) * 0.5,
-                vy: (Math.random() - 0.5) * 0.5,
-            });
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    ctx.scale(dpr, dpr);
+    initParticles(displayWidth, displayHeight);
+  };
+
+  const animate = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const maxDistance = 150;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    particles.current.forEach(particle => {
+      particle.x += particle.vx;
+      particle.y += particle.vy;
+
+      if (particle.x < 0 || particle.x > window.innerWidth) particle.vx *= -1;
+      if (particle.y < 0 || particle.y > window.innerHeight) particle.vy *= -1;
+
+      ctx.beginPath();
+      ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fill();
+
+      particles.current.forEach(otherParticle => {
+        const dx = particle.x - otherParticle.x;
+        const dy = particle.y - otherParticle.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < maxDistance) {
+          ctx.beginPath();
+          ctx.moveTo(particle.x, particle.y);
+          ctx.lineTo(otherParticle.x, otherParticle.y);
+          ctx.strokeStyle = `rgba(255, 255, 255, ${1 - distance / maxDistance})`;
+          ctx.lineWidth = 0.2;
+          ctx.stroke();
         }
+      });
+    });
 
-        const animate = () => {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+    animationFrameId.current = requestAnimationFrame(animate);
+  };
 
-            particles.forEach(particle => {
-                particle.x += particle.vx;
-                particle.y += particle.vy;
+  useEffect(() => {
+    let isComponentMounted = true;
 
-                if (particle.x < 0 || particle.x > canvas.width) particle.vx *= -1;
-                if (particle.y < 0 || particle.y > canvas.height) particle.vy *= -1;
+    const handleResize = () => {
+      if (!isComponentMounted) return;
 
-                ctx.beginPath();
-                ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
-                ctx.fillStyle = '#ffFFFF';
-                ctx.fill();
+      if (animationFrameId.current) {
+        cancelAnimationFrame(animationFrameId.current);
+      }
+      resizeCanvas();
+      animate();
+    };
 
-                particles.forEach(otherParticle => {
-                    const dx = particle.x - otherParticle.x;
-                    const dy = particle.y - otherParticle.y;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
-
-                    if (distance < maxDistance) {
-                        ctx.beginPath();
-                        ctx.moveTo(particle.x, particle.y);
-                        ctx.lineTo(otherParticle.x, otherParticle.y);
-                        ctx.strokeStyle = `rgba(255, 255, 255, ${1 - distance / maxDistance})`;
-                        ctx.lineWidth = 0.2;
-                        ctx.stroke();
-                    }
-                });
-            });
-
-            animationFrameId = requestAnimationFrame(animate);
-        };
-
+    // Pequeño retraso para asegurar que el canvas esté montado
+    setTimeout(() => {
+      if (isComponentMounted) {
+        resizeCanvas();
         animate();
+      }
+    }, 0);
 
-        return () => {
-            window.removeEventListener('resize', resizeCanvas);
-            cancelAnimationFrame(animationFrameId);
-        };
-    }, []);
+    window.addEventListener('resize', handleResize);
 
-    return (
-        <BackgroundWrapper>
-            <Canvas ref={canvasRef} />
-        </BackgroundWrapper>
-    );
+    return () => {
+      isComponentMounted = false;
+      if (animationFrameId.current) {
+        cancelAnimationFrame(animationFrameId.current);
+      }
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  return (
+    <BackgroundWrapper>
+      <Canvas ref={canvasRef} />
+    </BackgroundWrapper>
+  );
 };
 
 export default EntanglementBackground;
