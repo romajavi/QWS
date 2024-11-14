@@ -4,13 +4,16 @@ import { motion, useAnimation } from 'framer-motion';
 import { ReactTyped } from 'react-typed';
 import PageAnimation from '../components/PageAnimation.js';
 import PageContainer from '../components/PageContainer.js';
+import Button from '../components/Button.js';
 
 const PortfolioWrapper = styled.div`
-  ${({ theme }) => theme.pageContainerStyle}
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
   min-height: calc(100vh - 120px);
   justify-content: flex-start;
   padding-bottom: 5rem;
-  `;
+`;
 
 const Title = styled.h1`
   font-size: 2rem;
@@ -23,18 +26,18 @@ const Title = styled.h1`
 `;
 
 const ProjectReelContainer = styled.div`
-  width: 100vw; // Cambiado a viewport width
+  width: 100vw;
   overflow: hidden;
   padding: 2rem 0;
-  margin-left: calc(-50vw + 50%); // Esto centra el contenedor
+  margin-left: calc(-50vw + 50%);
   margin-right: calc(-50vw + 50%);
 `;
 
 const ProjectReel = styled(motion.div)`
   display: flex;
   width: fit-content;
-  padding: 0; // Eliminar padding
-  margin: 0; // Eliminar margin
+  padding: 0;
+  margin: 0;
 `;
 
 const ProjectCard = styled(motion.div)`
@@ -51,11 +54,8 @@ const ProjectCard = styled(motion.div)`
   transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
-
-  &:hover {
-    transform: translateY(10px);
-  }
 `;
+
 
 const ProjectImage = styled.img`
   width: 100%;
@@ -89,14 +89,14 @@ const ProjectDescription = styled.p`
   -webkit-box-orient: vertical;
 `;
 
-const CTAButton = styled.button`
-  ${({ theme }) => theme.button}
-  font-size: 0.9rem;
-  padding: 0.3rem 0.8rem;
-  width: fit-content;
-  align-self: center;
-  margin-top: 1rem;
+const PortfolioButton = styled(Button)`
+  width: 40%;
+  padding: auto;
+  margin-top: auto;
+  font-size: 0.7rem;
+  border-radius: 8px;
 `;
+
 
 function Portfolio() {
   const [projects, setProjects] = useState([]);
@@ -115,7 +115,7 @@ function Portfolio() {
       if (reelRef.current) {
         const reelWidth = reelRef.current.scrollWidth;
         await controls.start({
-          x: [-reelWidth/2, 0],
+          x: [-reelWidth / 2, 0],
           transition: {
             repeat: Infinity,
             repeatType: "loop",
@@ -129,7 +129,6 @@ function Portfolio() {
       moveReel();
     }
   }, [controls, projects]);
-
 
   const handleClick = (link) => {
     window.open(link, '_blank');
@@ -158,13 +157,12 @@ function Portfolio() {
                 <ProjectContent>
                   <ProjectName>{project.name}</ProjectName>
                   <ProjectDescription>{project.description}</ProjectDescription>
-                  <CTAButton
+                  <PortfolioButton
+                    variant="portfolio"
                     onClick={() => handleClick(project.link)}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
                   >
-                    Ir al sitio
-                  </CTAButton>
+                    IR AL SITIO
+                  </PortfolioButton>
                 </ProjectContent>
               </ProjectCard>
             ))}

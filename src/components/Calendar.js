@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
+import Button from './Button.js';
 
 const CalendarWrapper = styled.div`
   background: ${props => props.theme.colors.background};
@@ -9,38 +10,24 @@ const CalendarWrapper = styled.div`
   padding: 1rem;
   font-size: 0.8rem;
   width: 100%;
-  max-width: 300px; // Asegurar que no se haga demasiado grande
+  max-width: 300px;
   margin: 0 auto;
+  margin-bottom: 2rem; // Agregar margen inferior
   display: flex;
   flex-direction: column;
 `;
-
-
 
 const CalendarHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 1rem;
 `;
 
 const MonthYear = styled.h3`
   color: ${props => props.theme.colors.text};
   margin-bottom: 0.2rem;
   font-size: 0.9rem;
-`;
-
-const Button = styled(motion.button)`
-  background: ${props => props.theme.colors.primary};
-  color: ${props => props.theme.colors.background};
-  border: none;
-  padding: 0.08rem 0.5rem;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.8rem;
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
 `;
 
 const DaysGrid = styled.div`
@@ -89,6 +76,19 @@ const WeekdayHeader = styled.div`
   font-weight: bold;
   color: ${props => props.theme.colors.accent};
   font-size: 0.7rem;
+`;
+
+
+const CalendarNavButton = styled(Button)`
+  padding: 0.3rem 0.6rem;
+  min-width: auto;
+  font-size: 0.8rem;
+  background:  ${props => props.theme.colors.primary};
+  border: 1px solid ${props => props.theme.colors.accent}40;
+  
+  &:hover {
+    background: ${props => props.theme.colors.accent}10;
+  }
 `;
 
 const Calendar = ({ onSelectDate, minDate }) => {
@@ -158,10 +158,10 @@ const Calendar = ({ onSelectDate, minDate }) => {
             currentDate.getMonth(),
             day
         );
-        
+
         // Comprobar si es domingo (0 es domingo en JavaScript)
         const isDomingo = date.getDay() === 0;
-        
+
         // Retornar true si es domingo O si la fecha es anterior a la fecha mínima
         return isDomingo || date < minDate;
     };
@@ -206,23 +206,21 @@ const Calendar = ({ onSelectDate, minDate }) => {
     return (
         <CalendarWrapper>
             <CalendarHeader>
-                <Button
+                <CalendarNavButton
+                    variant="calendar"
                     onClick={handlePrevMonth}
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
                 >
                     &lt;
-                </Button>
+                </CalendarNavButton>
                 <MonthYear>
                     {`${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`}
                 </MonthYear>
-                <Button
+                <CalendarNavButton
+                    variant="calendar"
                     onClick={handleNextMonth}
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
                 >
                     &gt;
-                </Button>
+                </CalendarNavButton>
             </CalendarHeader>
             <DaysGrid>
                 {weekdays.map(day => (

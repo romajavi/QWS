@@ -6,7 +6,11 @@ import Calendar from '../components/Calendar.js';
 import StandardPopup from '../components/StandardPopup.js';
 import LoadingSpinner from '../components/LoadingSpinner.js';
 import PageContainer from '../components/PageContainer.js';
-import Footer from '../components/Footer.js';
+import Button from '../components/Button.js';
+import Captcha from '../components/Captcha.js';
+
+
+
 
 const ContactWrapper = styled.div`
   display: flex;
@@ -35,7 +39,7 @@ const TextArea = styled.textarea`
   padding: 0.8rem;
   margin-bottom: 1rem;
   background: rgba(30, 30, 30, 0.7);
-  border: 1px solid ${props => props.theme.colors.primary}40;
+  border: 1px solid ${props => props.theme.colors.secondaryBackground}40;
   border-radius: 8px;
   color: ${props => props.theme.colors.text};
   min-height: 100px;
@@ -56,7 +60,7 @@ const Select = styled.select`
   display: block;
   padding: 0.8rem;
   background: rgba(30, 30, 30, 0.7);
-  border: 1px solid ${props => props.theme.colors.primary}40;
+  border: 1px solid ${props => props.theme.colors.secondaryBackground}40;
   border-radius: 8px;
   color: ${props => props.theme.colors.text};
   cursor: pointer;
@@ -76,36 +80,29 @@ const Select = styled.select`
 `;
 
 
-const pulseGlow = keyframes`
-  0% { box-shadow: 0 0 5px rgba(0, 255, 255, 0.3); }
-  50% { box-shadow: 0 0 20px rgba(0, 255, 255, 0.5); }
-  100% { box-shadow: 0 0 5px rgba(0, 255, 255, 0.3); }
-`;
-
 const FormContainer = styled.div`
+
   width: 90%;
   max-width: 1200px;
   margin: 2rem auto;
   background: ${props => props.theme.colors.cardBackground};
   backdrop-filter: blur(10px);
   border-radius: 20px;
-  padding: 2rem;
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-  border: 1px solid rgba(255, 215, 0, 0.1);
+  padding: 2rem 2rem 7rem 2rem; // Aumentar padding inferior
   position: relative;
-  overflow: hidden;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  border: 1px solid ${props => props.hasError ? '#ff3333' : props.theme.colors.secondaryBackground}40;
 
   @media (max-width: 768px) {
-    width: 95%;
-    padding: 1.5rem;
-  }
+   padding: 2rem;
+ }
 `;
 
 const FormGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr 2px 1fr;
   gap: 2rem;
-  position: relative;
+  margin-bottom: 2rem;
 
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
@@ -147,46 +144,28 @@ const Section = styled.div`
 const Input = styled.input`
   width: 100%;
   padding: 0.8rem;
-  background: rgba(30, 30, 30, 0.7) !important;
-  border: 1px solid ${props => props.hasError ? '#ff3333' : props.theme.colors.primary}40;
+  margin-bottom: 1.5rem;
+  background: rgba(30, 30, 30, 0.7);
+  border: 1px solid ${props => props.hasError ? '#ff3333' : props.theme.colors.secondaryBackground}40;
   border-radius: 8px;
-  color: ${props => props.theme.colors.text} !important;
-  transition: all 0.3s ease;
-  margin-bottom: 1rem;
+  color: ${props => props.theme.colors.text};
 
   &:-webkit-autofill,
   &:-webkit-autofill:hover,
   &:-webkit-autofill:focus {
     -webkit-text-fill-color: ${props => props.theme.colors.text};
-    -webkit-box-shadow: 0 0 0 1000px ${props => props.theme.colors.background} inset !important;
+    -webkit-box-shadow: 0 0 0px 1000px rgba(30, 30, 30, 0.7) inset;
     transition: background-color 5000s ease-in-out 0s;
   }
-
-  &:focus {
-    outline: none;
-    border-color: ${props => props.theme.colors.accent};
-    box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
-  }
 `;
+
 
 const PreferenceGroup = styled.div`
   background: rgba(30, 30, 30, 0.5);
   padding: 1.2rem;
   border-radius: 8px;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-  border: 1px solid rgba(0, 255, 255, 0.1);
-`;
-
-const RadioGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-  width: 100%;
-  padding: 1rem;
-  background: ${props => props.error ? 'rgba(255, 51, 51, 0.1)' : 'rgba(40, 40, 40, 0.95)'};
-  border-radius: 10px;
-  border: 1px solid ${props => props.error ? '#ff3333' : 'rgba(0, 255, 255, 0.1)'};
+  margin-bottom: 1.5rem;
+  border: 1px solid ${props => props.hasError ? '#ff3333' : props.theme.colors.secondaryBackground}40;
 `;
 
 const RadioContainer = styled.div`
@@ -214,7 +193,7 @@ const RadioLabel = styled.label`
   padding: 0.8rem 1.2rem;
   background: rgba(30, 30, 30, 0.7);
   border-radius: 5px;
-  border: 1px solid ${props => props.error ? '#ff3333' : 'rgba(255, 215, 0, 0.1)'};
+  border: 1px solid ${props => props.hasError ? '#ff3333' : props.theme.colors.secondaryBackground}40;
   transition: all 0.3s ease;
 
   &:hover {
@@ -271,39 +250,13 @@ const Divider = styled.div`
 
 const ButtonGroup = styled.div`
   display: flex;
-  gap: 1rem;
-  justify-content: flex-end;
-  padding: 1rem 2rem;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  padding: 2rem;
+  margin-top: 2rem;
 `;
 
-const Button = styled.button`
-  padding: 0.8rem 2rem;
-  font-size: 0.9rem;
-  border: none;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s ease;
-
-  &.submit {
-    background: ${props => props.theme.colors.primary};
-    color: ${props => props.theme.colors.background};
-    
-    &:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
-    }
-  }
-
-  &.clear {
-    background: rgba(255, 255, 255, 0.1);
-    color: ${props => props.theme.colors.text};
-    
-    &:hover {
-      background: rgba(255, 255, 255, 0.2);
-    }
-  }
-`;
 
 const MessageText = styled.p`
   font-size: 1.1rem;
@@ -325,6 +278,47 @@ const PopupMessage = styled.div`
   padding: 1rem 0;
 `;
 
+const FormSection = styled.div`
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 1.5rem;
+  height: 100%;
+`;
+
+const TextAreaContainer = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+`;
+
+const CustomButtonGroup = styled.div`
+ position: absolute;
+ bottom: 2rem;
+ right: 2rem;
+ display: flex;
+ gap: 1rem;
+ 
+
+ @media (max-width: 768px) {
+   position: static;
+   justify-content: center;
+   margin-top: 2rem;
+ }
+`;
+
+const ClearButton = styled(Button)`
+  width: 150px;
+  height: 45px;
+  background: ${props => props.theme.colors.secondaryBackground};
+  &:hover {
+    background: ${props => props.theme.colors.secondaryBackground};
+  }
+`;
+
+const SubmitButton = styled(Button)`
+  width: 150px;
+  height: 45px;
+`;
 const Contact = () => {
   const [formData, setFormData] = useState({
     name: '',
@@ -351,17 +345,17 @@ const Contact = () => {
 
   const validateForm = () => {
     const newErrors = {};
-
     if (!formData.name) newErrors.name = true;
     if (!formData.email) newErrors.email = true;
     if (!formData.phone) newErrors.phone = true;
     if (!formData.contactPreference.length) newErrors.contactPreference = true;
     if (!formData.contactDays.length) newErrors.contactDays = true;
     if (!formData.contactTime.length) newErrors.contactTime = true;
-
+    if (!isCaptchaVerified) newErrors.captcha = true;
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -442,6 +436,10 @@ const Contact = () => {
       setTimeout(() => navigate('/'), 500);
     }
   };
+
+
+  const [isCaptchaVerified, setIsCaptchaVerified] = useState(false);
+
 
   return (
     <PageContainer>
@@ -598,12 +596,17 @@ const Contact = () => {
                   </RadioContainer>
                 </PreferenceGroup>
 
-                <TextArea
-                  name="observations"
-                  placeholder="Observaciones generales"
-                  value={formData.observations}
-                  onChange={(e) => setFormData({ ...formData, observations: e.target.value })}
-                />
+                <FormSection>
+                  <TextAreaContainer>
+                    <TextArea
+                      name="observations"
+                      placeholder="Observaciones generales"
+                      value={formData.observations}
+                      onChange={(e) => setFormData({ ...formData, observations: e.target.value })}
+                      style={{ flex: 1, minHeight: '150px' }}
+                    />
+                  </TextAreaContainer>
+                </FormSection>
               </Section>
 
               <Divider />
@@ -680,17 +683,25 @@ const Contact = () => {
                     </RadioLabel>
                   </RadioContainer>
                 </PreferenceGroup>
+                <Captcha onVerify={setIsCaptchaVerified} />
               </Section>
             </FormGrid>
 
-            <ButtonGroup>
-              <Button type="button" className="clear" onClick={handleReset}>
+
+            <CustomButtonGroup>
+              <ClearButton
+                variant="secondary"
+                onClick={handleReset}
+              >
                 Vaciar
-              </Button>
-              <Button type="submit" className="submit">
+              </ClearButton>
+              <SubmitButton
+                variant="primary"
+                type="submit"
+              >
                 Enviar
-              </Button>
-            </ButtonGroup>
+              </SubmitButton>
+            </CustomButtonGroup>
           </form>
         </FormContainer>
       </ContactWrapper>

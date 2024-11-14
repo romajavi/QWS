@@ -19,7 +19,7 @@ const FAQTitle = styled.h2`
   color: ${props => props.theme.colors.primary};
   text-align: center;
   margin-bottom: 3rem;
-  font-size: 2.5rem;
+  font-size: 2rem;
   text-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
   
   @media (max-width: 768px) {
@@ -179,6 +179,24 @@ const faqData = {
         {
             question: "¿Cómo funciona la política de soporte post-entrega?",
             answer: "Ofrecemos un período de soporte gratuito de 30 días después de la entrega para corregir posibles errores. Después de este período, recomendamos contratar un plan de mantenimiento para soporte continuo."
+        }
+    ],
+    Costos: [
+        {
+            question: "¿En qué moneda se reflejan los precios?",
+            answer: "Los precios de nuestros servicios están reflejados en dólares americanos. Sin embargo, puedes realizar el pago en pesos argentinos al tipo de cambio del día, según lo establezca tu banco o procesador de pagos."
+        },
+        {
+            question: "¿El costo del dominio y hosting están incluidos en el precio?",
+            answer: "No, los costos de dominio y hosting no están incluidos en el precio de nuestros servicios. Estos servicios son contratados por separado y renovados anualmente, de acuerdo con las tarifas del proveedor de hosting y dominio."
+        },
+        {
+            question: "¿El certificado SSL está incluido en el precio?",
+            answer: "El certificado SSL no está incluido en el precio estándar. Si deseas añadir SSL para proteger tu sitio, que en algunos proveedores de servicio es obligatorio, este se contrata por separado y suele renovarse anualmente. Un SSL es importante para la seguridad y confianza de los usuarios en tu página web."
+        },
+        {
+            question: "¿Existen otros costos adicionales que deba considerar?",
+            answer: "Es posible que algunos servicios adicionales, como revisiones extra o mantenimiento posterior al período incluido, impliquen costos adicionales. Cualquier gasto adicional será comunicado antes de proceder para que pueda ser aprobado."
         }
     ]
 };

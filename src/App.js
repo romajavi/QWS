@@ -17,16 +17,18 @@ const UnderConstruction = lazy(() => import('./components/UnderConstruction.js')
 
 export const theme = {
     colors: {
-        primary: '#FFD700',
-        secondary: '#FFA500',
-        background: '#000000',
-        text: '#FFFFFF',
-        accent: '#00FFFF',
-        buttonText: '#000000',
-        primaryBackground: '#333333',
-        secondaryBackground: '#a5aa9a',
-        footerBackground: '#000000',
-        cardBackground: 'rgba(51, 51, 51, 0.95)', // Color cards
+        primary: '#FFD700', // Dorado: un tono vibrante que destaca como color principal.
+        secondary: '#FFA500', // Naranja: un color cálido para destacar elementos secundarios.
+        background: '#000000', // Negro: usado para el fondo general, proporciona un contraste fuerte.
+        text: '#FFFFFF', // Blanco: ideal para el texto, asegura una buena legibilidad sobre fondos oscuros.
+        accent: '#00FFFF', // Cian: un color fresco que actúa como acento en detalles importantes.
+        buttonText: '#000000', // Negro: usado en el texto de botones para facilitar la lectura.
+        primaryBackground: '#333333', // Gris oscuro: adecuado para fondos alternativos que aún mantienen contraste.
+        secondaryBackground: '#a5aa9a', // Gris claro con tono verde: un fondo suave para áreas secundarias.
+        footerBackground: '#000000', // Negro: usado en el footer para coherencia con el fondo principal.
+        cardBackground: 'rgba(51, 51, 51, 0.95)', // Gris oscuro translúcido: un fondo para las tarjetas con opacidad.
+        cardBackground: 'rgba(26, 26, 26, 0.95)', // Fondo más oscuro para las cards
+
     },
     fonts: {
         main: "'Orbitron', sans-serif",

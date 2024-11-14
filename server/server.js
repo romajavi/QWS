@@ -14,7 +14,12 @@ const __dirname = path.dirname(__filename); //  es el directorio donde está el 
 const app = express(); //  instancia de la aplicación Express, que es como el "objeto" que representa el servidor.
 const PORT = process.env.PORT || 5000; // define en qué puerto va a correr el servidor. 
 
-app.use(cors()); // Habilita CORS para permitir que otros dominios accedan a tu servidor
+app.use(cors({// Habilita CORS para permitir que otros dominios accedan a tu servidor
+
+    origin: ['http://localhost:3000', 'http://10.0.1.27:3000'],
+    credentials: true
+}));
+
 app.use(express.json()); // Permite que el servidor acepte y entienda JSON en las solicitudes HTTP
 app.use(express.static(path.join(__dirname, '../public'))); //  Sirve archivos estáticos (como imágenes o HTML) desde el directorio
 
@@ -46,7 +51,7 @@ app.post('/api/contact', emailHandler); //Esta ruta responde a solicitudes POST 
 
 // Maneja cualquier solicitud que no coincida con las rutas anteriores
 app.get('*', (req, res) => {  //Este endpoint maneja cualquier otra ruta que no coincida con las anteriores. Si alguien intenta acceder a una ruta no definida, el servidor siempre enviará el archivo index.html
-    res.sendFile(path.join(__dirname, '../public/index.html')); 
+    res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
 app.listen(PORT, () => {

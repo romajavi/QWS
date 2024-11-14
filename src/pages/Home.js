@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { ReactTyped } from 'react-typed';
 import EntanglementBackground from '../components/EntanglementBackground.js';
 import AnimatedSubtitle from '../components/AnimatedSubtitle.js';
+import Button from '../components/Button.js';
 
 const HomeWrapper = styled(motion.div)`
   position: relative;
@@ -33,30 +34,13 @@ const ContentWrapper = styled(motion.div)`
 const Title = styled.h1`
   font-size: 4rem;
   margin-top: 2rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   
   @media (max-width: 768px) {
     font-size: 3rem;
   }
 `;
 
-const CTAButton = styled(motion.button)`
-  ${props => props.theme.StyledButton}
-  font-size: 1.2rem;
-  padding: 1.2rem 2.5rem;
-  margin-top: 2rem;
-  animation: ${props => props.theme.buttonAnimation} 2s infinite ease-in-out;
-  background: linear-gradient(45deg,
-    ${props => props.theme.colors.primary},
-    ${props => props.theme.colors.accent}
-  );
-  border-radius: 12px;
-
-  &:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(0, 255, 255, 0.4);
-  }
-`;
 
 const BackgroundWrapper = styled.div`
   position: fixed;
@@ -95,14 +79,13 @@ const Home = () => {
             />
           </Title>
           <AnimatedSubtitle />
-          <CTAButton
+          <Button
+            animated
             onClick={handleExploreClick}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="animated"
+            className="home-button" 
           >
             Descubre más
-          </CTAButton>
+          </Button>
         </ContentWrapper>
       </HomeWrapper>
     </>

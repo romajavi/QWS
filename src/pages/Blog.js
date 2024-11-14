@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import BlogPost from '../components/BlogPost.js';
+import Button from '../components/Button.js';
 
 const BlogContainer = styled.div`
   width: 100%;

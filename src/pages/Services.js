@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import ServiceCard from '../components/ServiceCard.js';
 import StandardPopup from '../components/StandardPopup.js';
@@ -7,7 +7,8 @@ import PageContainer from '../components/PageContainer.js';
 import FAQSection from '../components/FAQSection.js';
 import { ReactTyped } from 'react-typed';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, useAnimation } from 'framer-motion';
+import Button from '../components/Button.js';
 
 
 
@@ -38,48 +39,12 @@ const Title = styled.h1`
   }
 `;
 
-const Button = styled(motion.button)`
-  background-color: ${props => props.theme.colors.primary};
-  color: ${props => props.theme.colors.background};
-  border: none;
-  border-radius: 5px;
-  padding: 0.6rem 1.3rem;
-  font-size: 0.8rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin: 0.5rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-
-  &:hover {
-    background-color: ${props => props.theme.colors.accent};
-    transform: translateY(-2px);
-    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
-  }
-
-  &:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-
-  &:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(0, 255, 255, 0.5);
-  }
-
-  @media (max-width: 768px) {
-    font-size: 0.9rem;
-    padding: 0.7rem 1.2rem;
-  }
-`;
 
 const services = [
     {
         name: "Landing Pages y Sitios Web",
         image: "/assets/web-development.jpg",
-        price: "Desde $299",
+        price: "Desde u$d 149",
         features: [
             {
                 name: "Diseño Responsivo",
@@ -116,7 +81,7 @@ const services = [
     {
         name: "Mantenimiento WordPress",
         image: "/assets/wordpress-maintenance.jpg",
-        price: "Desde $99/mes",
+        price: "Desde u$d 49/mes",
         features: [
             {
                 name: "Actualizaciones de Seguridad",
@@ -153,7 +118,7 @@ const services = [
     {
         name: "Optimización Web Básica",
         image: "/assets/optimization.jpg",
-        price: "Desde $199",
+        price: "Desde u$d 99",
         features: [
             {
                 name: "Optimización de Imágenes",
@@ -234,9 +199,17 @@ function Services() {
                     title="¿Cómo deseas seguir?"
                 >
                     <Link to="/contact">
-                        <Button onClick={() => handleContact('schedule')}>Agendar cita</Button>
+                        <Button
+                            variant="primary"
+                            onClick={() => handleContact('schedule')}
+                        >
+                            Agendar cita
+                        </Button>
                     </Link>
-                    <Button onClick={() => handleContact('whatsapp')}>
+                    <Button
+                        variant="primary"
+                        onClick={() => handleContact('whatsapp')}
+                    >
                         Contacto Directo
                     </Button>
                 </StandardPopup>

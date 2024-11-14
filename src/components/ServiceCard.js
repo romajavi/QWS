@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import Button from './Button.js';
 
 const Card = styled(motion.div)`
   background: ${props => props.theme.colors.cardBackground};
@@ -16,35 +17,36 @@ const Card = styled(motion.div)`
   text-align: center;
   position: relative;
   overflow: visible;
-  box-shadow: 0 8px 32px rgba(0, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease;
-
+  
   &:hover {
-    box-shadow: 0 8px 32px rgba(0, 255, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     border-color: ${props => props.theme.colors.accent};
+    transform: translateY(-5px);
   }
 `;
 
 const ServiceName = styled.h3`
-  color: ${props => props.theme.colors.background};
+  color: ${props => props.theme.colors.accent};
   font-size: 1.1rem;
   font-family: ${props => props.theme.fonts.secondary};
   margin-bottom: 1rem;
   position: relative;
   z-index: 2;
-  background: ${props => props.theme.colors.accent};
+  background: ${props => props.theme.effects.accent};
   padding: 0.6rem 1rem;
   border-radius: 8px;
   width: 100%;
-  box-shadow: 0 4px 12px rgba(0, 255, 255, 0.2);
+  box-shadow: ${props => props.theme.effects.glow};
 `;
 
 const Price = styled.p`
-  font-size: 1.4rem;
-  color: ${props => props.theme.colors.primary};
+  font-size: 1rem;
+  color: ${props => props.theme.colors.secondaryBackground};
   margin-bottom: 1rem;
   font-weight: bold;
-  text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+
 `;
 
 const FeatureList = styled.ul`
@@ -97,31 +99,14 @@ const FeatureDescription = styled(motion.div)`
   margin-bottom: 5px;
 `;
 
-const ContactButton = styled(motion.button)`
-  background: ${props => props.theme.colors.primary};
-  color: ${props => props.theme.colors.buttonText};
-  border: none;
-  padding: 0.7rem 1.3rem;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: bold;
-  margin-top: 1rem;
-  transition: all 0.3s ease;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
-
-  &:hover {
-    background: ${props => props.theme.colors.accent};
-    box-shadow: 0 4px 20px rgba(0, 255, 255, 0.3);
-    transform: translateY(-2px);
-  }
-
-  &:active {
-    transform: translateY(0);
-  }
+const ServiceButton = styled(Button)`
+  width: 60%;
+  padding: 0.8rem;
+  margin-top: auto;
+  font-size: 0.7rem;
+  border-radius: 8;
 `;
+
 
 const Feature = ({ feature }) => {
   const [showDescription, setShowDescription] = useState(false);
@@ -164,13 +149,12 @@ const ServiceCard = ({ name, price, features, onContactClick }) => {
           <Feature key={index} feature={feature} />
         ))}
       </FeatureList>
-      <ContactButton
+      <ServiceButton
+        variant="service"
         onClick={() => onContactClick(name)}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
       >
         Más información
-      </ContactButton>
+      </ServiceButton>
     </Card>
   );
 };
