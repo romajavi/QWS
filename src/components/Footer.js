@@ -1,7 +1,7 @@
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
-import { Facebook, Twitter, Instagram, Linkedin, Clock, Mail, Phone, MapPin, ExternalLink } from 'lucide-react';
+import { Facebook, Twitter, Instagram, Linkedin, Clock, Mail, Phone, ExternalLink } from 'lucide-react';
 
 const gradientAnimation = keyframes`
   0% { background-position: 0% 50%; }

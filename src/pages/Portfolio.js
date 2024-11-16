@@ -90,13 +90,8 @@ const ProjectDescription = styled.p`
 `;
 
 const PortfolioButton = styled(Button)`
-  width: 40%;
-  padding: auto;
   margin-top: auto;
-  font-size: 0.7rem;
-  border-radius: 8px;
 `;
-
 
 function Portfolio() {
   const [projects, setProjects] = useState([]);
@@ -159,9 +154,10 @@ function Portfolio() {
                   <ProjectDescription>{project.description}</ProjectDescription>
                   <PortfolioButton
                     variant="portfolio"
+                    size="small"
                     onClick={() => handleClick(project.link)}
                   >
-                    IR AL SITIO
+                    Ir a Sitio
                   </PortfolioButton>
                 </ProjectContent>
               </ProjectCard>

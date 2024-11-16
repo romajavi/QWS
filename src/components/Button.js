@@ -16,11 +16,13 @@ const StyledButton = styled.button`
   ${props => buttonVariants[props.variant || 'primary']}
   ${props => props.customStyle}
 
+  
+
   ${props => props.$isAnimated && css`
     animation: ${buttonAnimation} 2s infinite ease-in-out;
   `}
 
-  ${props => props.fullWidth && css`
+    ${props => props.$fullWidth && css`
     width: 100%;
   `}
 
@@ -50,16 +52,15 @@ const Button = ({
   return (
     <StyledButton
       $variant={variant}
-      $isAnimated={animated}
+      $animated={animated}
       size={size}
       className={className}
       customStyle={customStyle}
-      fullWidth={fullWidth}
+      $fullWidth={fullWidth}
       {...props}
     >
       {children}
     </StyledButton>
   );
 };
-
 export default Button;

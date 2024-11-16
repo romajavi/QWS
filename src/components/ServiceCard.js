@@ -100,13 +100,8 @@ const FeatureDescription = styled(motion.div)`
 `;
 
 const ServiceButton = styled(Button)`
-  width: 60%;
-  padding: 0.8rem;
   margin-top: auto;
-  font-size: 0.7rem;
-  border-radius: 8;
 `;
-
 
 const Feature = ({ feature }) => {
   const [showDescription, setShowDescription] = useState(false);
@@ -151,6 +146,7 @@ const ServiceCard = ({ name, price, features, onContactClick }) => {
       </FeatureList>
       <ServiceButton
         variant="service"
+        size="small"
         onClick={() => onContactClick(name)}
       >
         Más información

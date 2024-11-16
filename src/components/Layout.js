@@ -18,16 +18,14 @@ const MainContent = styled.main`
 `;
 
 const Layout = ({ children }) => {
-    const contentLoaded = useContentLoaded(500);
-
-    return (
-        <LayoutWrapper>
-            <Header />
-            <MainContent>
-                {children}
-            </MainContent>
-        </LayoutWrapper>
-    );
+  return (
+    <LayoutWrapper>
+      <Header />
+      <MainContent>
+        {children}
+      </MainContent>
+    </LayoutWrapper>
+  );
 };
 
 export default Layout;

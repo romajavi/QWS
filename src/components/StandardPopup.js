@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -35,16 +35,24 @@ const CloseButton = styled.button`
   position: absolute;
   top: 10px;
   right: 10px;
+  width: 30px;
+  height: 30px;
+  padding: 0;
   background: none;
   border: none;
   color: ${props => props.theme.colors.accent};
   font-size: 1.5rem;
   cursor: pointer;
-  padding: 0.5rem;
-  line-height: 1;
-  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  
   &:hover {
+    background: rgba(0, 255, 255, 0.1);
     color: ${props => props.theme.colors.primary};
+    transform: rotate(90deg);
   }
 `;
 
@@ -55,6 +63,19 @@ const PopupTitle = styled.h2`
   text-shadow: 0 0 1px rgba(0, 255, 255, 0.3);
   @media (max-width: 768px) {
     font-size: 1.3rem;
+  }
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+
+  @media (min-width: 480px) {
+    flex-direction: row;
+    gap: 2rem;
   }
 `;
 
@@ -86,7 +107,9 @@ const StandardPopup = ({ isOpen, onClose, title, children }) => {
         >
           <CloseButton onClick={onClose}>×</CloseButton>
           <PopupTitle>{title}</PopupTitle>
-          {children}
+          <ButtonContainer>
+            {children}
+          </ButtonContainer>
         </PopupContainer>
       </PopupOverlay>
     </AnimatePresence>

@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 import { ReactTyped } from 'react-typed';
 import Calendar from '../components/Calendar.js';
 import StandardPopup from '../components/StandardPopup.js';
@@ -248,16 +248,6 @@ const Divider = styled.div`
   }
 `;
 
-const ButtonGroup = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 2rem;
-  padding: 2rem;
-  margin-top: 2rem;
-`;
-
-
 const MessageText = styled.p`
   font-size: 1.1rem;
   line-height: 1.5;
@@ -307,8 +297,6 @@ const CustomButtonGroup = styled.div`
 `;
 
 const ClearButton = styled(Button)`
-  width: 150px;
-  height: 45px;
   background: ${props => props.theme.colors.secondaryBackground};
   &:hover {
     background: ${props => props.theme.colors.secondaryBackground};
@@ -316,9 +304,9 @@ const ClearButton = styled(Button)`
 `;
 
 const SubmitButton = styled(Button)`
-  width: 150px;
-  height: 45px;
 `;
+
+
 const Contact = () => {
   const [formData, setFormData] = useState({
     name: '',
@@ -691,12 +679,14 @@ const Contact = () => {
             <CustomButtonGroup>
               <ClearButton
                 variant="secondary"
+                size="small" 
                 onClick={handleReset}
               >
                 Vaciar
               </ClearButton>
               <SubmitButton
                 variant="primary"
+                size="small"  
                 type="submit"
               >
                 Enviar

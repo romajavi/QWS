@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import ServiceCard from '../components/ServiceCard.js';
 import StandardPopup from '../components/StandardPopup.js';
@@ -6,8 +6,6 @@ import PageAnimation from '../components/PageAnimation.js';
 import PageContainer from '../components/PageContainer.js';
 import FAQSection from '../components/FAQSection.js';
 import { ReactTyped } from 'react-typed';
-import { Link } from 'react-router-dom';
-import { motion, useAnimation } from 'framer-motion';
 import Button from '../components/Button.js';
 
 
@@ -198,16 +196,16 @@ function Services() {
                     onClose={() => setIsPopupOpen(false)}
                     title="¿Cómo deseas seguir?"
                 >
-                    <Link to="/contact">
-                        <Button
-                            variant="primary"
-                            onClick={() => handleContact('schedule')}
-                        >
-                            Agendar cita
-                        </Button>
-                    </Link>
                     <Button
                         variant="primary"
+                        size="small"
+                        onClick={() => handleContact('schedule')}
+                    >
+                        Agendar cita
+                    </Button>
+                    <Button
+                        variant="primary"
+                        size="small"
                         onClick={() => handleContact('whatsapp')}
                     >
                         Contacto Directo

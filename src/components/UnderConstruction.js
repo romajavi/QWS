@@ -7,18 +7,6 @@ const spin = keyframes`
   100% { transform: rotate(360deg); }
 `;
 
-const float = keyframes`
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-20px); }
-  100% { transform: translateY(0px); }
-`;
-
-const glow = keyframes`
-  0% { box-shadow: 0 0 5px ${props => props.theme.colors.primary}; }
-  50% { box-shadow: 0 0 20px ${props => props.theme.colors.primary}; }
-  100% { box-shadow: 0 0 5px ${props => props.theme.colors.primary}; }
-`;
-
 const PageWrapper = styled.div`
   display: flex;
   flex-direction: column;

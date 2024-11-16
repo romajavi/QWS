@@ -2,8 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 import logoImage from '../assets/logo.png';
-import logoImage2 from '../assets/logor.png';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+
+
+
+
 
 // Animaciones
 const gradientAnimation = keyframes`
@@ -42,10 +47,20 @@ const HeaderWrapper = styled.header`
   }
 `;
 
-const Logo = styled(motion.img)`
-  height: 120px;
-  cursor: pointer;
-  z-index: 1001;
+const Logo = styled(motion.div)`
+ height: 120px;
+ width: auto;
+ 
+ .lazy-load-image-background {
+   height: 100%;
+   
+   img {
+     height: 100%;
+     width: auto;
+     object-fit: contain;
+   }
+ }
+
   @media (max-width: 768px) {
     height: 100px;
     position: absolute;
@@ -54,6 +69,7 @@ const Logo = styled(motion.img)`
     padding: 1rem;
     z-index: 1001;
   }
+
 `;
 
 const Nav = styled.nav`
@@ -83,32 +99,37 @@ const NavLink = styled(motion.div)`
 
 // Menú móvil actualizado
 const MobileMenuButton = styled.button`
-  all: unset;
-  display: none;
-  background: none;
-  border: none;
-  color: ${props => props.theme.colors.primary};
-  font-size: 1.8rem;
-  cursor: pointer;
-  transition: color 0.3s ease;
   position: absolute;
   left: 1rem;
   top: 50%;
   transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  background: none;
+  border: none;
+  color: ${props => props.theme.colors.accent};
+  font-size: 1.8rem;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
   z-index: 1001;
   
   @media (max-width: 768px) {
-    display: block;
+    display: flex;
   }
 
   &:hover {
-    color: ${props => props.theme.colors.accent};
+    background: rgba(0, 255, 255, 0.1);
+    color: ${props => props.theme.colors.primary};
+    transform: translateY(-50%) rotate(180deg);
   }
 
-  // Deshabilitar animaciones heredadas
-  animation: none !important;
-  &::before {
-    display: none;
+  &:active {
+    transform: translateY(-50%) scale(0.95);
   }
 `;
 
@@ -214,7 +235,7 @@ function Header() {
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth <= 768) {
-        setLogoSrc(logoImage2);
+        setLogoSrc(logoImage);
       } else {
         setLogoSrc(logoImage);
       }
@@ -233,19 +254,26 @@ function Header() {
     <HeaderWrapper>
       <MobileMenuButton
         onClick={toggleMobileMenu}
-        className="mobile-menu-button"
         aria-label="Toggle mobile menu"
       >
-        {isMobileMenuOpen ? '✕' : '☰'}
+        {isMobileMenuOpen ? '×' : '☰'}
       </MobileMenuButton>
 
       <Link to="/" aria-label="Home">
         <Logo
-          src={logoSrc}
-          alt="QWS Logo"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-        />
+        >
+          <LazyLoadImage
+            src={logoSrc}
+            alt="QWS Logo"
+            width="120"
+            height="120"
+            effect="blur"
+            placeholderSrc={logoSrc} // Usar versión de baja calidad
+            threshold={100}
+          />
+        </Logo>
       </Link>
 
       <Nav>

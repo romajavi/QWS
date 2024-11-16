@@ -12,35 +12,38 @@
   <meta name="author" content="Axion Dev" />
   <meta name="robots" content="index, follow, max-image-preview:large" />
 
+  <!-- SEO Básico -->
+  <title>AxionDev | Desarrollo Web y Soluciones Digitales 2024</title>
+  <meta name="description"
+    content="Expertos en desarrollo web full-stack, diseño UX/UI y soluciones digitales innovadoras. Creamos aplicaciones web modernas con React, optimización SEO y diseño responsive. Transforma tu presencia digital con tecnología de vanguardia." />
+  <meta name="author" content="AxionDev" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+
   <!-- Favicon y App Icons -->
-  <link rel="icon" type="image/x-icon" href="%PUBLIC_URL%/images/favicon.ico" />
-  <link rel="apple-touch-icon" sizes="180x180" href="%PUBLIC_URL%/images/apple-touch-icon.png" />
+  <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
   <link rel="manifest" href="/site.webmanifest" />
-  <meta name="theme-color" content="#000000" />
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://axiondev.com/" />
-  <meta property="og:title" content="Axion Dev | Desarrollo Web Profesional 2024" />
+  <meta property="og:url" content="https://axiondev.tech/" />
+  <meta property="og:title" content="AxionDev | Desarrollo Web Profesional 2024" />
   <meta property="og:description"
     content="Soluciones digitales innovadoras y desarrollo web de alto rendimiento. Expertos en React, diseño UX/UI y optimización SEO para impulsar tu presencia online." />
-  <meta property="og:image" content="https://axiondev.com/public/images/axion-dev-preview.png" />
+  <meta property="og:image" content="https://axiondev.tech/og-image.jpg" />
   <meta property="og:locale" content="es_ES" />
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image" />
-  <meta property="twitter:url" content="https://axiondev.com/" />
-  <meta property="twitter:title" content="Axion Dev | Desarrollo Web Innovador" />
+  <meta property="twitter:url" content="https://axiondev.tech/" />
+  <meta property="twitter:title" content="AxionDev | Desarrollo Web Innovador" />
   <meta property="twitter:description"
     content="Transformamos ideas en soluciones digitales. Desarrollo web moderno, UX/UI y optimización SEO para maximizar tu impacto online." />
-  <meta property="twitter:image" content="https://axiondev.com/public/images/axion-dev-preview.png" />
+  <meta property="twitter:image" content="https://axiondev.tech/twitter-image.jpg" />
 
   <!-- Fuentes -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Roboto:wght@300;400;700&display=swap"
-    rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 
   <!-- SEO Avanzado -->
   <link rel="canonical" href="https://axiondev.com/" />
@@ -53,16 +56,16 @@
   <meta name="google-site-verification" content="tu-código-de-verificación" />
   <meta name="msvalidate.01" content="tu-código-de-verificación-bing" />
 
-  <!-- Datos Estructurados -->
+  <!-- Schema.org markup -->
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "ProfessionalService",
-      "name": "Axion Dev",
-      "image": "https://axiondev.com/public/images/logo.png",
+      "name": "AxionDev",
+      "image": "https://axiondev.tech/logo.png",
       "description": "Servicios profesionales de desarrollo web y soluciones digitales",
-      "@id": "https://axiondev.com",
-      "url": "https://axiondev.com",
+      "@id": "https://axiondev.tech",
+      "url": "https://axiondev.tech",
       "telephone": "tu-teléfono",
       "address": {
         "@type": "PostalAddress",
@@ -90,10 +93,10 @@
         "closes": "18:00"
       },
       "sameAs": [
-        "https://facebook.com/axiondev", 
+        "https://facebook.com/axiondev",
         "https://twitter.com/axiondev",
-        "https://linkedin.com/company/axiondev",
-        "https://instagram.com/axiondev"
+        "https://instagram.com/axiondev",
+        "https://linkedin.com/company/axiondev"
       ],
       "priceRange": "$$"
     }
@@ -103,6 +106,27 @@
   <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
   <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <!-- preload para recursos críticos: -->
+  <link rel="preload" href="/static/media/logo.png" as="image" />
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Orbitron" as="style" />
+
+
+  <style>
+    /* Critical CSS */
+    body {
+      margin: 0;
+      background: #000000;
+      color: #FFFFFF;
+    }
+
+    .preload-logo {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  </style>
 </head>
 
 <body>
