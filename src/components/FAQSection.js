@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 
 const FAQContainer = styled.section`
-  margin: 4rem auto;
+  margin: 10rem auto;
   max-width: 800px;
   padding: 2rem;
   width: 100%;

@@ -22,7 +22,7 @@ export const buttonSizes = {
   large: css`
     padding: 1rem 2rem;
     font-size: 1.125rem;
-    min-width: 200px;
+    min-width: 1000px;
   `
 };
 

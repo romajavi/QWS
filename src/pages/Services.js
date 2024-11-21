@@ -7,6 +7,9 @@ import StandardPopup from '../components/StandardPopup.js';
 import FAQSection from '../components/FAQSection.js';
 import PageContainer from '../components/PageContainer.js';
 import Button from '../components/Button.js';
+import { useNavigate } from 'react-router-dom';
+
+
 
 const ServicesWrapper = styled.div`
   display: flex;
@@ -40,6 +43,7 @@ const Title = styled.h1`
 
 function Services() {
     const { t } = useTranslation();
+    const navigate = useNavigate();
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [selectedService, setSelectedService] = useState(null);
 
@@ -50,12 +54,26 @@ function Services() {
         setIsPopupOpen(true);
     };
 
-    const handleContact = (type) => {
-        if (type === 'whatsapp') {
-            const message = t('services.contactMessage', {
-                service: t(`services.services.${selectedService}.name`)
-            });
-            window.open(`https://wa.me/5491168805604?text=${encodeURIComponent(message)}`, '_blank');
+    const handleContact = (method) => {
+        if (method === 'WHATSAPP') {
+            // Formatear el mensaje según el servicio seleccionado
+            const serviceName = selectedService ? t(`services.services.${selectedService}.name`) : '';
+            const message = selectedService
+                ? `¡Hola! Me interesa obtener más información sobre el servicio de ${serviceName}.`
+                : '¡Hola! Me gustaría obtener más información sobre sus servicios.';
+
+            const whatsappUrl = `https://wa.me/5491168805604?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        } else if (method === 'EMAIL') {
+            setIsPopupOpen(false);
+            navigate('/contact');
+
+            setTimeout(() => {
+                const calendarSection = document.querySelector('#calendar-section');
+                if (calendarSection) {
+                    calendarSection.scrollIntoView({ behavior: 'smooth' });
+                }
+            }, 100);
         }
         setIsPopupOpen(false);
     };
@@ -89,9 +107,19 @@ function Services() {
                     <Button
                         variant="primary"
                         size="small"
-                        onClick={() => handleContact('whatsapp')}
+                        glow={true}
+                        onClick={() => handleContact('WHATSAPP')}
                     >
                         {t('services.contactPopup.directContact')}
+                    </Button>
+
+                    <Button
+                        variant="primary"
+                        size="small"
+                        glow={true}
+                        onClick={() => handleContact('EMAIL')}
+                    >
+                        {t('services.contactPopup.schedule')}
                     </Button>
                 </StandardPopup>
 

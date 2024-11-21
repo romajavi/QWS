@@ -287,7 +287,8 @@
     },
     "underConstruction": {
         "title": "Estamos trabalhando em algo incrível",
-        "subtitle": "Volte em breve para descobrir as novidades!"
+        "subtitle": "Volte em breve para descobrir as novidades!",
+        "message": "Esta seção está atualmente em construção"
     },
     "faq": {
         "title": "Perguntas Frequentes",

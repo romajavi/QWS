@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
+import { floatingStyles } from '../styles/Animations.js';
 
 const CaptchaContainer = styled.div`
   display: flex;
@@ -18,10 +19,11 @@ const CaptchaDisplay = styled.div`
   font-family: 'Courier New', monospace;
   font-size: 2rem;
   letter-spacing: 3px;
-  margin-bottom: -1rem;
   background: ${props => props.theme.colors.primaryBackground};
   border-radius: 4px;
   user-select: none;
+  padding: 0.5rem 1rem;
+  ${floatingStyles()} // Llamamos a la función dentro de una función
 `;
 
 const CaptchaInput = styled.input`

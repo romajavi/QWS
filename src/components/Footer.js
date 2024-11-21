@@ -193,7 +193,7 @@ const Footer = () => {
             <SocialIcon href="https://twitter.com" target="_blank" rel="noopener noreferrer">
               <Twitter />
             </SocialIcon>
-            <SocialIcon href="https://instagram.com" target="_blank" rel="noopener noreferrer">
+            <SocialIcon href="https://instagram.com/axiondev" target="_blank" rel="noopener noreferrer">
               <Instagram />
             </SocialIcon>
             <SocialIcon href="https://linkedin.com" target="_blank" rel="noopener noreferrer">

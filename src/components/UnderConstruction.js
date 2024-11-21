@@ -2,6 +2,8 @@ import React from 'react';
 import styled, { keyframes } from 'styled-components';
 import { Settings } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom'; 
+import Button from './Button.js'; 
 
 const spin = keyframes`
   0% { transform: rotate(0deg); }
@@ -95,8 +97,19 @@ const Message = styled.div`
   }
 `;
 
+const ButtonContainer = styled.div`
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+`;
+
 const UnderConstruction = ({ pageName }) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+
+  const handleNavigateToServices = () => {
+    navigate('/services');
+  };
 
   return (
     <PageWrapper>
@@ -116,6 +129,15 @@ const UnderConstruction = ({ pageName }) => {
         <p>{t('underConstruction.message')}</p>
         <p className="subtitle">{t('underConstruction.subtitle')}</p>
       </Message>
+      <ButtonContainer>
+        <Button 
+          variant="primary"
+          glow={true}
+          onClick={handleNavigateToServices}
+        >
+          {t('navigation.goToServices', 'Ir a Servicios')}
+        </Button>
+      </ButtonContainer>
     </PageWrapper>
   );
 };

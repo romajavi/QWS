@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useState } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ReactTyped } from 'react-typed';
@@ -151,11 +151,14 @@ const Home = () => {
             </Title>
             <AnimatedSubtitle />
             <StyledButton
+              variant="primary"
+              glow={true}
               animated
               size="large"
               onClick={handleExploreClick}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              glowIntensity={1}
             >
               {t('home.exploreButton')}
             </StyledButton>

@@ -151,7 +151,13 @@ const ServiceCard = ({ serviceKey, onContactClick }) => {
             />
           ))}
       </FeatureList>
-      <Button onClick={() => onContactClick(serviceKey)}>
+      <Button
+        variant="primary"
+        size="small"
+        glow={true}
+        onClick={() => onContactClick(serviceKey)}
+        glowIntensity={0.5}
+      >
         {t('services.moreInfo')}
       </Button>
     </Card>

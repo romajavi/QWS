@@ -12,12 +12,43 @@ const __dirname = path.dirname(__filename);
 const clientTemplate = fs.readFileSync(path.join(__dirname, 'clientEmailTemplate.html'), 'utf8');
 const adminTemplate = fs.readFileSync(path.join(__dirname, 'adminEmailTemplate.html'), 'utf8');
 
+// Configuración actualizada para Gmail
 const smtpClient = new SMTPClient({
     user: process.env.EMAIL_USER,
     password: process.env.EMAIL_PASS,
-    host: 'smtp.gmail.com',
-    ssl: true,
+    host: 'smtp.gmail.com',  // Hardcodeado para desarrollo
+    port: 587,               // Puerto para TLS
+    tls: true,              // Usar TLS
+    timeout: 10000,         // Timeout de 10 segundos
 });
+
+// Función de prueba mejorada
+const testConnection = async () => {
+    try {
+        console.log('Testing SMTP connection...');
+        console.log('Using credentials:', {
+            host: 'smtp.gmail.com',
+            port: 587,
+            user: process.env.EMAIL_USER,
+            tls: true
+        });
+
+        await smtpClient.sendAsync({
+            text: 'Test connection',
+            from: process.env.EMAIL_USER,
+            to: process.env.EMAIL_USER,
+            subject: 'Test Email'
+        });
+
+        console.log('SMTP Connection test successful!');
+    } catch (error) {
+        console.error('SMTP Connection test failed:', error.message);
+        console.error('Full error:', error);
+    }
+};
+
+// Ejecutar test al iniciar
+testConnection();
 
 export const emailHandler = async (req, res) => {
     const {
@@ -35,6 +66,8 @@ export const emailHandler = async (req, res) => {
     } = req.body;
 
     try {
+        console.log('Sending email to client...');
+
         // Enviar correo al cliente
         let clientHtml = clientTemplate
             .replace('{nombre}', name)
@@ -44,13 +77,16 @@ export const emailHandler = async (req, res) => {
 
         await smtpClient.sendAsync({
             text: 'Gracias por contactarnos',
-            from: `"Axion Dev" <${process.env.EMAIL_USER.trim()}>`,
-            to: email.trim(),
+            from: `"Axion Dev" <${process.env.EMAIL_USER}>`,
+            to: email,
             subject: 'Confirmación de recepción - Axion Dev',
             attachment: [
                 { data: clientHtml, alternative: true }
             ]
         });
+
+        console.log('Client email sent successfully');
+        console.log('Sending email to admin...');
 
         // Enviar correo al administrador
         let adminHtml = adminTemplate
@@ -68,50 +104,23 @@ export const emailHandler = async (req, res) => {
 
         await smtpClient.sendAsync({
             text: 'Nuevo formulario de contacto recibido',
-            from: `"Axion Dev" <${process.env.EMAIL_USER.trim()}>`,
-            to: process.env.ADMIN_EMAIL.trim(),
+            from: `"Axion Dev" <${process.env.EMAIL_USER}>`,
+            to: process.env.ADMIN_EMAIL,
             subject: 'Nuevo formulario de contacto - Axion Dev',
             attachment: [
                 { data: adminHtml, alternative: true }
             ]
         });
 
+        console.log('Admin email sent successfully');
         res.status(200).json({ message: 'Formulario enviado con éxito' });
     } catch (error) {
-        console.error('Error al enviar el correo:', error);
+        console.error('Error sending email:', error);
         res.status(500).json({
             error: 'Error al procesar el formulario',
-            details: error.message
+            details: error.message,
+            stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
         });
-    }
-};
-
-export const sendVerificationCode = async (email, code) => {
-    try {
-        await smtpClient.sendAsync({
-            text: `Tu código de verificación es: ${code}`,
-            from: `"Axion Dev" <${process.env.EMAIL_USER.trim()}>`,
-            to: email.trim(),
-            subject: 'Código de verificación - Panel Admin',
-            attachment: [{
-                data: `
-                    <html>
-                        <body style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
-                            <h2 style="color: #FFD700;">Axion Dev</h2>
-                            <p>Tu código de verificación es:</p>
-                            <h1 style="color: #00FFFF; font-size: 32px;">${code}</h1>
-                            <p>Este código expirará en 5 minutos.</p>
-                            <p style="font-size: 12px; color: #666;">Por favor, no compartas este código con nadie.</p>
-                        </body>
-                    </html>
-                `,
-                alternative: true
-            }]
-        });
-        return true;
-    } catch (error) {
-        console.error('Error al enviar email de verificación:', error);
-        return false;
     }
 };
 

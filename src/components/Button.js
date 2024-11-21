@@ -1,66 +1,75 @@
 import React from 'react';
-import styled, { css, keyframes } from 'styled-components';
-import { buttonBaseStyles, buttonSizes, buttonVariants } from '../styles/GlobalStyles.js';
+import styled from 'styled-components';
+import { glowButtonStyles, subtleGlowStyles } from '../styles/Animations.js';
 
-// Definir la animación del botón
-const buttonAnimation = keyframes`
-  0% { transform: scale(1); box-shadow: 0 0 0 rgba(0, 255, 255, 0); }
-  50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(0, 255, 255, 0.3); }
-  100% { transform: scale(1); box-shadow: 0 0 0 rgba(0, 255, 255, 0); }
-`;
-
-// Componente de botón estilizado
 const StyledButton = styled.button`
-  ${buttonBaseStyles}
-  ${props => buttonSizes[props.size || 'medium']}
-  ${props => buttonVariants[props.variant || 'primary']}
-  ${props => props.customStyle}
-
+  /* Estilos base */
+  background: ${props => props.theme.colors.primary};
+  color: ${props => props.theme.colors.buttonText};
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
   
+  /* Tamaños */
+  padding: ${({ $size }) => $size === 'small' ? '0.5rem 1rem' : '0.75rem 1.5rem'};
+  font-size: ${({ $size }) => $size === 'medium' ? '0.875rem' : '1rem'};
+  min-width: ${({ $size }) => $size === 'large' ? '100px' : '150px'};
+  
+  /* Variantes */
+  background: ${({ $variant, theme }) =>
+    $variant === 'secondary'
+      ? theme.colors.secondaryBackground
+      : theme.colors.primary
+  };
+  
+  /* Efectos de resplandor */
+  ${({ $glow, $variant, $glowIntensity = 1 }) =>
+    $glow && $variant === 'primary' ? glowButtonStyles($glowIntensity) : ''}
+  ${({ $glow, $variant, $glowIntensity = 0.5 }) =>
+    $glow && $variant === 'secondary' ? subtleGlowStyles($glowIntensity) : ''}
 
-  ${props => props.$isAnimated && css`
-    animation: ${buttonAnimation} 2s infinite ease-in-out;
-  `}
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 255, 255, 0.3);
+  }
 
-    ${props => props.$fullWidth && css`
-    width: 100%;
-  `}
+  &:active {
+    transform: translateY(0);
+  }
 
-  ${props => props.type === 'submit' && css`
-    margin-left: auto;
-  `}
-
-  ${props => props.variant === 'clear' && css`
-    background: ${props => props.theme.colors.secondaryBackground};
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
     &:hover {
-      background: ${props => props.theme.colors.secondaryBackground};
-      opacity: 0.8;
+      transform: none;
+      box-shadow: none;
     }
-  `}
+  }
 `;
 
 const Button = ({
   children,
   variant = 'primary',
   size = 'medium',
-  animated = false,
-  className = '',
-  customStyle,
-  fullWidth = false,
+  glow = false,
+  glowIntensity = 1, // Nueva prop para controlar la intensidad
   ...props
 }) => {
   return (
     <StyledButton
       $variant={variant}
-      $animated={animated}
-      size={size}
-      className={className}
-      customStyle={customStyle}
-      $fullWidth={fullWidth}
+      $size={size}
+      $glow={glow}
+      $glowIntensity={glowIntensity}
       {...props}
     >
       {children}
     </StyledButton>
   );
 };
+
 export default Button;

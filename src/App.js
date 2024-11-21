@@ -8,6 +8,8 @@ import GlobalStyles from './styles/GlobalStyles.js';
 import styled from 'styled-components';
 import './translations/i18n.js';
 import LanguageSelector from './components/LanguageSelector.js';
+import WhatsAppButton from './components/WhatsAppButton.js'; // Importa el nuevo componente
+
 
 
 
@@ -49,24 +51,23 @@ function App() {
             <Router>
                 <LanguageSelector />
                 <GlobalStyles />
-                <LanguageSelector />
                 <Layout>
                     <Suspense fallback={<LoadingSpinner />}>
                         <Routes>
                             <Route path="/" element={<Home />} />
                             <Route path="/blog" element={<UnderConstruction pageName="Blog" />} />
                             <Route path="/services" element={<Services />} />
-                            <Route path="/portfolio" element={<Portfolio />} />
+                            <Route path="/portfolio" element={<UnderConstruction pageName="Porttfolio" />} />
                             <Route path="/contact" element={<Contact />} />
                             <Route path="/about-us" element={<UnderConstruction pageName="Sobre Nosotros" />} />
-                            <Route path="/faq" element={<UnderConstruction pageName="Preguntas Frecuentes" />} />
+                            {/* <Route path="/faq" element={<UnderConstruction pageName="Preguntas Frecuentes" />} /> */}
                         </Routes>
                     </Suspense>
                 </Layout>
+                <WhatsAppButton phoneNumber="5491168805604" /> {/* Agregar número aquí */}
             </Router>
         </ThemeProvider>
     );
 }
 
 export default App;
-

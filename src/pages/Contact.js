@@ -9,6 +9,7 @@ import LoadingSpinner from '../components/LoadingSpinner.js';
 import PageContainer from '../components/PageContainer.js';
 import Button from '../components/Button.js';
 import Captcha from '../components/Captcha.js';
+import { glowButtonStyles } from '../styles/Animations.js'; 
 
 
 
@@ -306,6 +307,7 @@ const ClearButton = styled(Button)`
 `;
 
 const SubmitButton = styled(Button)`
+  ${glowButtonStyles}
 `;
 
 const ErrorMessage = styled.p`
@@ -497,6 +499,8 @@ const Contact = () => {
       appointmentDate: formattedDate
     }));
   };
+
+
 
   // Función para cerrar el popup
   const handleClosePopup = () => {
