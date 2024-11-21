@@ -2,6 +2,7 @@ import React from 'react';
 import styled, { keyframes } from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
 import { Facebook, Twitter, Instagram, Linkedin, Clock, Mail, Phone, ExternalLink } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const gradientAnimation = keyframes`
   0% { background-position: 0% 50%; }
@@ -16,7 +17,7 @@ const FooterWrapper = styled.footer`
     ${props => props.theme.colors.primaryBackground}
   );
   color: ${props => props.theme.colors.text};
-  padding: 2rem 2rem 1.5rem; // Reducido de 4rem 2rem 2rem
+  padding: 2rem 2rem 1.5rem;
   position: relative;
   overflow: hidden;
 
@@ -40,7 +41,7 @@ const FooterWrapper = styled.footer`
 const FooterGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2rem; // Reducido de 3rem
+  gap: 2rem;
   max-width: 1200px;
   margin: 0 auto;
 `;
@@ -48,8 +49,8 @@ const FooterGrid = styled.div`
 const FooterSection = styled.div`
   h3 {
     color: ${props => props.theme.colors.primary};
-    font-size: 1.2rem; // Reducido de 1.5rem
-    margin-bottom: 1rem; // Reducido de 1.5rem
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
     position: relative;
     display: inline-block;
 
@@ -58,7 +59,7 @@ const FooterSection = styled.div`
       position: absolute;
       bottom: -5px;
       left: 0;
-      width: 40px; // Reducido de 50px
+      width: 40px;
       height: 2px;
       background: ${props => props.theme.colors.accent};
     }
@@ -71,7 +72,7 @@ const NavLink = styled(Link)`
   gap: 0.5rem;
   color: ${props => props.theme.colors.text};
   text-decoration: none;
-  margin-bottom: 0.75rem; // Reducido de 1rem
+  margin-bottom: 0.75rem;
   transition: all 0.3s ease;
 
   &:hover {
@@ -83,13 +84,13 @@ const NavLink = styled(Link)`
 const SocialLinks = styled.div`
   display: flex;
   gap: 1rem;
-  margin-top: 1rem; // Reducido de 1.5rem
+  margin-top: 1rem;
 `;
 
 const SocialIcon = styled.a`
   color: ${props => props.theme.colors.text};
   background: ${props => props.theme.colors.primaryBackground};
-  padding: 0.6rem; // Reducido de 0.8rem
+  padding: 0.6rem;
   border-radius: 50%;
   transition: all 0.3s ease;
   display: flex;
@@ -103,23 +104,24 @@ const SocialIcon = styled.a`
   }
 
   svg {
-    width: 18px; // Reducido de 20px
-    height: 18px; // Reducido de 20px
+    width: 18px;
+    height: 18px;
   }
 `;
 
 const Copyright = styled.div`
   text-align: center;
-  margin-top: 2rem; // Reducido de 3rem
-  padding-top: 1.5rem; // Reducido de 2rem
+  margin-top: 2rem;
+  padding-top: 1.5rem;
   border-top: 1px solid ${props => props.theme.colors.primary}40;
   color: ${props => props.theme.colors.text}80;
-  font-size: 0.9rem; // Añadido para reducir tamaño del texto
+  font-size: 0.9rem;
 `;
 
 const Footer = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
-  
+
   const handleWhatsAppClick = () => {
     window.open('https://wa.me/5491168805604', '_blank');
   };
@@ -129,65 +131,61 @@ const Footer = () => {
     navigate('/services#faq');
   };
 
-  return (
-    <FooterWrapper>
-      <FooterGrid>
-        <FooterSection>
-          <h3>Axion Dev</h3>
+  const renderSectionContent = (key, section) => {
+    switch (key) {
+      case 'company':
+        return (
           <nav>
             <NavLink to="/about-us">
               <ExternalLink size={16} />
-              Sobre Nosotros
+              {section.links.about}
             </NavLink>
             <NavLink to="/services">
               <ExternalLink size={16} />
-              Servicios
+              {section.links.services}
             </NavLink>
             <NavLink to="/contact">
               <Mail size={16} />
-              Contacto
+              {section.links.contact}
             </NavLink>
           </nav>
-        </FooterSection>
-
-        <FooterSection>
-          <h3>Recursos</h3>
+        );
+      case 'resources':
+        return (
           <nav>
             <NavLink to="/blog">
               <ExternalLink size={16} />
-              Blog
+              {section.links.blog}
             </NavLink>
             <NavLink to="#" onClick={handleFAQClick}>
               <ExternalLink size={16} />
-              Preguntas Frecuentes
+              {section.links.faq}
             </NavLink>
             <NavLink to="#" onClick={handleWhatsAppClick}>
               <Phone size={16} />
-              Soporte
+              {section.links.support}
             </NavLink>
           </nav>
-        </FooterSection>
-
-        <FooterSection>
-          <h3>Contacto</h3>
+        );
+      case 'contact':
+        return (
           <nav>
             <NavLink to="#" onClick={handleWhatsAppClick}>
               <Phone size={16} />
-              WhatsApp
+              {section.links.whatsapp}
             </NavLink>
-            <NavLink to="mailto:contact@axiondev.tech">
+            <NavLink to="mailto:info@axiondev.tech">
               <Mail size={16} />
-              contact@axiondev.tech
+              {section.links.email}
             </NavLink>
             <NavLink to="#">
               <Clock size={16} />
-              Lun - Vie: 9:00 - 18:00
+              {section.links.schedule}
             </NavLink>
           </nav>
-        </FooterSection>
-
-        <FooterSection>
-          <h3>Síguenos</h3>
+        );
+      case 'social':
+        return (
           <SocialLinks>
             <SocialIcon href="https://facebook.com" target="_blank" rel="noopener noreferrer">
               <Facebook />
@@ -202,11 +200,24 @@ const Footer = () => {
               <Linkedin />
             </SocialIcon>
           </SocialLinks>
-        </FooterSection>
-      </FooterGrid>
+        );
+      default:
+        return null;
+    }
+  };
 
+  return (
+    <FooterWrapper>
+      <FooterGrid>
+        {Object.entries(t('footer.sections', { returnObjects: true })).map(([key, section]) => (
+          <FooterSection key={key}>
+            <h3>{section.title}</h3>
+            {renderSectionContent(key, section)}
+          </FooterSection>
+        ))}
+      </FooterGrid>
       <Copyright>
-        © {new Date().getFullYear()} AxionDev. Todos los derechos reservados.
+        {t('footer.copyright')}
       </Copyright>
     </FooterWrapper>
   );

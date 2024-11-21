@@ -1,11 +1,14 @@
 import React, { useCallback, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ReactTyped } from 'react-typed';
+import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import EntanglementBackground from '../components/EntanglementBackground.js';
 import AnimatedSubtitle from '../components/AnimatedSubtitle.js';
 import Button from '../components/Button.js';
+
+
 
 
 
@@ -36,7 +39,7 @@ const ContentWrapper = styled(motion.div)`
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  gap: 3.5rem;
+  gap: 4rem;
 `;
 
 const Title = styled.h1`
@@ -47,10 +50,19 @@ const Title = styled.h1`
   text-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
   will-change: transform;
   
+  .company-name {
+    color: #a5aa9a;
+  }
+  
+  .separator {
+    color: #00FFFF;
+  }
+
   @media (max-width: 768px) {
     margin: 1rem 0 0.5rem;
   }
 `;
+
 
 const StyledButton = styled(Button)`
   transition: transform 0.3s ease;
@@ -104,28 +116,14 @@ const itemVariants = {
 };
 
 const Home = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    // Precarga de assets críticos
-    const preloadAssets = () => {
-      const images = ['/images/logo.png'];
-      images.forEach(src => {
-        const img = new Image();
-        img.src = src;
-      });
-    };
-
-    preloadAssets();
-  }, []);
 
   const handleExploreClick = useCallback(() => {
     const button = document.activeElement;
     if (button) button.blur();
     requestAnimationFrame(() => {
-      navigate('/services', {
-        state: { fromHome: true }
-      });
+      navigate('/services', { state: { fromHome: true } });
     });
   }, [navigate]);
 
@@ -149,8 +147,6 @@ const Home = () => {
                 showCursor={true}
                 cursorChar="|"
                 html={true}
-                startDelay={500}
-                backDelay={2000}
               />
             </Title>
             <AnimatedSubtitle />
@@ -161,7 +157,7 @@ const Home = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              Descubre más
+              {t('home.exploreButton')}
             </StyledButton>
           </ContentWrapper>
         </HomeWrapper>

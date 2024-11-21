@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import logoImage from '../assets/logo.png';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
+import { useTranslation } from 'react-i18next';
 
 
 
@@ -193,6 +194,7 @@ const Overlay = styled(motion.div)`
 `;
 
 function Header() {
+  const { t } = useTranslation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [logoSrc, setLogoSrc] = useState(logoImage);
   const location = useLocation();
@@ -204,7 +206,12 @@ function Header() {
     document.body.style.overflow = !isMobileMenuOpen ? 'hidden' : 'unset';
   };
 
-  const navItems = ['home', 'services', 'portfolio', 'contact'];
+  const navItems = [
+    { key: 'home', path: '/' },
+    { key: 'services', path: '/services' },
+    { key: 'portfolio', path: '/portfolio' },
+    { key: 'contact', path: '/contact' }
+  ];
 
   const handleNavClick = (page) => {
     setIsMobileMenuOpen(false);
@@ -214,19 +221,19 @@ function Header() {
 
   // Componente de enlaces de navegación actualizado
   const renderNavLinks = (isMobile = false) => (
-    navItems.map((page) => {
-      const isActive = location.pathname === (page === 'home' ? '/' : `/${page}`);
+    navItems.map(({ key, path }) => {
+      const isActive = location.pathname === path;
       const Component = isMobile ? MobileNavLink : NavLink;
 
       return (
         <Component
-          key={page}
-          onClick={() => handleNavClick(page)}
+          key={key}
+          onClick={() => handleNavClick(key)}
           className={isActive ? 'active' : ''}
-          whileHover={isMobile ? { scale: 1.1 } : { scale: 1.1 }} // Cambiado a una escala muy sutil
+          whileHover={isMobile ? { scale: 1.1 } : { scale: 1.1 }}
           whileTap={{ scale: 0.98 }}
         >
-          {page}
+          {t(`header.${key}`)}
         </Component>
       );
     })

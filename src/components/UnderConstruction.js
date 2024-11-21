@@ -1,6 +1,7 @@
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
 import { Settings } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const spin = keyframes`
   0% { transform: rotate(0deg); }
@@ -95,26 +96,28 @@ const Message = styled.div`
 `;
 
 const UnderConstruction = ({ pageName }) => {
-    return (
-        <PageWrapper>
-            <Title>{pageName}</Title>
-            <GearsContainer>
-                <MainGear>
-                    <Settings />
-                </MainGear>
-                <SmallGear className="top-right">
-                    <Settings />
-                </SmallGear>
-                <SmallGear className="bottom-left">
-                    <Settings />
-                </SmallGear>
-            </GearsContainer>
-            <Message>
-                <p>Estamos trabajando en algo increíble</p>
-                <p className="subtitle">¡Vuelve pronto para descubrir las novedades!</p>
-            </Message>
-        </PageWrapper>
-    );
+  const { t } = useTranslation();
+
+  return (
+    <PageWrapper>
+      <Title>{pageName}</Title>
+      <GearsContainer>
+        <MainGear>
+          <Settings />
+        </MainGear>
+        <SmallGear className="top-right">
+          <Settings />
+        </SmallGear>
+        <SmallGear className="bottom-left">
+          <Settings />
+        </SmallGear>
+      </GearsContainer>
+      <Message>
+        <p>{t('underConstruction.message')}</p>
+        <p className="subtitle">{t('underConstruction.subtitle')}</p>
+      </Message>
+    </PageWrapper>
+  );
 };
 
 export default UnderConstruction;

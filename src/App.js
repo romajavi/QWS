@@ -6,16 +6,10 @@ import LoadingSpinner from './components/LoadingSpinner.js';
 import PageAnimation from './components/PageAnimation.js';
 import GlobalStyles from './styles/GlobalStyles.js';
 import styled from 'styled-components';
+import './translations/i18n.js';
+import LanguageSelector from './components/LanguageSelector.js';
 
 
-// const PreloadImage = ({ src }) => {
-//     React.useEffect(() => {
-//       const img = new Image();
-//       img.src = src;
-//     }, [src]);
-//     return null;
-//   };
-  
 
 // Lazy loading para las páginas
 const Home = lazy(() => import('./pages/Home.js'));
@@ -53,7 +47,9 @@ function App() {
     return (
         <ThemeProvider theme={theme}>
             <Router>
+                <LanguageSelector />
                 <GlobalStyles />
+                <LanguageSelector />
                 <Layout>
                     <Suspense fallback={<LoadingSpinner />}>
                         <Routes>

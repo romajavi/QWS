@@ -2,9 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { motion, useAnimation } from 'framer-motion';
 import { ReactTyped } from 'react-typed';
+import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import PageAnimation from '../components/PageAnimation.js';
 import PageContainer from '../components/PageContainer.js';
 import Button from '../components/Button.js';
+import { portfolioProjects } from '../data/portfolioData.js';
 
 const PortfolioWrapper = styled.div`
   display: flex;
@@ -42,7 +45,7 @@ const ProjectReel = styled(motion.div)`
 
 const ProjectCard = styled(motion.div)`
   flex: 0 0 300px;
-  height: 350px;
+  height: 400px;
   margin: 0 1rem;
   border-radius: 15px;
   overflow: hidden;
@@ -55,7 +58,6 @@ const ProjectCard = styled(motion.div)`
   display: flex;
   flex-direction: column;
 `;
-
 
 const ProjectImage = styled.img`
   width: 100%;
@@ -73,20 +75,31 @@ const ProjectContent = styled.div`
 
 const ProjectName = styled.h3`
   color: ${props => props.theme.colors.accent};
-  font-size: 1rem;
+  font-size: 1.2rem;
   margin-bottom: 0.5rem;
 `;
 
 const ProjectDescription = styled.p`
   color: ${props => props.theme.colors.text};
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   line-height: 1.4;
   flex-grow: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 4;
-  -webkit-box-orient: vertical;
+  margin-bottom: 1rem;
+`;
+
+const TechnologiesList = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+`;
+
+const TechnologyTag = styled.span`
+  background: ${props => props.theme.colors.primary}20;
+  color: ${props => props.theme.colors.accent};
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
 `;
 
 const PortfolioButton = styled(Button)`
@@ -94,16 +107,21 @@ const PortfolioButton = styled(Button)`
 `;
 
 function Portfolio() {
-  const [projects, setProjects] = useState([]);
+  const { t } = useTranslation();
+  const navigate = useNavigate();
   const controls = useAnimation();
   const reelRef = useRef(null);
 
-  useEffect(() => {
-    fetch('/api/projects')
-      .then(response => response.json())
-      .then(data => setProjects(data))
-      .catch(error => console.error("Error loading projects:", error));
-  }, []);
+  const getTranslatedProject = (project) => {
+    const baseKey = `portfolio.projects.${project.id}`;
+    return {
+      name: t(`${baseKey}.name`, { defaultValue: project.name }),
+      description: t(`${baseKey}.description`, { defaultValue: project.description }),
+      technologies: project.technologies.map(tech =>
+        t(`portfolio.technologies.${tech}`, { defaultValue: tech })
+      )
+    };
+  };
 
   useEffect(() => {
     const moveReel = async () => {
@@ -120,10 +138,8 @@ function Portfolio() {
         });
       }
     };
-    if (projects.length > 0) {
-      moveReel();
-    }
-  }, [controls, projects]);
+    moveReel();
+  }, [controls]);
 
   const handleClick = (link) => {
     window.open(link, '_blank');
@@ -134,7 +150,7 @@ function Portfolio() {
       <PortfolioWrapper>
         <Title>
           <ReactTyped
-            strings={['Portafolio de Proyectos Web']}
+            strings={[t('portfolio.title')]}
             typeSpeed={50}
             showCursor={true}
             cursorChar="|"
@@ -142,26 +158,38 @@ function Portfolio() {
         </Title>
         <ProjectReelContainer>
           <ProjectReel ref={reelRef} animate={controls}>
-            {[...projects, ...projects].map((project, index) => (
-              <ProjectCard
-                key={`${project.id}-${index}`}
-                whileHover={{ y: -10 }}
-                transition={{ duration: 0.3 }}
-              >
-                <ProjectImage src={`/images/portfolio/${project.image}`} alt={project.name} />
-                <ProjectContent>
-                  <ProjectName>{project.name}</ProjectName>
-                  <ProjectDescription>{project.description}</ProjectDescription>
-                  <PortfolioButton
-                    variant="portfolio"
-                    size="small"
-                    onClick={() => handleClick(project.link)}
-                  >
-                    Ir a Sitio
-                  </PortfolioButton>
-                </ProjectContent>
-              </ProjectCard>
-            ))}
+            {[...portfolioProjects, ...portfolioProjects].map((project, index) => {
+              const translatedProject = getTranslatedProject(project);
+
+              return (
+                <ProjectCard
+                  key={`${project.id}-${index}`}
+                  whileHover={{ y: -10 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <ProjectImage
+                    src={`/images/portfolio/${project.image}`}
+                    alt={translatedProject.name}
+                  />
+                  <ProjectContent>
+                    <ProjectName>{translatedProject.name}</ProjectName>
+                    <ProjectDescription>{translatedProject.description}</ProjectDescription>
+                    <TechnologiesList>
+                      {translatedProject.technologies.map((tech, i) => (
+                        <TechnologyTag key={i}>{tech}</TechnologyTag>
+                      ))}
+                    </TechnologiesList>
+                    <PortfolioButton
+                      variant="portfolio"
+                      size="small"
+                      onClick={() => handleClick(project.link)}
+                    >
+                      {t('portfolio.viewProject')}
+                    </PortfolioButton>
+                  </ProjectContent>
+                </ProjectCard>
+              );
+            })}
           </ProjectReel>
         </ProjectReelContainer>
       </PortfolioWrapper>

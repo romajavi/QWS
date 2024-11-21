@@ -3,8 +3,10 @@ import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import { useTranslation } from 'react-i18next';
 import Button from './Button.js';
 
+// Estilos
 const Card = styled(motion.div)`
   background: ${props => props.theme.colors.cardBackground};
   border: 1px solid ${props => props.theme.colors.secondaryBackground};
@@ -19,7 +21,7 @@ const Card = styled(motion.div)`
   overflow: visible;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease;
-  
+
   &:hover {
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     border-color: ${props => props.theme.colors.accent};
@@ -29,7 +31,7 @@ const Card = styled(motion.div)`
 
 const ServiceName = styled.h3`
   color: ${props => props.theme.colors.accent};
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-family: ${props => props.theme.fonts.secondary};
   margin-bottom: 1rem;
   position: relative;
@@ -46,7 +48,6 @@ const Price = styled.p`
   color: ${props => props.theme.colors.secondaryBackground};
   margin-bottom: 1rem;
   font-weight: bold;
-
 `;
 
 const FeatureList = styled.ul`
@@ -92,18 +93,15 @@ const FeatureDescription = styled(motion.div)`
   padding: 0.8rem;
   border-radius: 8px;
   font-size: 0.8rem;
-  width: 200px;
+  width: auto;
   z-index: 10;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   border: 1px solid ${props => props.theme.colors.accent};
   margin-bottom: 5px;
 `;
 
-const ServiceButton = styled(Button)`
-  margin-top: auto;
-`;
-
-const Feature = ({ feature }) => {
+// Componente Feature
+const Feature = ({ feature, description }) => {
   const [showDescription, setShowDescription] = useState(false);
 
   return (
@@ -113,7 +111,7 @@ const Feature = ({ feature }) => {
         onMouseLeave={() => setShowDescription(false)}
       >
         <FeatureIcon icon={faCheck} />
-        {feature.name}
+        {feature}
       </FeatureHeader>
       <AnimatePresence>
         {showDescription && (
@@ -123,7 +121,7 @@ const Feature = ({ feature }) => {
             exit={{ opacity: 0, y: 10 }}
             transition={{ duration: 0.2 }}
           >
-            {feature.description}
+            {description}
           </FeatureDescription>
         )}
       </AnimatePresence>
@@ -131,26 +129,31 @@ const Feature = ({ feature }) => {
   );
 };
 
-const ServiceCard = ({ name, price, features, onContactClick }) => {
+// Componente ServiceCard
+const ServiceCard = ({ serviceKey, onContactClick }) => {
+  const { t } = useTranslation();
+
   return (
-    <Card
-      whileHover={{ scale: 1.02 }}
-      transition={{ type: "spring", stiffness: 300 }}
-    >
-      <ServiceName>{name}</ServiceName>
-      <Price>{price}</Price>
+    <Card>
+      <ServiceName>
+        {t(`services.categories.${serviceKey}.name`)}
+      </ServiceName>
+      <Price>
+        {t(`services.categories.${serviceKey}.price`)}
+      </Price>
       <FeatureList>
-        {features.map((feature, index) => (
-          <Feature key={index} feature={feature} />
-        ))}
+        {t(`services.categories.${serviceKey}.features`, { returnObjects: true })
+          .map((feature, index) => (
+            <Feature
+              key={index}
+              feature={feature.title} // Título
+              description={feature.description} // Descripción
+            />
+          ))}
       </FeatureList>
-      <ServiceButton
-        variant="service"
-        size="small"
-        onClick={() => onContactClick(name)}
-      >
-        Más información
-      </ServiceButton>
+      <Button onClick={() => onContactClick(serviceKey)}>
+        {t('services.moreInfo')}
+      </Button>
     </Card>
   );
 };

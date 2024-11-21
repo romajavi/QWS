@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import Button from './Button.js';
+
 
 const CalendarWrapper = styled.div`
   background: ${props => props.theme.colors.background};
@@ -92,6 +94,7 @@ const CalendarNavButton = styled(Button)`
 `;
 
 const Calendar = ({ onSelectDate, minDate }) => {
+    const { t, i18n } = useTranslation();
     const [currentDate, setCurrentDate] = useState(new Date());
     const [selectedDate, setSelectedDate] = useState(null);
 
@@ -107,12 +110,28 @@ const Calendar = ({ onSelectDate, minDate }) => {
         1
     ).getDay();
 
-    const monthNames = [
-        "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
-    ];
+    const monthNames = {
+        es: [
+            "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+            "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+        ],
+        en: [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ],
+        pt: [
+            "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+            "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+        ]
+    };
+    
+    const weekdaysText = {
+        es: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
+        en: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+        pt: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"]
+    };
 
-    const weekdays = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
+    const weekdays = weekdaysText[i18n.language] || weekdaysText.es;
 
     const handlePrevMonth = (e) => {
         e.preventDefault();
@@ -213,7 +232,7 @@ const Calendar = ({ onSelectDate, minDate }) => {
                     &lt;
                 </CalendarNavButton>
                 <MonthYear>
-                    {`${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`}
+                    {`${monthNames[i18n.language][currentDate.getMonth()]} ${currentDate.getFullYear()}`}
                 </MonthYear>
                 <CalendarNavButton
                     variant="calendar"

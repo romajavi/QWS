@@ -1,0 +1,415 @@
+{
+    "header": {
+        "home": "Inicio",
+        "services": "Servicios",
+        "portfolio": "Portafolio",
+        "contact": "Contacto",
+        "blog": "Blog"
+    },
+    "home": {
+        "title": "Desarrollo Web y Soluciones Digitales",
+        "subtitle": {
+            "1": "🎯 Desarrollo de sitios web modernos y accesibles para pequeñas y medianas empresas",
+            "2": "💻 Desarrollo y diseño de páginas de aterrizaje atractivas y optimizadas",
+            "3": "⚡ Mantenimiento y actualizaciones de sitios web en WordPress",
+            "4": "📱 Diseño responsivo para una experiencia perfecta en todos los dispositivos",
+            "5": "🔍 Implementación de SEO para mejorar tu visibilidad en línea"
+        },
+        "exploreButton": "Descubre más"
+    },
+    "portfolio": {
+        "title": "Portafolio de Proyectos Web",
+        "viewProject": "Ver Proyecto",
+        "projects": {
+            "1": {
+                "name": "E-commerce Premium",
+                "description": "Plataforma de comercio electrónico desarrollada con React y Node.js. Incluye pasarela de pago, gestión de inventarios y panel de administración."
+            },
+            "2": {
+                "name": "Sistema de Gestión Educativa",
+                "description": "Aplicación web para la gestión integral de instituciones educativas. Control de asistencia, calificaciones y comunicación con padres."
+            },
+            "3": {
+                "name": "Panel Analítico",
+                "description": "Panel interactivo para visualización de datos empresariales. Gráficos en tiempo real e informes personalizables."
+            },
+            "4": {
+                "name": "App de Entregas",
+                "description": "Aplicación móvil para servicio de entregas a domicilio. Sistema de seguimiento en tiempo real y gestión de pedidos."
+            }
+        }
+    },
+    "services": {
+        "title": "Servicios de Desarrollo Web",
+        "moreInfo": "Más información",
+        "categories": {
+            "landingPages": {
+                "name": "Páginas de Aterrizaje y Sitios Web",
+                "price": "Desde u$ d149",
+                "features": [
+                    {
+                        "title": "Diseño Responsivo",
+                        "description": "Tu sitio web se verá genial en cualquier dispositivo, ya sea móvil, tablet o computadora. 📱💻✨"
+                    },
+                    {
+                        "title": "Hasta 5 Secciones",
+                        "description": "Organizamos tu contenido en un máximo de 5 secciones para claridad y funcionalidad. 🗂️📑✅"
+                    },
+                    {
+                        "title": "Formulario de Contacto",
+                        "description": "Incluye un formulario fácil de usar para que tus clientes puedan contactarte directamente. 📨🤝📋"
+                    },
+                    {
+                        "title": "SEO Básico",
+                        "description": "Configuramos tu sitio para que sea encontrado fácilmente en los motores de búsqueda. 🔍📈🌐"
+                    },
+                    {
+                        "title": "Enlaces a Redes Sociales",
+                        "description": "Conectamos tu sitio con tus perfiles en redes sociales para mayor alcance. 🔗📲📢"
+                    },
+                    {
+                        "title": "Entrega según lo acordado",
+                        "description": "Nos aseguramos de entregar tu proyecto en el tiempo pactado y con alta calidad. ⏳🎯🏆"
+                    }
+                ]
+            },
+            "wordpress": {
+                "name": "Mantenimiento de WordPress",
+                "price": "Desde u$d 49/mes",
+                "features": [
+                    {
+                        "title": "Actualizaciones de Seguridad",
+                        "description": "Mantengo tu sitio protegido con actualizaciones de seguridad regulares. 🔐🛡️⚙️"
+                    },
+                    {
+                        "title": "Copias de Seguridad Regulares",
+                        "description": "Realizamos copias de seguridad periódicas para proteger tu información. 💾🗂️🔄"
+                    },
+                    {
+                        "title": "Actualizaciones de Contenido",
+                        "description": "Mantén tu contenido actualizado de forma profesional y rápida. ✍️🚀📅"
+                    },
+                    {
+                        "title": "Monitoreo de Tiempo de Actividad",
+                        "description": "Vigilo que tu sitio esté siempre en línea y funcionando correctamente. 🌐🔎⏱️"
+                    },
+                    {
+                        "title": "Soporte por Correo Electrónico",
+                        "description": "Estoy disponible para resolver tus dudas por correo electrónico. 📬❓🤓"
+                    },
+                    {
+                        "title": "Informes Mensuales",
+                        "description": "Recibes un resumen mensual con las tareas realizadas en tu sitio. 📊🗓️📜"
+                    }
+                ]
+            },
+            "optimization": {
+                "name": "Optimización Web Básica",
+                "price": "Desde u$d 99",
+                "features": [
+                    {
+                        "title": "Optimización de Imágenes",
+                        "description": "Reducimos el tamaño de tus imágenes sin perder calidad para mejorar la velocidad. 🖼️⚡🚀"
+                    },
+                    {
+                        "title": "Descripciones Meta",
+                        "description": "Agregamos metadatos clave para mejorar el posicionamiento de tu sitio en buscadores. 🏷️🔍📈"
+                    },
+                    {
+                        "title": "Mejoras de Velocidad",
+                        "description": "Hacemos ajustes técnicos para que tu sitio cargue más rápido. 🚀⏩🌐"
+                    },
+                    {
+                        "title": "Implementación de SSL",
+                        "description": "Configuramos el certificado SSL para asegurar la conexión de tu sitio. 🔒📶🌍"
+                    },
+                    {
+                        "title": "Adaptado a Móviles",
+                        "description": "Nos aseguramos de que tu sitio sea completamente funcional en dispositivos móviles. 📱🖥️✅"
+                    },
+                    {
+                        "title": "Informe de Mejoras",
+                        "description": "Te proporcionamos un resumen detallado de las optimizaciones realizadas. 📄✅📊"
+                    }
+                ]
+            }
+        },
+        "contactPopup": {
+            "title": "¿Cómo deseas proceder?",
+            "schedule": "Agendar cita",
+            "directContact": "Contacto Directo"
+        }
+    },
+    "contact": {
+        "title": "Contacto",
+        "form": {
+            "sections": {
+                "personal": "Información Personal",
+                "appointment": "Agendar una Cita"
+            },
+            "inputs": {
+                "name": "Nombre *",
+                "email": "Correo Electrónico *",
+                "phone": "Teléfono *",
+                "company": "Empresa (opcional)",
+                "observations": "Observaciones *",
+                "noObservations": "Sin observaciones"
+            },
+            "preferences": {
+                "contact": {
+                    "title": "Preferencias de Contacto *",
+                    "options": {
+                        "phone": "Teléfono",
+                        "email": "Correo Electrónico"
+                    }
+                },
+                "days": {
+                    "title": "Días de Contacto *",
+                    "options": {
+                        "weekdays": "Lun-Vie",
+                        "weekend": "Fin de Semana"
+                    }
+                },
+                "time": {
+                    "title": "Horario de Contacto *",
+                    "options": {
+                        "morning": "Mañana",
+                        "afternoon": "Tarde"
+                    }
+                }
+            },
+            "appointment": {
+                "date": "Fecha de la Cita",
+                "time": "Hora de la Cita",
+                "notSpecified": "No especificado",
+                "medium": {
+                    "title": "Medio de la Cita",
+                    "options": {
+                        "zoom": "Zoom",
+                        "meet": "Google Meet",
+                        "whatsapp": "WhatsApp"
+                    }
+                }
+            },
+            "buttons": {
+                "clear": "Limpiar",
+                "submit": "Enviar"
+            },
+            "status": {
+                "success": {
+                    "title": "🎉 ¡Éxito absoluto!",
+                    "message": "Tu formulario se ha enviado con éxito, viajando a través de los cables del universo digital directamente a nuestra bandeja de entrada. ✉️✨ ¡Gracias por escribirnos! Nuestro equipo revisará tu mensaje y se pondrá en contacto contigo a la brevedad. 🚀🌟"
+                },
+                "error": {
+                    "title": "🚧 ¡Ups! Algo salió mal...",
+                    "message": "Parece que el formulario tropezó en el camino. 🐾💨 No te preocupes, ya estamos revisándolo. Mientras tanto, revisa tu conexión o inténtalo de nuevo. Si el problema persiste, estamos aquí para ayudarte. 🛠️✨"
+                }
+            },
+            "errors": {
+                "title": "Error",
+                "required": "Faltan campos obligatorios",
+                "invalidEmail": "Formato de correo electrónico inválido",
+                "clientEmailError": "Error al enviar el correo de confirmación",
+                "adminEmailError": "Error al enviar la notificación al administrador"
+            },
+            "emails": {
+                "client": {
+                    "thankYou": "¡Gracias por contactarnos!",
+                    "subject": "Confirmación de recepción - Axion Dev",
+                    "greeting": "Estimado/a",
+                    "received": "Hemos recibido tu solicitud y te contactaremos pronto para confirmar tu cita. Aquí están los detalles de tu solicitud:",
+                    "appointmentDetails": "Detalles de la cita",
+                    "followUp": "A la brevedad posible nos pondremos en contacto contigo para confirmar tu cita."
+                },
+                "admin": {
+                    "newContact": "Nuevo formulario de contacto recibido",
+                    "subject": "Nuevo formulario de contacto - Axion Dev",
+                    "details": "Detalles del contacto"
+                }
+            },
+            "validation": {
+                "name": "Por favor, ingrese su nombre",
+                "email": "Por favor, ingrese un correo electrónico válido",
+                "phone": "Por favor, ingrese un número de teléfono válido",
+                "contactPreference": "Por favor, seleccione una preferencia de contacto",
+                "contactDays": "Por favor, seleccione los días de contacto",
+                "contactTime": "Por favor, seleccione el horario de contacto"
+            }
+        },
+        "captcha": {
+            "title": "Verificación",
+            "placeholder": "Ingresa el código",
+            "error": "Código incorrecto",
+            "required": "Por favor, complete el captcha",
+            "verifying": "Verificando...",
+            "success": "Verificación exitosa",
+            "retry": "Intentar de nuevo",
+            "loading": "Cargando captcha..."
+        }
+    },
+    "footer": {
+        "sections": {
+            "company": {
+                "title": "AxionDev",
+                "links": {
+                    "about": "Sobre Nosotros",
+                    "services": "Servicios",
+                    "contact": "Contacto"
+                }
+            },
+            "resources": {
+                "title": "Recursos",
+                "links": {
+                    "blog": "Blog",
+                    "faq": "Preguntas Frecuentes",
+                    "support": "Soporte"
+                }
+            },
+            "contact": {
+                "title": "Contacto",
+                "links": {
+                    "whatsapp": "WhatsApp",
+                    "email": "info@axiondev.tech",
+                    "schedule": "Lun - Vie: 9:00 - 18:00"
+                }
+            },
+            "social": {
+                "title": "Síguenos",
+                "links": {
+                    "facebook": "Facebook",
+                    "twitter": "Twitter",
+                    "instagram": "Instagram",
+                    "linkedin": "LinkedIn"
+                }
+            }
+        },
+        "copyright": "© 2024 AxionDev. Todos los derechos reservados."
+    },
+    "underConstruction": {
+        "title": "Estamos trabajando en algo asombroso",
+        "subtitle": "¡Vuelve pronto para descubrir las novedades!"
+    },
+    "faq": {
+        "title": "Preguntas Frecuentes",
+        "categories": {
+            "conceptos": {
+                "title": "Conceptos Básicos",
+                "items": [
+                    {
+                        "question": "¿Qué es un dominio web?",
+                        "answer": "Un dominio web es el nombre único que identifica tu sitio en Internet, como 'mipagina.com'. Es la dirección que los usuarios escriben en su navegador para visitar tu sitio. Los dominios se registran por períodos de 1 año y pueden renovarse anualmente para mantener la propiedad."
+                    },
+                    {
+                        "question": "¿Qué es el hosting y por qué lo necesito?",
+                        "answer": "El hosting o alojamiento web es el espacio en un servidor donde se almacenan todos los archivos de tu sitio web (imágenes, texto, código, etc.). Es esencial para que tu sitio sea accesible en Internet. Los planes se contratan generalmente por un año e incluyen características como SSL y copias de seguridad, dependiendo del plan elegido."
+                    },
+                    {
+                        "question": "¿Qué es un certificado SSL?",
+                        "answer": "El SSL es un certificado de seguridad que protege la comunicación entre el usuario y el servidor. Cuando tu sitio tiene SSL, su dirección comienza con 'https://' y muestra un candado, lo que aumenta la confianza de los usuarios. Es importante para la seguridad y el SEO, y debe renovarse anualmente."
+                    },
+                    {
+                        "question": "¿Qué es el SEO y por qué es importante?",
+                        "answer": "El SEO (Optimización para Motores de Búsqueda) es el proceso de mejorar tu sitio web para que ocupe mejores posiciones en Google y otros motores de búsqueda. Incluye la optimización de palabras clave, enlaces, velocidad del sitio y otros factores. Un buen SEO ayuda a que más personas encuentren tu sitio de forma natural."
+                    },
+                    {
+                        "question": "¿Qué es una página de aterrizaje?",
+                        "answer": "Una página de aterrizaje es una página web diseñada específicamente para captar la atención de los usuarios y motivarlos a realizar una acción específica, como registrarse o realizar una compra. Estas páginas están optimizadas para la conversión con un objetivo claro y específico."
+                    }
+                ]
+            },
+            "servicios": {
+                "title": "Servicios",
+                "items": [
+                    {
+                        "question": "¿Qué incluye el servicio de hosting?",
+                        "answer": "Nuestro servicio de hosting incluye espacio en el servidor para almacenar los archivos del sitio web, certificado SSL, copias de seguridad regulares y soporte técnico. Los planes varían en capacidad de almacenamiento y características adicionales según las necesidades del cliente."
+                    },
+                    {
+                        "question": "¿Qué son las rondas de revisión?",
+                        "answer": "Las rondas de revisión son oportunidades para solicitar cambios y ajustes después de la primera entrega del proyecto. Cada servicio incluye un número específico de rondas que pueden realizarse sin costo adicional para perfeccionar el trabajo según tus necesidades."
+                    },
+                    {
+                        "question": "¿Qué incluye el mantenimiento web?",
+                        "answer": "El mantenimiento web incluye actualizaciones de seguridad, verificación de enlaces, copias de seguridad periódicas, actualizaciones de contenido y soporte técnico. La frecuencia y el alcance de estos servicios dependen del plan contratado (básico, estándar o premium)."
+                    },
+                    {
+                        "question": "¿Qué es la optimización de velocidad?",
+                        "answer": "La optimización de velocidad es el proceso de mejorar el tiempo de carga de tu sitio web mediante técnicas como la optimización de imágenes, la minificación del código y la mejora de la configuración del servidor. Un sitio más rápido mejora la experiencia del usuario y el SEO."
+                    }
+                ]
+            },
+            "soporte": {
+                "title": "Soporte",
+                "items": [
+                    {
+                        "question": "¿Qué es el soporte prioritario?",
+                        "answer": "El soporte prioritario es un servicio de respuesta rápida para resolver problemas urgentes en tu sitio web. Los clientes con este servicio tienen acceso a respuestas más rápidas y soluciones inmediatas, especialmente útil en emergencias fuera del horario laboral."
+                    },
+                    {
+                        "question": "¿Qué sucede si necesito más revisiones de las incluidas?",
+                        "answer": "Si necesitas revisiones adicionales más allá de las incluidas en tu paquete, estas tendrán un costo extra que te informaremos antes de realizar cualquier ajuste. Siempre se te notificará y podrás aprobar el costo antes de proceder."
+                    },
+                    {
+                        "question": "¿Qué incluye el período de soporte postentrega?",
+                        "answer": "Todos los proyectos incluyen un período de soporte gratuito de 30 días para corregir posibles errores. Después de este período, puedes contratar un plan de mantenimiento para seguir recibiendo soporte y actualizaciones."
+                    }
+                ]
+            },
+            "mantenimiento": {
+                "title": "Mantenimiento",
+                "items": [
+                    {
+                        "question": "¿Qué son las copias de seguridad y con qué frecuencia se realizan?",
+                        "answer": "Las copias de seguridad son copias de todos los archivos de tu sitio web y la base de datos. Dependiendo del plan de mantenimiento, realizamos copias de seguridad semanales o mensuales para proteger tu información en caso de cualquier incidente."
+                    },
+                    {
+                        "question": "¿Cómo funcionan las actualizaciones de contenido?",
+                        "answer": "Las actualizaciones de contenido consisten en modificar o agregar texto, imágenes, videos u otros elementos a tu sitio web. La frecuencia de las actualizaciones depende del plan de mantenimiento contratado, generalmente mensual o trimestral."
+                    },
+                    {
+                        "question": "¿Qué incluye la optimización de imágenes?",
+                        "answer": "La optimización de imágenes consiste en reducir el tamaño de los archivos sin sacrificar la calidad visual, mejorando así la velocidad de carga del sitio. Incluye compresión, redimensionamiento y optimización del formato."
+                    }
+                ]
+            },
+            "políticas": {
+                "title": "Políticas",
+                "items": [
+                    {
+                        "question": "¿Cuál es la política de cancelación?",
+                        "answer": "Si decides cancelar un proyecto después de haber iniciado, el pago inicial no es reembolsable ya que cubre el trabajo inicial y los recursos utilizados. Para servicios anuales como hosting o dominio, la cancelación puede implicar una retención parcial del costo."
+                    },
+                    {
+                        "question": "¿Cuál es la política de revisiones?",
+                        "answer": "Cada paquete incluye un número específico de rondas de revisión, detalladas en el contrato. Las revisiones adicionales se cobrarán por separado y siempre se comunicarán previamente para su aprobación."
+                    },
+                    {
+                        "question": "¿Cómo funciona la política de soporte postentrega?",
+                        "answer": "Ofrecemos un período de soporte gratuito de 30 días después de la entrega para corregir posibles errores. Después de este período, recomendamos contratar un plan de mantenimiento para recibir soporte continuo."
+                    }
+                ]
+            },
+            "costos": {
+                "title": "Costos",
+                "items": [
+                    {
+                        "question": "¿En qué moneda están reflejados los precios?",
+                        "answer": "Los precios de nuestros servicios están reflejados en dólares estadounidenses. Sin embargo, puedes realizar el pago en pesos argentinos al tipo de cambio del día, según lo establecido por tu banco o procesador de pagos."
+                    },
+                    {
+                        "question": "¿Los costos de dominio y hosting están incluidos en el precio?",
+                        "answer": "No, los costos de dominio y hosting no están incluidos en el precio de nuestros servicios. Estos servicios se contratan por separado y se renuevan anualmente según las tarifas del proveedor de hosting y dominio."
+                    },
+                    {
+                        "question": "¿El certificado SSL está incluido en el precio?",
+                        "answer": "El certificado SSL no está incluido en el precio estándar. Si deseas agregar SSL para proteger tu sitio, se contrata por separado y generalmente se renueva anualmente. Un SSL es importante para la seguridad y la confianza de los usuarios en tu sitio web."
+                    },
+                    {
+                        "question": "¿Existen otros costos adicionales que deba considerar?",
+                        "answer": "Algunos servicios adicionales, como revisiones extra o mantenimiento posterior al período incluido, pueden implicar costos adicionales. Cualquier gasto adicional será comunicado antes de proceder para que puedas aprobarlo."
+                    }
+                ]
+            }
+        }
+    }
+}

@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
+
 
 const PopupOverlay = styled(motion.div)`
   position: fixed;
@@ -49,26 +51,27 @@ const CloseButton = styled(motion.button)`
 `;
 
 const DiscountPopup = ({ isOpen, onClose }) => {
-    return (
-        <AnimatePresence>
-            {isOpen && (
-                <PopupOverlay
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    onClick={onClose}
-                >
-                    <PopupContent onClick={(e) => e.stopPropagation()}>
-                        <CloseButton onClick={onClose}>×</CloseButton>
-                        <PopupTitle>¡Oferta Especial!</PopupTitle>
-                        <PopupText>
-                            Obtén un 20% de descuento en todos nuestros servicios al abonar en efectivo o por transferencia.
-                        </PopupText>
-                    </PopupContent>
-                </PopupOverlay>
-            )}
-        </AnimatePresence>
-    );
+  const { t } = useTranslation();
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <PopupOverlay
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={onClose}
+        >
+          <PopupContent onClick={(e) => e.stopPropagation()}>
+            <CloseButton onClick={onClose}>×</CloseButton>
+            <PopupTitle>{t('discount.title')}</PopupTitle>
+            <PopupText>
+              {t('discount.message')}
+            </PopupText>
+          </PopupContent>
+        </PopupOverlay>
+      )}
+    </AnimatePresence>
+  );
 };
 
 export default DiscountPopup;

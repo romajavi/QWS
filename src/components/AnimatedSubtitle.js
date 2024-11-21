@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 const SubtitleContainer = styled(motion.div)`
   font-size: 2rem;
   color: ${props => props.theme.colors.secondaryBackground};
   line-height: 1.8;
   max-width: 1200px;
-  margin: 3rem auto; // Aumentamos el margen vertical
+  margin: 3rem auto;
   padding: 2rem;
-  height: 100px; // Reducimos un poco la altura
+  height: 100px;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-
+  
   @media (max-width: 768px) {
     font-size: 1.5rem;
     padding: 1.5rem;
@@ -34,32 +35,33 @@ const TextWrapper = styled(motion.p)`
   text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
 `;
 
-const subtitleTexts = [
-    "🎯 Desarrollo de sitios web modernos y accesibles para pequeños y medianos negocios",
-    "💻 Desarrollo y diseño de landing pages atractivas y optimizadas",
-    "⚡ Mantenimiento y actualizaciones de sitios web WordPress",
-    "📱 Diseño responsivo para una experiencia perfecta en todos los dispositivos",
-    "🔍 Implementación de SEO para mejorar tu visibilidad online"
-];
-
-
 const AnimatedSubtitle = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
+    const { t } = useTranslation();
+
+    // Obtener los subtítulos traducidos
+    const subtitleTexts = [
+        t('home.subtitle.1'),
+        t('home.subtitle.2'),
+        t('home.subtitle.3'),
+        t('home.subtitle.4'),
+        t('home.subtitle.5')
+    ];
 
     useEffect(() => {
         const timer = setInterval(() => {
             setCurrentIndex((prev) => (prev + 1) % subtitleTexts.length);
-        }, 5000); // Aumentamos el tiempo a 5 segundos
+        }, 5000);
 
         return () => clearInterval(timer);
-    }, []);
+    }, [subtitleTexts.length]);
 
     return (
         <SubtitleContainer>
             <AnimatePresence mode="wait">
                 <TextWrapper
                     key={currentIndex}
-                    initial={{ opacity: 0, scale: 0.8 }} // Cambiamos la animación inicial
+                    initial={{ opacity: 0, scale: 0.8 }}
                     animate={{
                         opacity: 1,
                         scale: 1,
@@ -70,7 +72,7 @@ const AnimatedSubtitle = () => {
                     }}
                     exit={{
                         opacity: 0,
-                        scale: 1.1, // Efecto de zoom out al salir
+                        scale: 1.1,
                         transition: {
                             duration: 0.5,
                             ease: "easeIn"

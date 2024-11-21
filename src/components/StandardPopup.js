@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
+
 
 const PopupOverlay = styled(motion.div)`
   position: fixed;
@@ -79,8 +81,8 @@ const ButtonContainer = styled.div`
   }
 `;
 
-const StandardPopup = ({ isOpen, onClose, title, children }) => {
-  useEffect(() => {
+const StandardPopup = ({ isOpen, onClose, titleKey, children }) => {
+  const { t } = useTranslation(); useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
     }
@@ -106,7 +108,7 @@ const StandardPopup = ({ isOpen, onClose, title, children }) => {
           exit={{ scale: 0.5, opacity: 0 }}
         >
           <CloseButton onClick={onClose}>×</CloseButton>
-          <PopupTitle>{title}</PopupTitle>
+          <PopupTitle>{t(titleKey)}</PopupTitle>
           <ButtonContainer>
             {children}
           </ButtonContainer>

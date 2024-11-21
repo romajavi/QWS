@@ -1,7 +1,8 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { ReactTyped } from 'react-typed';
+import { useTranslation } from 'react-i18next';
 import Calendar from '../components/Calendar.js';
 import StandardPopup from '../components/StandardPopup.js';
 import LoadingSpinner from '../components/LoadingSpinner.js';
@@ -39,7 +40,7 @@ const TextArea = styled.textarea`
   padding: 0.8rem;
   margin-bottom: 1rem;
   background: rgba(30, 30, 30, 0.7);
-  border: 1px solid ${props => props.theme.colors.secondaryBackground}40;
+  border: 1px solid ${props => props.$hasError ? '#ff3333' : `${props.theme.colors.secondaryBackground}40`};
   border-radius: 8px;
   color: ${props => props.theme.colors.text};
   min-height: 100px;
@@ -88,7 +89,7 @@ const FormContainer = styled.div`
   background: ${props => props.theme.colors.cardBackground};
   backdrop-filter: blur(10px);
   border-radius: 20px;
-  padding: 2rem 2rem 7rem 2rem; // Aumentar padding inferior
+  padding: 2rem 2rem 2rem 2rem; // Aumentar padding inferior
   position: relative;
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
   border: 1px solid ${props => props.hasError ? '#ff3333' : props.theme.colors.secondaryBackground}40;
@@ -146,7 +147,7 @@ const Input = styled.input`
   padding: 0.8rem;
   margin-bottom: 1.5rem;
   background: rgba(30, 30, 30, 0.7);
-  border: 1px solid ${props => props.hasError ? '#ff3333' : props.theme.colors.secondaryBackground}40;
+  border: 1px solid ${props => props.$hasError ? '#ff3333' : `${props.theme.colors.secondaryBackground}40`};
   border-radius: 8px;
   color: ${props => props.theme.colors.text};
 
@@ -165,7 +166,7 @@ const PreferenceGroup = styled.div`
   padding: 1.2rem;
   border-radius: 8px;
   margin-bottom: 1.5rem;
-  border: 1px solid ${props => props.hasError ? '#ff3333' : props.theme.colors.secondaryBackground}40;
+  border: ${props => props.theme.colors.secondaryBackground};
 `;
 
 const RadioContainer = styled.div`
@@ -176,7 +177,7 @@ const RadioContainer = styled.div`
 `;
 
 const CheckboxTitle = styled.h3`
-  color: ${props => props.error ? '#ff3333' : props.theme.colors.accent};
+  color: ${props => props.theme.colors.accent};
   font-size: 1rem;
   margin-bottom: 1rem;
   text-align: center;
@@ -193,7 +194,7 @@ const RadioLabel = styled.label`
   padding: 0.8rem 1.2rem;
   background: rgba(30, 30, 30, 0.7);
   border-radius: 5px;
-  border: 1px solid ${props => props.hasError ? '#ff3333' : props.theme.colors.secondaryBackground}40;
+  border: ${props => props.theme.colors.secondaryBackground};
   transition: all 0.3s ease;
 
   &:hover {
@@ -205,7 +206,7 @@ const RadioLabel = styled.label`
     appearance: none;
     width: 18px;
     height: 18px;
-    border: 2px solid ${props => props.error ? '#ff3333' : props.theme.colors.primary};
+    border: 2px solid ${props => props.$error ? '#ff3333' : props.theme.colors.primary};
     border-radius: 50%;
     position: relative;
     transition: all 0.3s ease;
@@ -229,6 +230,7 @@ const RadioLabel = styled.label`
     }
   }
 `;
+
 
 const Divider = styled.div`
   width: 2px;
@@ -306,8 +308,16 @@ const ClearButton = styled(Button)`
 const SubmitButton = styled(Button)`
 `;
 
+const ErrorMessage = styled.p`
+  color: #ff3333;
+  font-size: 0.875rem;
+  text-align: center;
+  margin-top: 0.5rem;
+`;
+
 
 const Contact = () => {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -322,43 +332,77 @@ const Contact = () => {
     observations: ''
   });
 
+  const [submitStatus, setSubmitStatus] = useState({
+    success: false,
+    titleKey: '',
+    message: ''
+  });
   const [errors, setErrors] = useState({});
   const [selectedDate, setSelectedDate] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState({ success: false, message: '' });
+  const [formStatus, setFormStatus] = useState({
+    isSubmitting: false,
+    isSuccess: false,
+    error: null
+  });
+  const [isCaptchaVerified, setIsCaptchaVerified] = useState(false);
 
   const navigate = useNavigate();
   const formRef = useRef(null);
 
+  useEffect(() => {
+    if (formStatus.isSuccess) {
+      setSubmitStatus({
+        success: true,
+        titleKey: 'contact.form.status.success.title',
+        message: t('contact.form.status.success.message')
+      });
+      setShowPopup(true);
+    } else if (formStatus.error) {
+      setSubmitStatus({
+        success: false,
+        titleKey: 'contact.form.status.error.title',
+        message: t('contact.form.status.error.message')
+      });
+      setShowPopup(true);
+    }
+  }, [formStatus, t]);
+
   const validateForm = () => {
+    console.log('Starting form validation');
     const newErrors = {};
-    if (!formData.name) newErrors.name = true;
-    if (!formData.email) newErrors.email = true;
-    if (!formData.phone) newErrors.phone = true;
-    if (!formData.contactPreference.length) newErrors.contactPreference = true;
-    if (!formData.contactDays.length) newErrors.contactDays = true;
-    if (!formData.contactTime.length) newErrors.contactTime = true;
+
+    if (!formData.name.trim()) newErrors.name = true;
+    if (!formData.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) newErrors.email = true;
+    if (!formData.phone.trim()) newErrors.phone = true;
+    // if (!formData.contactPreference.length) newErrors.contactPreference = true;
+    // if (!formData.contactDays.length) newErrors.contactDays = true;
+    // if (!formData.contactTime.length) newErrors.contactTime = true;
+    if (!formData.observations || formData.observations.trim() === '') newErrors.observations = true;
     if (!isCaptchaVerified) newErrors.captcha = true;
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-
+  // Función para manejar el envío del formulario
+  // 3. Update handleSubmit function
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setIsLoading(true); // Activar spinner
+  
     if (!validateForm()) {
       setSubmitStatus({
         success: false,
-        message: 'Por favor, complete todos los campos requeridos.'
+        titleKey: 'contact.form.errors.title',
+        message: t('contact.form.errors.required')
       });
       setShowPopup(true);
+      setIsLoading(false); // Desactivar spinner
       return;
     }
-
-    setIsLoading(true);
-
+  
     try {
       const response = await fetch('/api/contact', {
         method: 'POST',
@@ -367,29 +411,32 @@ const Contact = () => {
         },
         body: JSON.stringify(formData),
       });
-
+  
       if (response.ok) {
-        setSubmitStatus({
-          success: true,
-          message: '¡Gracias por contactarnos! Te responderemos pronto.'
-        });
+        setFormStatus({ isSubmitting: false, isSuccess: true, error: null });
         handleReset();
       } else {
-        throw new Error('Error al enviar el formulario');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Server response was not ok');
       }
     } catch (error) {
-      console.error('Error:', error);
-      setSubmitStatus({
-        success: false,
-        message: 'Hubo un error al enviar el formulario. Por favor, intenta nuevamente.'
+      setFormStatus({ 
+        isSubmitting: false, 
+        isSuccess: false, 
+        error: error.message === 'email_error' ? 'contact.form.errors.clientEmailError' : 'contact.form.errors.required'
       });
     } finally {
-      setIsLoading(false);
-      setShowPopup(true);
+      setIsLoading(false); // Siempre desactivar spinner
     }
   };
 
-  const handleReset = () => {
+
+  // 4. Update handleReset function
+  const handleReset = (e) => {
+    if (e) {
+      e.preventDefault();
+    }
+
     setFormData({
       name: '',
       email: '',
@@ -403,31 +450,68 @@ const Contact = () => {
       appointmentMedium: '',
       observations: ''
     });
+
     setSelectedDate(null);
     setErrors({});
+    setIsCaptchaVerified(false);
+    setSubmitStatus({
+      success: false,
+      titleKey: '',
+      message: ''
+    });
+    setShowPopup(false);
+
     if (formRef.current) {
       formRef.current.reset();
+      const radios = formRef.current.querySelectorAll('input[type="radio"]');
+      radios.forEach(radio => {
+        radio.checked = false;
+      });
+
+      const textarea = formRef.current.querySelector('textarea');
+      if (textarea) {
+        textarea.value = '';
+      }
+
+      const select = formRef.current.querySelector('select[name="appointmentTime"]');
+      if (select) {
+        select.value = '10:00';
+      }
     }
+
+
+    // Limpiar cualquier mensaje de error o éxito que pudiera estar mostrándose
+    setShowPopup(false);
   };
 
+  // Función para manejar la selección de fecha
   const handleDateSelect = (date) => {
+    if (!date) return;
+
+    // Formatear la fecha para el formato ISO
+    const formattedDate = date.toISOString().split('T')[0];
+
     setSelectedDate(date);
     setFormData(prev => ({
       ...prev,
-      appointmentDate: date.toISOString().split('T')[0]
+      appointmentDate: formattedDate
     }));
   };
 
+  // Función para cerrar el popup
   const handleClosePopup = () => {
     setShowPopup(false);
     if (submitStatus.success) {
+      // Redirigir a la página principal después de un envío exitoso
       setTimeout(() => navigate('/'), 500);
     }
   };
 
-
-  const [isCaptchaVerified, setIsCaptchaVerified] = useState(false);
-
+  console.log('Rendering popup with:', {
+    isOpen: showPopup,
+    titleKey: submitStatus.titleKey,
+    message: submitStatus.message
+  });
 
   return (
     <PageContainer>
@@ -435,163 +519,207 @@ const Contact = () => {
       <ContactWrapper>
         <Title>
           <ReactTyped
-            strings={['Contacto']}
+            strings={[t('contact.title')]}
             typeSpeed={50}
             showCursor={true}
             cursorChar="|"
           />
         </Title>
-        <FormContainer>
+        <FormContainer $hasError={Object.keys(errors).length > 0}>
           <form onSubmit={handleSubmit} ref={formRef}>
             <FormGrid>
+
+              {/* personal information */}
               <Section>
-                <h2>Información</h2>
+                <h2>{t('contact.form.sections.personal')}</h2>
+
+                {/* Inputs personales */}
                 <Input
                   type="text"
                   name="name"
-                  placeholder="Nombre *"
+                  placeholder={t('contact.form.inputs.name')}
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  hasError={errors.name}
-                  autoComplete="name"
+                  $hasError={errors.name}
+                  autoComplete="given-name"
                 />
+
                 <Input
                   type="email"
                   name="email"
-                  placeholder="Email *"
+                  placeholder={t('contact.form.inputs.email')}
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  hasError={errors.email}
+                  $hasError={errors.email}
                   autoComplete="email"
                 />
+
                 <Input
                   type="tel"
                   name="phone"
-                  placeholder="Teléfono *"
+                  placeholder={t('contact.form.inputs.phone')}
                   value={formData.phone}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  hasError={errors.phone}
+                  $hasError={errors.phone}
                   autoComplete="tel"
                 />
+
                 <Input
                   type="text"
                   name="company"
-                  placeholder="Empresa"
+                  placeholder={t('contact.form.inputs.company')}
                   value={formData.company}
                   onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                   autoComplete="organization"
                 />
 
-                <PreferenceGroup>
-                  <CheckboxTitle error={errors.contactPreference}>
-                    Preferencias de Contacto *
+                {/* Preferencias de Contacto */}
+                <PreferenceGroup $hasError={errors.contactPreference}>
+                  <CheckboxTitle $error={errors.contactPreference}>
+                    {t('contact.form.preferences.contact.title')}
                   </CheckboxTitle>
                   <RadioContainer>
-                    <RadioLabel error={errors.contactPreference}>
+                    <RadioLabel $hasError={errors.contactPreference}>
                       <input
                         type="radio"
                         name="contactPreference"
-                        value="telefono"
-                        checked={formData.contactPreference.includes('telefono')}
-                        onChange={(e) => setFormData({
-                          ...formData,
-                          contactPreference: [e.target.value]
-                        })}
+                        value="phone"
+                        checked={formData.contactPreference.includes('phone')}
+                        onChange={(e) => {
+                          setFormData({
+                            ...formData,
+                            contactPreference: [e.target.value]
+                          });
+                          if (errors.contactPreference) {
+                            setErrors(prev => ({ ...prev, contactPreference: false }));
+                          }
+                        }}
                       />
-                      Teléfono
+                      {t('contact.form.preferences.contact.options.phone')}
                     </RadioLabel>
-                    <RadioLabel error={errors.contactPreference}>
+                    <RadioLabel $hasError={errors.contactPreference}>
                       <input
                         type="radio"
                         name="contactPreference"
                         value="email"
                         checked={formData.contactPreference.includes('email')}
-                        onChange={(e) => setFormData({
-                          ...formData,
-                          contactPreference: [e.target.value]
-                        })}
+                        onChange={(e) => {
+                          setFormData({
+                            ...formData,
+                            contactPreference: [e.target.value]
+                          });
+                          if (errors.contactPreference) {
+                            setErrors(prev => ({ ...prev, contactPreference: false }));
+                          }
+                        }}
                       />
-                      Email
+                      {t('contact.form.preferences.contact.options.email')}
                     </RadioLabel>
                   </RadioContainer>
                 </PreferenceGroup>
 
-                <PreferenceGroup>
-                  <CheckboxTitle error={errors.contactDays}>
-                    Días de Contacto *
+                {/* Días de Contacto */}
+                <PreferenceGroup $hasError={errors.contactDays}>
+                  <CheckboxTitle $error={errors.contactDays}>
+                    {t('contact.form.preferences.days.title')}
                   </CheckboxTitle>
                   <RadioContainer>
-                    <RadioLabel error={errors.contactDays}>
+                    <RadioLabel $hasError={errors.contactDays}>
                       <input
                         type="radio"
                         name="contactDays"
-                        value="lunVier"
-                        checked={formData.contactDays.includes('lunVier')}
-                        onChange={(e) => setFormData({
-                          ...formData,
-                          contactDays: [e.target.value]
-                        })}
+                        value="weekdays"
+                        checked={formData.contactDays.includes('weekdays')}
+                        onChange={(e) => {
+                          setFormData({
+                            ...formData,
+                            contactDays: [e.target.value]
+                          });
+                          if (errors.contactDays) {
+                            setErrors(prev => ({ ...prev, contactDays: false }));
+                          }
+                        }}
                       />
-                      Lun-Vier
+                      {t('contact.form.preferences.days.options.weekdays')}
                     </RadioLabel>
-                    <RadioLabel error={errors.contactDays}>
+                    <RadioLabel $hasError={errors.contactDays}>
                       <input
                         type="radio"
                         name="contactDays"
-                        value="fSemana"
-                        checked={formData.contactDays.includes('fSemana')}
-                        onChange={(e) => setFormData({
-                          ...formData,
-                          contactDays: [e.target.value]
-                        })}
+                        value="weekend"
+                        checked={formData.contactDays.includes('weekend')}
+                        onChange={(e) => {
+                          setFormData({
+                            ...formData,
+                            contactDays: [e.target.value]
+                          });
+                          if (errors.contactDays) {
+                            setErrors(prev => ({ ...prev, contactDays: false }));
+                          }
+                        }}
                       />
-                      F/Semana
+                      {t('contact.form.preferences.days.options.weekend')}
                     </RadioLabel>
                   </RadioContainer>
                 </PreferenceGroup>
 
-                <PreferenceGroup>
-                  <CheckboxTitle error={errors.contactTime}>
-                    Horario de Contacto *
+                {/* Horario de Contacto */}
+                <PreferenceGroup $hasError={errors.contactTime}>
+                  <CheckboxTitle $error={errors.contactTime}>
+                    {t('contact.form.preferences.time.title')}
                   </CheckboxTitle>
                   <RadioContainer>
-                    <RadioLabel error={errors.contactTime}>
+                    <RadioLabel $hasError={errors.contactTime}>
                       <input
                         type="radio"
                         name="contactTime"
-                        value="manana"
-                        checked={formData.contactTime.includes('manana')}
-                        onChange={(e) => setFormData({
-                          ...formData,
-                          contactTime: [e.target.value]
-                        })}
+                        value="morning"
+                        checked={formData.contactTime.includes('morning')}
+                        onChange={(e) => {
+                          setFormData({
+                            ...formData,
+                            contactTime: [e.target.value]
+                          });
+                          if (errors.contactTime) {
+                            setErrors(prev => ({ ...prev, contactTime: false }));
+                          }
+                        }}
                       />
-                      Mañana
+                      {t('contact.form.preferences.time.options.morning')}
                     </RadioLabel>
-                    <RadioLabel error={errors.contactTime}>
+                    <RadioLabel $hasError={errors.contactTime}>
                       <input
                         type="radio"
                         name="contactTime"
-                        value="tarde"
-                        checked={formData.contactTime.includes('tarde')}
-                        onChange={(e) => setFormData({
-                          ...formData,
-                          contactTime: [e.target.value]
-                        })}
+                        value="afternoon"
+                        checked={formData.contactTime.includes('afternoon')}
+                        onChange={(e) => {
+                          setFormData({
+                            ...formData,
+                            contactTime: [e.target.value]
+                          });
+                          if (errors.contactTime) {
+                            setErrors(prev => ({ ...prev, contactTime: false }));
+                          }
+                        }}
                       />
-                      Tarde
+                      {t('contact.form.preferences.time.options.afternoon')}
                     </RadioLabel>
                   </RadioContainer>
                 </PreferenceGroup>
 
+                {/* Sección de Observaciones */}
                 <FormSection>
                   <TextAreaContainer>
+                    <CheckboxTitle $error={errors.contactTime}>
+                      {t('contact.form.inputs.observations')}
+                    </CheckboxTitle>
                     <TextArea
                       name="observations"
-                      placeholder="Observaciones generales"
                       value={formData.observations}
                       onChange={(e) => setFormData({ ...formData, observations: e.target.value })}
                       style={{ flex: 1, minHeight: '150px' }}
+                      $hasError={errors.observations}
                     />
                   </TextAreaContainer>
                 </FormSection>
@@ -599,14 +727,18 @@ const Contact = () => {
 
               <Divider />
 
+              {/* appointment information */}
               <Section>
-                <h2>Agendar una Cita</h2>
+                <h2>{t('contact.form.sections.appointment')}</h2>
                 <Calendar
                   onSelectDate={handleDateSelect}
                   selectedDate={selectedDate}
                 />
+
                 <PreferenceGroup>
-                  <CheckboxTitle>Horario de Cita</CheckboxTitle>
+                  <CheckboxTitle>
+                    {t('contact.form.appointment.time')}
+                  </CheckboxTitle>
                   <Select
                     name="appointmentTime"
                     value={formData.appointmentTime}
@@ -614,6 +746,7 @@ const Contact = () => {
                       ...formData,
                       appointmentTime: e.target.value
                     })}
+                    $hasError={errors.appointmentTime}
                   >
                     <option value="09:00">09:00</option>
                     <option value="10:00">10:00</option>
@@ -628,7 +761,9 @@ const Contact = () => {
                 </PreferenceGroup>
 
                 <PreferenceGroup>
-                  <CheckboxTitle>Medio de la Cita</CheckboxTitle>
+                  <CheckboxTitle>
+                    {t('contact.form.appointment.medium.title')}
+                  </CheckboxTitle>
                   <RadioContainer>
                     <RadioLabel>
                       <input
@@ -641,7 +776,7 @@ const Contact = () => {
                           appointmentMedium: e.target.value
                         })}
                       />
-                      Zoom
+                      {t('contact.form.appointment.medium.options.zoom')}
                     </RadioLabel>
                     <RadioLabel>
                       <input
@@ -654,7 +789,7 @@ const Contact = () => {
                           appointmentMedium: e.target.value
                         })}
                       />
-                      Google Meet
+                      {t('contact.form.appointment.medium.options.meet')}
                     </RadioLabel>
                     <RadioLabel>
                       <input
@@ -667,29 +802,49 @@ const Contact = () => {
                           appointmentMedium: e.target.value
                         })}
                       />
-                      WhatsApp
+                      {t('contact.form.appointment.medium.options.whatsapp')}
                     </RadioLabel>
                   </RadioContainer>
                 </PreferenceGroup>
-                <Captcha onVerify={setIsCaptchaVerified} />
+
+                {/* Implementación del Captcha */}
+                <PreferenceGroup>
+                  <CheckboxTitle $error={errors.captcha}>
+                    {t('contact.captcha.title')}
+                  </CheckboxTitle>
+                  <Captcha
+                    onVerify={(verified) => {
+                      setIsCaptchaVerified(verified);
+                      if (verified) {
+                        setErrors(prev => ({ ...prev, captcha: false }));
+                      } else {
+                        setErrors(prev => ({ ...prev, captcha: true }));
+                      }
+                    }}
+                  />
+                  {errors.captcha && (
+                    <ErrorMessage>
+                      {t('contact.captcha.required')}
+                    </ErrorMessage>
+                  )}
+                </PreferenceGroup>
               </Section>
             </FormGrid>
-
 
             <CustomButtonGroup>
               <ClearButton
                 variant="secondary"
-                size="small" 
+                size="small"
                 onClick={handleReset}
               >
-                Vaciar
+                {t('contact.form.buttons.clear')}
               </ClearButton>
               <SubmitButton
                 variant="primary"
-                size="small"  
+                size="small"
                 type="submit"
               >
-                Enviar
+                {t('contact.form.buttons.submit')}
               </SubmitButton>
             </CustomButtonGroup>
           </form>
@@ -699,11 +854,15 @@ const Contact = () => {
       <StandardPopup
         isOpen={showPopup}
         onClose={handleClosePopup}
-        title={submitStatus.success ? "¡Envío Exitoso!" : "Error"}
+        titleKey={submitStatus.titleKey}  // Asegúrate que sea titleKey y no title
       >
         <PopupMessage>
-          <StatusIcon>{submitStatus.success ? "✅" : "❌"}</StatusIcon>
-          <MessageText>{submitStatus.message}</MessageText>
+          <StatusIcon>
+            {submitStatus.success ? "✅" : "❌"}
+          </StatusIcon>
+          <MessageText>
+            {submitStatus.message}
+          </MessageText>
         </PopupMessage>
       </StandardPopup>
     </PageContainer>
