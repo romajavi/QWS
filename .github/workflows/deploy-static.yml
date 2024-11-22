@@ -10,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v2
@@ -25,17 +27,16 @@ jobs:
           CI: false
           REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
 
+      - name: List build directory
+        run: ls -la build/
+
       - name: Deploy to Hostgator
         uses: SamKirkland/FTP-Deploy-Action@4.0.0
         with:
-          server: ${{ secrets.FTP_SERVER }}
+          server: soytumas.axiondev.site
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./build/
-          server-dir: ./public_html/
-          state-name: .ftp-deploy-sync-state.json
+          server-dir: /home2/soytumas/public_html/
           dangerous-clean-slate: true
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/node_modules/**
+          log-level: verbose
