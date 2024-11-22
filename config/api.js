@@ -3,7 +3,7 @@ const API_CONFIG = {
         API_URL: 'http://localhost:5000'
     },
     production: {
-        API_URL: 'https://tu-backend.onrender.com' // Aquí irá la URL del nuevo backend
+        API_URL: 'https://backend.onrender.com' // Aquí irá la URL del nuevo backend
     }
 };
 
