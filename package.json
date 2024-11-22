@@ -50,7 +50,11 @@
     "version:patch": "npm --no-git-tag-version version patch",
     "version:minor": "npm --no-git-tag-version version minor",
     "version:major": "npm --no-git-tag-version version major",
-    "prepare-release": "node scripts/prepare-release.js"
+    "prepare-release": "node scripts/prepare-release.js",
+    "build:staging": "cross-env REACT_APP_ENV=staging react-scripts build",
+    "build:prod": "cross-env REACT_APP_ENV=production react-scripts build",
+    "deploy:staging": "npm run build:staging && node scripts/deploy.js staging",
+    "deploy:prod": "npm run build:prod && node scripts/deploy.js production"
   },
   "eslintConfig": {
     "extends": [
@@ -78,10 +82,30 @@
     "html-webpack-plugin": "^5.6.3",
     "nodemon": "^3.1.7",
     "postcss-loader": "^8.1.1",
-    "source-map-explorer": "^2.5.3"
+    "source-map-explorer": "^2.5.3",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.0.2"
   },
-  "proxy": "http://localhost:5000",
+  "proxy": "https://axiondev.tech",
   "devServer": {
-    "webSocketServer": false
+    "webSocketServer": false,
+    "proxy": {
+      "/api": {
+        "target": "https://axiondev.tech",
+        "changeOrigin": true,
+        "secure": false
+      }
+    }
+  },
+  "config": {
+    "production": {
+      "API_URL": "https://axiondev.tech",
+      "NODE_ENV": "production"
+    },
+    "staging": {
+      "API_URL": "https://axiondev.tech",
+      "NODE_ENV": "staging"
+    }
   }
 }

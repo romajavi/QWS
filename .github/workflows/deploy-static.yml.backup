@@ -1,9 +1,9 @@
-name: Deploy Staging Site
+name: Deploy Static Site
 
 on:
   push:
     branches:
-      - staging
+      - main
 
 jobs:
   build-and-deploy:
@@ -24,25 +24,18 @@ jobs:
         env:
           CI: false
           REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
-          NODE_ENV: ${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}
 
-      - name: Create .htaccess
-        run: |
-          echo "RewriteEngine On" > build/.htaccess
-          echo "RewriteBase /" >> build/.htaccess
-          echo "RewriteRule ^index\.html$ - [L]" >> build/.htaccess
-          echo "RewriteCond %{REQUEST_FILENAME} !-f" >> build/.htaccess
-          echo "RewriteCond %{REQUEST_FILENAME} !-d" >> build/.htaccess
-          echo "RewriteRule . /index.html [L]" >> build/.htaccess
-
-      - name: Deploy to Staging
+      - name: Deploy to Hostgator
         uses: SamKirkland/FTP-Deploy-Action@4.0.0
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./build/
-          server-dir: /public_html/staging/
+          server-dir: ./public_html/
+          state-name: .ftp-deploy-sync-state.json
           dangerous-clean-slate: true
-          port: 21
-          security: strict
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
