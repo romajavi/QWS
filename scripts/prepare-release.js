@@ -3,24 +3,26 @@ import fs from 'fs';
 
 const updateVersion = () => {
     try {
-        // Obtener la versión actual
         const pkgData = JSON.parse(fs.readFileSync('./package.json'));
         const currentVersion = pkgData.version;
 
         console.log(`📦 Preparando release versión ${currentVersion}`);
 
-        // Commit de los cambios de versión
-        execSync('git add package.json package-lock.json');
-        execSync(`git commit -m "chore(release): versión ${currentVersion}"`);
+        // Crear tag anotado
+        try {
+            execSync(`git tag -a v${currentVersion} -m "Release ${currentVersion}"`);
+            console.log(`✅ Tag v${currentVersion} creado`);
+        } catch (tagError) {
+            if (tagError.message.includes('already exists')) {
+                console.log(`ℹ️ Tag v${currentVersion} ya existe, continuando...`);
+            } else {
+                throw tagError;
+            }
+        }
 
-        // Crear tag
-        execSync(`git tag -a v${currentVersion} -m "Release ${currentVersion}"`);
-        console.log(`✅ Tag v${currentVersion} creado`);
-
-        // Push de cambios y tags
-        execSync('git push origin develop');
+        // Push tags
         execSync('git push origin --tags');
-        console.log('✅ Cambios y tags actualizados en remoto');
+        console.log('✅ Tags actualizados en remoto');
 
         // Merge a staging
         execSync('git checkout staging');
