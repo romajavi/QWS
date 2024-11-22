@@ -36,5 +36,5 @@ jobs:
           local-dir: ./build/
           server-dir: /public_html/
           dangerous-clean-slate: true
-          log-level: verbose
-          protocol: ftps
+          protocol: ftp
+          security: loose
