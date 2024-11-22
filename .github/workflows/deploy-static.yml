@@ -27,16 +27,14 @@ jobs:
           CI: false
           REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
 
-      - name: List build directory
-        run: ls -la build/
-
       - name: Deploy to Hostgator
         uses: SamKirkland/FTP-Deploy-Action@4.0.0
         with:
-          server: soytumas.axiondev.site
+          server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./build/
-          server-dir: /home2/soytumas/public_html/
+          server-dir: /public_html/
           dangerous-clean-slate: true
           log-level: verbose
+          protocol: ftps
