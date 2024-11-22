@@ -1,37 +1,46 @@
-name: Deploy Staging Site
+name: Deploy Static Site
 
 on:
   push:
     branches:
-      - staging
+      - main
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v2
         with:
           node-version: '20'
       
       - name: Install Dependencies
         run: npm install
 
-      - name: Build Staging
-        run: npm run build:staging
+      - name: Build
+        run: npm run build
         env:
           CI: false
-          REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL_STAGING }}
+          REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
 
-      - name: Deploy to Staging
-        uses: SamKirkland/FTP-Deploy-Action@v4
+      - name: Create .htaccess
+        run: |
+          echo "RewriteEngine On" > build/.htaccess
+          echo "RewriteBase /" >> build/.htaccess
+          echo "RewriteRule ^index\.html$ - [L]" >> build/.htaccess
+          echo "RewriteCond %{REQUEST_FILENAME} !-f" >> build/.htaccess
+          echo "RewriteCond %{REQUEST_FILENAME} !-d" >> build/.htaccess
+          echo "RewriteRule . /index.html [L]" >> build/.htaccess
+
+      - name: Deploy to Hostgator
+        uses: SamKirkland/FTP-Deploy-Action@4.0.0
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./build/
-          server-dir: /home2/soytumas/public_html/
-          protocol: ftps
-          security: strict
-          timeout: 120000
+          server-dir: /public_html/
+          dangerous-clean-slate: true
+          protocol: ftp
+          security: loose
