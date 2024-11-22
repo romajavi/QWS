@@ -16,6 +16,9 @@
 .env.production
 config/*.env
 !config/example.env
+development.env
+production.env
+example.env
 
 # Logs
 npm-debug.log*

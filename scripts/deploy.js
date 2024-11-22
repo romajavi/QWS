@@ -1,70 +1,42 @@
-// scripts/deploy.js
+import { exec } from 'child_process';
 import dotenv from 'dotenv';
 import path from 'path';
-import fs from 'fs';
-import { fileURLToPath } from 'url';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.join(process.cwd(), 'config/production.env') });
 
-// Cargar variables de entorno de producción
-dotenv.config({ path: path.join(__dirname, '../config/production.env') });
+const deploy = async () => {
+    try {
+        // 1. Build del proyecto
+        console.log('Building project...');
+        await execCommand('npm run build');
 
-// Lista de archivos y directorios necesarios para el despliegue
-const deployFiles = [
-    'build',
-    'server',
-    'package.json',
-    'package-lock.json',
-    'config'
-];
+        // 2. Verificar build
+        console.log('Verifying build...');
+        await execCommand('ls -la build/');
 
-// Directorio donde se creará el paquete de despliegue
-const deployDir = path.join(__dirname, '../deploy');
+        // 3. Comprimir archivos estáticos
+        console.log('Compressing static files...');
+        await execCommand('gzip -kr build/static/');
 
-// Crear el directorio de despliegue si no existe
-if (!fs.existsSync(deployDir)) {
-    fs.mkdirSync(deployDir);
-}
-
-// Copiar archivos necesarios
-deployFiles.forEach(file => {
-    const sourcePath = path.join(__dirname, '..', file);
-    const destPath = path.join(deployDir, file);
-
-    if (fs.existsSync(sourcePath)) {
-        if (fs.lstatSync(sourcePath).isDirectory()) {
-            // Copiar directorio recursivamente
-            fs.cpSync(sourcePath, destPath, { recursive: true });
-        } else {
-            // Copiar archivo
-            fs.copyFileSync(sourcePath, destPath);
-        }
+        console.log('Deployment preparation completed successfully!');
+    } catch (error) {
+        console.error('Deployment failed:', error);
+        process.exit(1);
     }
-});
+};
 
-// Actualizar package.json para producción
-const packageJsonPath = path.join(deployDir, 'package.json');
-if (fs.existsSync(packageJsonPath)) {
-    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath));
+const execCommand = (command) => {
+    return new Promise((resolve, reject) => {
+        exec(command, (error, stdout, stderr) => {
+            if (error) {
+                console.error(`Error: ${error}`);
+                reject(error);
+                return;
+            }
+            console.log(stdout);
+            resolve(stdout);
+        });
+    });
+};
 
-    // Actualizar scripts
-    packageJson.scripts = {
-        ...packageJson.scripts,
-        start: 'NODE_ENV=production node server/server.js'
-    };
-
-    // Eliminar dependencias de desarrollo si existen
-    delete packageJson.devDependencies;
-
-    // Guardar el package.json actualizado
-    fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
-}
-
-// Crear archivo .env para producción
-fs.copyFileSync(
-    path.join(__dirname, '../config/production.env'),
-    path.join(deployDir, '.env')
-);
-
-console.log('Paquete de despliegue creado en el directorio "deploy"');
+deploy();
