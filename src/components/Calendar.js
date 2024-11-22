@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
@@ -93,10 +93,19 @@ const CalendarNavButton = styled(Button)`
   }
 `;
 
-const Calendar = ({ onSelectDate, minDate }) => {
+const Calendar = ({ onSelectDate, selectedDate: propSelectedDate }) => {
     const { t, i18n } = useTranslation();
     const [currentDate, setCurrentDate] = useState(new Date());
-    const [selectedDate, setSelectedDate] = useState(null);
+    const [selectedDate, setSelectedDate] = useState(propSelectedDate);
+    const minDate = new Date();
+
+    // Asegurar que minDate tenga un valor válido
+    useEffect(() => {
+        if (!minDate) {
+            minDate = new Date();
+        }
+    }, [minDate]);
+
 
     const daysInMonth = new Date(
         currentDate.getFullYear(),
@@ -124,7 +133,7 @@ const Calendar = ({ onSelectDate, minDate }) => {
             "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
         ]
     };
-    
+
     const weekdaysText = {
         es: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
         en: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
@@ -159,18 +168,17 @@ const Calendar = ({ onSelectDate, minDate }) => {
     };
 
     const handleDateClick = (day) => {
-        const selectedDate = new Date(
+        const clickedDate = new Date(
             currentDate.getFullYear(),
             currentDate.getMonth(),
             day
         );
 
-        if (selectedDate >= minDate) {
-            setSelectedDate(selectedDate);
-            onSelectDate(selectedDate);
+        if (clickedDate >= minDate) {
+            setSelectedDate(clickedDate);
+            onSelectDate(clickedDate);
         }
     };
-
     const isDateDisabled = (day) => {
         const date = new Date(
             currentDate.getFullYear(),
@@ -178,12 +186,11 @@ const Calendar = ({ onSelectDate, minDate }) => {
             day
         );
 
-        // Comprobar si es domingo (0 es domingo en JavaScript)
-        const isDomingo = date.getDay() === 0;
 
-        // Retornar true si es domingo O si la fecha es anterior a la fecha mínima
+        const isDomingo = date.getDay() === 0;
         return isDomingo || date < minDate;
     };
+
 
     const renderDays = () => {
         const days = [];
