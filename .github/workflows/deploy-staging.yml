@@ -1,3 +1,4 @@
+# .github/workflows/deploy-staging.yml (actualizado)
 name: Deploy Staging Site
 
 on:
@@ -28,8 +29,8 @@ jobs:
         uses: SamKirkland/FTP-Deploy-Action@4.0.0
         with:
           server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME_STAGING }}
-          password: ${{ secrets.FTP_PASSWORD_STAGING }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./build/
           server-dir: ./public_html/staging/
           protocol: ftp
