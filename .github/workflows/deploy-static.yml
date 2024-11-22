@@ -9,12 +9,9 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
+      - uses: actions/checkout@v3
       - name: Setup Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: '20'
 
@@ -26,18 +23,16 @@ jobs:
         env:
           CI: false
           REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
-          NODE_ENV: ${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}
+          NODE_ENV: production
 
-      - name: Deploy to Hostgator
-        uses: SamKirkland/FTP-Deploy-Action@4.0.0
+      - name: Deploy to Production
+        uses: SamKirkland/FTP-Deploy-Action@v4
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./build/
-          server-dir: /public_html/
-          dangerous-clean-slate: true
-          protocol: ftp
-          security: loose
-          timeout: 60000
-          port: 21
+          server-dir: /home2/soytumas/public_html/
+          protocol: ftps
+          security: strict
+          timeout: 120000

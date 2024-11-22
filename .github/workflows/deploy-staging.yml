@@ -1,4 +1,3 @@
-# .github/workflows/deploy-staging.yml (actualizado)
 name: Deploy Staging Site
 
 on:
@@ -10,9 +9,9 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Setup Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: '20'
       
@@ -26,13 +25,13 @@ jobs:
           REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL_STAGING }}
 
       - name: Deploy to Staging
-        uses: SamKirkland/FTP-Deploy-Action@4.0.0
+        uses: SamKirkland/FTP-Deploy-Action@v4
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./build/
-          server-dir: /public_html/  # Ruta absoluta
-          protocol: ftp
-          security: loose
-          state-name: .ftp-deploy-sync-state.json
+          server-dir: /home2/soytumas/public_html/
+          protocol: ftps
+          security: strict
+          timeout: 120000
