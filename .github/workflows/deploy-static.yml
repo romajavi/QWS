@@ -25,15 +25,6 @@ jobs:
           CI: false
           REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
 
-      - name: Create .htaccess
-        run: |
-          echo "RewriteEngine On" > build/.htaccess
-          echo "RewriteBase /" >> build/.htaccess
-          echo "RewriteRule ^index\.html$ - [L]" >> build/.htaccess
-          echo "RewriteCond %{REQUEST_FILENAME} !-f" >> build/.htaccess
-          echo "RewriteCond %{REQUEST_FILENAME} !-d" >> build/.htaccess
-          echo "RewriteRule . /index.html [L]" >> build/.htaccess
-
       - name: Deploy to Hostgator
         uses: SamKirkland/FTP-Deploy-Action@4.0.0
         with:
@@ -41,7 +32,10 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./build/
-          server-dir: /public_html/
+          server-dir: ./public_html/
+          state-name: .ftp-deploy-sync-state.json
           dangerous-clean-slate: true
-          port: 21  # Especificar el puerto FTPS explícito
-          security: strict # Añadir seguridad estricta para FTP
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
