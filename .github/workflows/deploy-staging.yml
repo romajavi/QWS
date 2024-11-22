@@ -32,6 +32,6 @@ jobs:
           username: ${{ secrets.FTP_USERNAME_STAGING}}
           password: ${{ secrets.FTP_PASSWORD_STAGING }}
           local-dir: ./build/
-          server-dir: /public_html/staging/
+          server-dir: /staging/
           protocol: ftp
           security: loose
