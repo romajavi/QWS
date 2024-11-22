@@ -43,3 +43,5 @@ jobs:
           local-dir: ./build/
           server-dir: /public_html/
           dangerous-clean-slate: true
+          port: 21  # Especificar el puerto FTPS explícito
+          security: strict # Añadir seguridad estricta para FTP
