@@ -9,10 +9,7 @@ import LoadingSpinner from '../components/LoadingSpinner.js';
 import PageContainer from '../components/PageContainer.js';
 import Button from '../components/Button.js';
 import Captcha from '../components/Captcha.js';
-import { glowButtonStyles } from '../styles/Animations.js'; 
-
-
-
+import { glowButtonStyles } from '../styles/Animations.js';
 
 const ContactWrapper = styled.div`
   display: flex;
@@ -36,96 +33,57 @@ const Title = styled.h1`
   }
 `;
 
-const TextArea = styled.textarea`
-  width: 100%;
-  padding: 0.8rem;
+const CheckboxTitle = styled.h3`
+  color: ${props => props.theme.colors.accent};
+  font-size: 1rem;
   margin-bottom: 1rem;
-  background: rgba(30, 30, 30, 0.7);
-  border: 1px solid ${props => props.$hasError ? '#ff3333' : `${props.theme.colors.secondaryBackground}40`};
-  border-radius: 8px;
-  color: ${props => props.theme.colors.text};
-  min-height: 100px;
-  resize: vertical;
-  transition: all 0.3s ease;
-
-  &:focus {
-    outline: none;
-    border-color: ${props => props.theme.colors.accent};
-    box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
-  }
+  text-align: center;
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
 `;
-
-const Select = styled.select`
-  width: fit-content; // Ajustar al contenido
-  min-width: 120px; // Ancho mínimo
-  margin: 0 auto; // Centrar
-  display: block;
-  padding: 0.8rem;
-  background: rgba(30, 30, 30, 0.7);
-  border: 1px solid ${props => props.theme.colors.secondaryBackground}40;
-  border-radius: 8px;
-  color: ${props => props.theme.colors.text};
-  cursor: pointer;
-  transition: all 0.3s ease;
-
-  &:focus {
-    outline: none;
-    border-color: ${props => props.theme.colors.accent};
-    box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
-  }
-
-  option {
-    background: ${props => props.theme.colors.background};
-    color: ${props => props.theme.colors.text};
-    padding: 0.5rem;
-  }
-`;
-
 
 const FormContainer = styled.div`
-
   width: 90%;
   max-width: 1200px;
   margin: 2rem auto;
   background: ${props => props.theme.colors.cardBackground};
   backdrop-filter: blur(10px);
   border-radius: 20px;
-  padding: 2rem 2rem 2rem 2rem; // Aumentar padding inferior
+  padding: 2rem;
   position: relative;
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
   border: 1px solid ${props => props.hasError ? '#ff3333' : props.theme.colors.secondaryBackground}40;
 
   @media (max-width: 768px) {
-   padding: 2rem;
- }
+    padding: 1.5rem;
+  }
 `;
 
 const FormGrid = styled.div`
   display: grid;
-  grid-template-columns: 1fr 2px 1fr;
+  grid-template-columns: 1fr;
   gap: 2rem;
   margin-bottom: 2rem;
 
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-    gap: 1rem;
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr 2px 1fr;
+    gap: 2rem;
   }
 `;
 
 const Section = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.1em; // Espaciado uniforme
+  gap: 0.5rem;
   width: 100%;
   padding: 1rem;
-  
+
   h2 {
     color: ${props => props.theme.colors.primary};
     font-size: 1.5rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
     text-align: left;
     position: relative;
-    
+
     &::after {
       content: '';
       position: absolute;
@@ -146,7 +104,7 @@ const Section = styled.div`
 const Input = styled.input`
   width: 100%;
   padding: 0.8rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   background: rgba(30, 30, 30, 0.7);
   border: 1px solid ${props => props.$hasError ? '#ff3333' : `${props.theme.colors.secondaryBackground}40`};
   border-radius: 8px;
@@ -161,28 +119,62 @@ const Input = styled.input`
   }
 `;
 
+const TextArea = styled.textarea`
+  width: 100%;
+  padding: 0.8rem;
+  margin-bottom: 1rem;
+  background: rgba(30, 30, 30, 0.7);
+  border: 1px solid ${props => props.$hasError ? '#ff3333' : `${props.theme.colors.secondaryBackground}40`};
+  border-radius: 8px;
+  color: ${props => props.theme.colors.text};
+  min-height: 100px;
+  resize: vertical;
+  transition: all 0.3s ease;
+
+  &:focus {
+    outline: none;
+    border-color: ${props => props.theme.colors.accent};
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+  }
+`;
+
+const Select = styled.select`
+  width: 100%;
+  padding: 0.8rem;
+  margin-bottom: 1rem;
+  background: rgba(30, 30, 30, 0.7);
+  border: 1px solid ${props => props.theme.colors.secondaryBackground}40;
+  border-radius: 8px;
+  color: ${props => props.theme.colors.text};
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:focus {
+    outline: none;
+    border-color: ${props => props.theme.colors.accent};
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+  }
+
+  option {
+    background: ${props => props.theme.colors.background};
+    color: ${props => props.theme.colors.text};
+    padding: 0.5rem;
+  }
+`;
 
 const PreferenceGroup = styled.div`
   background: rgba(30, 30, 30, 0.5);
   padding: 1.2rem;
   border-radius: 8px;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   border: ${props => props.theme.colors.secondaryBackground};
 `;
 
 const RadioContainer = styled.div`
   display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 1.2rem;
-`;
-
-const CheckboxTitle = styled.h3`
-  color: ${props => props.theme.colors.accent};
-  font-size: 1rem;
-  margin-bottom: 1rem;
-  text-align: center;
-  text-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
 `;
 
 const RadioLabel = styled.label`
@@ -232,22 +224,22 @@ const RadioLabel = styled.label`
   }
 `;
 
-
 const Divider = styled.div`
-  width: 2px;
-  background: linear-gradient(
-    to bottom,
-    transparent,
-    ${props => props.theme.colors.primary},
-    ${props => props.theme.colors.accent},
-    ${props => props.theme.colors.primary},
-    transparent
-  );
-  margin: 0 1rem;
-  opacity: 0.6;
+  display: none;
 
-  @media (max-width: 768px) {
-    display: none;
+  @media (min-width: 768px) {
+    display: block;
+    width: 2px;
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      ${props => props.theme.colors.primary},
+      ${props => props.theme.colors.accent},
+      ${props => props.theme.colors.primary},
+      transparent
+    );
+    margin: 0 1rem;
+    opacity: 0.6;
   }
 `;
 
@@ -285,18 +277,10 @@ const TextAreaContainer = styled.div`
 `;
 
 const CustomButtonGroup = styled.div`
- position: absolute;
- bottom: 2rem;
- right: 2rem;
- display: flex;
- gap: 1rem;
- 
-
- @media (max-width: 768px) {
-   position: static;
-   justify-content: center;
-   margin-top: 2rem;
- }
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
 `;
 
 const ClearButton = styled(Button)`
@@ -393,7 +377,7 @@ const Contact = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true); // Activar spinner
-  
+
     if (!validateForm()) {
       setSubmitStatus({
         success: false,
@@ -404,7 +388,7 @@ const Contact = () => {
       setIsLoading(false); // Desactivar spinner
       return;
     }
-  
+
     try {
       const response = await fetch('/api/contact', {
         method: 'POST',
@@ -413,7 +397,7 @@ const Contact = () => {
         },
         body: JSON.stringify(formData),
       });
-  
+
       if (response.ok) {
         setFormStatus({ isSubmitting: false, isSuccess: true, error: null });
         handleReset();
@@ -422,9 +406,9 @@ const Contact = () => {
         throw new Error(errorData.message || 'Server response was not ok');
       }
     } catch (error) {
-      setFormStatus({ 
-        isSubmitting: false, 
-        isSuccess: false, 
+      setFormStatus({
+        isSubmitting: false,
+        isSuccess: false,
         error: error.message === 'email_error' ? 'contact.form.errors.clientEmailError' : 'contact.form.errors.required'
       });
     } finally {
