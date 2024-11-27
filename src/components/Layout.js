@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import Header from './Header.js';
-import useContentLoaded from '../hooks/useContentLoaded.js';
 
 const LayoutWrapper = styled.div`
   display: flex;

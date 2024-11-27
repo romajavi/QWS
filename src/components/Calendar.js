@@ -94,7 +94,7 @@ const CalendarNavButton = styled(Button)`
 `;
 
 const Calendar = ({ onSelectDate, minDate }) => {
-    const { t, i18n } = useTranslation();
+    const { i18n } = useTranslation();
     const [currentDate, setCurrentDate] = useState(new Date());
     const [selectedDate, setSelectedDate] = useState(null);
 

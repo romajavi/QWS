@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { motion, useAnimation } from 'framer-motion';
 import { ReactTyped } from 'react-typed';
@@ -108,7 +108,6 @@ const PortfolioButton = styled(Button)`
 
 function Portfolio() {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const controls = useAnimation();
   const reelRef = useRef(null);
 

@@ -1,8 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import BlogPost from '../components/BlogPost.js';
-import Button from '../components/Button.js';
-import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 
@@ -28,7 +26,6 @@ const BlogGrid = styled.div`
 
 const Blog = () => {
     const { t } = useTranslation();
-    const navigate = useNavigate();
     return (
         <BlogContainer>
             <BlogTitle>Blog</BlogTitle>

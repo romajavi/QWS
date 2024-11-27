@@ -10,6 +10,11 @@ import PageContainer from '../components/PageContainer.js';
 import Button from '../components/Button.js';
 import Captcha from '../components/Captcha.js';
 import { glowButtonStyles } from '../styles/Animations.js';
+import { useAnimationController } from '../utils/animationController.js';
+import { motion } from 'framer-motion';
+
+
+
 
 const ContactWrapper = styled.div`
   display: flex;
@@ -18,20 +23,34 @@ const ContactWrapper = styled.div`
   min-height: calc(100vh - 120px);
   width: 100%;
   padding-bottom: 5rem;
+
+  /* Ensure proper width handling */
+  & > div {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 
 const Title = styled.h1`
-  font-size: 2rem;
-  color: ${props => props.theme.colors.secondaryBackground};
-  margin-bottom: 2rem;
   text-align: center;
-  position: relative;
+  color: ${props => props.theme.colors.secondaryBackground};
+  margin: 2rem 0;  // Match Services.js margin
+  font-size: 2.5rem;  // Match Services.js font size
   text-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
-
+  height: 3.5rem;  // Match Services.js height
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
   @media (max-width: 768px) {
-    font-size: 1.5rem;
+    font-size: 1.8rem;
+    height: 2.8rem;
+    margin: 1.5rem 0;
   }
 `;
+
 
 const CheckboxTitle = styled.h3`
   color: ${props => props.theme.colors.accent};
@@ -41,20 +60,34 @@ const CheckboxTitle = styled.h3`
   text-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
 `;
 
+
 const FormContainer = styled.div`
   width: 90%;
   max-width: 1200px;
-  margin: 2rem auto;
+  margin: 1.5rem 0;  // Match ServicesContainer margin
+  padding: 2rem;  // Match ServicesContainer padding
   background: ${props => props.theme.colors.cardBackground};
   backdrop-filter: blur(10px);
   border-radius: 20px;
-  padding: 2rem;
   position: relative;
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
   border: 1px solid ${props => props.hasError ? '#ff3333' : props.theme.colors.secondaryBackground}40;
+  min-width: min(90%, 1200px);
+  box-sizing: border-box;
+  
+  & > form {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  @media (max-width: 1400px) {
+    max-width: 1000px;
+  }
 
   @media (max-width: 768px) {
+    width: 95%;
     padding: 1.5rem;
+    margin: 1rem auto;
   }
 `;
 
@@ -63,10 +96,17 @@ const FormGrid = styled.div`
   grid-template-columns: 1fr;
   gap: 2rem;
   margin-bottom: 2rem;
+  width: 100%; // Ensure full width
 
   @media (min-width: 768px) {
-    grid-template-columns: 1fr 2px 1fr;
+    grid-template-columns: minmax(300px, 1fr) 2px minmax(300px, 1fr);
     gap: 2rem;
+  }
+
+  /* Ensure grid items don't overflow */
+  & > * {
+    width: 100%;
+    max-width: 100%;
   }
 `;
 
@@ -139,14 +179,18 @@ const TextArea = styled.textarea`
 `;
 
 const Select = styled.select`
-  width: 100%;
+  width: auto;  // Change from 100% to auto
+  min-width: 120px;  // Add minimum width
   padding: 0.8rem;
-  margin-bottom: 1rem;
+  margin: 0 auto 1rem auto;  // Center the select element
+  display: block;  // Make it a block element
   background: rgba(30, 30, 30, 0.7);
   border: 1px solid ${props => props.theme.colors.secondaryBackground}40;
   border-radius: 8px;
   color: ${props => props.theme.colors.text};
   cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;  // Center the text inside
   transition: all 0.3s ease;
 
   &:focus {
@@ -173,13 +217,15 @@ const PreferenceGroup = styled.div`
 const RadioContainer = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;  // Add this to center the radio buttons
   gap: 1rem;
+  width: 100%;  // Add this to ensure full width
 `;
 
 const RadioLabel = styled.label`
   display: flex;
   align-items: center;
+  justify-content: center;  // Add this to center the content
   gap: 0.5rem;
   font-size: 0.9rem;
   color: ${props => props.theme.colors.text};
@@ -187,7 +233,8 @@ const RadioLabel = styled.label`
   padding: 0.8rem 1.2rem;
   background: rgba(30, 30, 30, 0.7);
   border-radius: 5px;
-  border: ${props => props.theme.colors.secondaryBackground};
+  width: 100%;  // Add this to make labels full width
+  max-width: 300px;  // Add this to control the maximum width
   transition: all 0.3s ease;
 
   &:hover {
@@ -303,6 +350,32 @@ const ErrorMessage = styled.p`
 
 
 const Contact = () => {
+  const { shouldAnimate, animationLevel } = useAnimationController();
+
+  // Configuramos las animaciones del formulario
+  const getFormAnimation = () => {
+    if (!shouldAnimate || animationLevel === 'minimal') {
+      return {};
+    }
+
+    if (animationLevel === 'reduced') {
+      return {
+        initial: { opacity: 0 },
+        animate: { opacity: 1 },
+        transition: { duration: 0.3 }
+      };
+    }
+
+    return {
+      initial: { opacity: 0, y: 20 },
+      animate: { opacity: 1, y: 0 },
+      transition: { duration: 0.5, ease: 'easeOut' }
+    };
+  };
+
+  const formAnimation = getFormAnimation();
+
+
   const { t } = useTranslation();
   const [formData, setFormData] = useState({
     name: '',
@@ -362,9 +435,6 @@ const Contact = () => {
     if (!formData.name.trim()) newErrors.name = true;
     if (!formData.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) newErrors.email = true;
     if (!formData.phone.trim()) newErrors.phone = true;
-    // if (!formData.contactPreference.length) newErrors.contactPreference = true;
-    // if (!formData.contactDays.length) newErrors.contactDays = true;
-    // if (!formData.contactTime.length) newErrors.contactTime = true;
     if (!formData.observations || formData.observations.trim() === '') newErrors.observations = true;
     if (!isCaptchaVerified) newErrors.captcha = true;
 
@@ -505,6 +575,7 @@ const Contact = () => {
     <PageContainer>
       {isLoading && <LoadingSpinner />}
       <ContactWrapper>
+        <motion.div {...formAnimation}>
         <Title>
           <ReactTyped
             strings={[t('contact.title')]}
@@ -836,7 +907,8 @@ const Contact = () => {
               </SubmitButton>
             </CustomButtonGroup>
           </form>
-        </FormContainer>
+          </FormContainer>
+        </motion.div>
       </ContactWrapper>
 
       <StandardPopup

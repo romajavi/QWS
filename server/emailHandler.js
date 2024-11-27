@@ -3,145 +3,210 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
+import { dirname } from 'path';
 
+// Configuración de rutas base
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __dirname = dirname(__filename);
 
-// Cargar variables de entorno según el ambiente
-const envPath = process.env.NODE_ENV === 'production'
-    ? path.join(process.cwd(), 'config/production.env')
-    : path.join(process.cwd(), 'config/development.env');
+// Función para cargar la configuración del ambiente
+const loadConfig = () => {
+    const env = process.env.NODE_ENV || 'development';
+    const configPath = path.join(__dirname, '../config', `${env}.env`);
 
-dotenv.config({ path: envPath });
+    console.log(`Cargando configuración de: ${configPath}`);
+    dotenv.config({ path: configPath });
 
-console.log('Ambiente:', process.env.NODE_ENV);
-console.log('Ruta del env:', envPath);
-console.log('Variables cargadas:', {
-    EMAIL_USER: process.env.EMAIL_USER,
-    SMTP_HOST: process.env.SMTP_HOST,
-    SMTP_PORT: process.env.SMTP_PORT
-});
-
-const clientTemplate = fs.readFileSync(path.join(__dirname, 'clientEmailTemplate.html'), 'utf8');
-const adminTemplate = fs.readFileSync(path.join(__dirname, 'adminEmailTemplate.html'), 'utf8');
-
-// Configuración SMTP
-const getSmtpConfig = () => {
+    // Validamos y retornamos la configuración necesaria
     const config = {
-        user: process.env.EMAIL_USER,
-        password: process.env.EMAIL_PASS,
-        host: process.env.SMTP_HOST,
-        port: parseInt(process.env.SMTP_PORT),
-        ssl: process.env.SMTP_SECURE === 'true',
-        timeout: 10000
+        EMAIL_USER: process.env.EMAIL_USER,
+        EMAIL_PASS: process.env.EMAIL_PASS,
+        SMTP_HOST: process.env.SMTP_HOST,
+        SMTP_PORT: parseInt(process.env.SMTP_PORT) || 587, // Puerto por defecto para TLS
+        ADMIN_EMAIL: process.env.ADMIN_EMAIL,
+        EMAIL_FROM_NAME: process.env.EMAIL_FROM_NAME || 'QuantumWeb'
     };
 
-    console.log('SMTP Config:', {
-        ...config,
-        password: '******'
-    });
+    // Verificación de configuración requerida
+    const requiredFields = ['EMAIL_USER', 'EMAIL_PASS', 'SMTP_HOST', 'ADMIN_EMAIL'];
+    const missingFields = requiredFields.filter(field => !config[field]);
+
+    if (missingFields.length) {
+        throw new Error(`Configuración incompleta. Campos faltantes: ${missingFields.join(', ')}`);
+    }
 
     return config;
 };
 
-const smtpClient = new SMTPClient(getSmtpConfig());
+const CONFIG = loadConfig();
 
-// Función de prueba
+// Función mejorada para crear el cliente SMTP
+const createSmtpClient = () => {
+    const config = {
+        user: CONFIG.EMAIL_USER,
+        password: CONFIG.EMAIL_PASS,
+        host: CONFIG.SMTP_HOST,
+        port: 587, // Puerto específico para Gmail con TLS
+        tls: {
+            ciphers: 'SSLv3',
+            rejectUnauthorized: false
+        },
+        timeout: 30000,
+        debug: true
+    };
+
+    console.log('Configuración SMTP:', {
+        host: config.host,
+        port: config.port,
+        user: config.user,
+        debug: config.debug
+    });
+
+    return new SMTPClient(config);
+};
+
+// Función mejorada para envío de emails
+const sendEmail = async (options) => {
+    const client = createSmtpClient();
+
+    try {
+        console.log('Iniciando envío de email:', {
+            to: options.to,
+            subject: options.subject
+        });
+
+        const result = await client.sendAsync({
+            from: `"${CONFIG.EMAIL_FROM_NAME}" <${CONFIG.EMAIL_USER}>`,
+            to: options.to,
+            subject: options.subject,
+            attachment: [{
+                data: options.html,
+                alternative: true
+            }]
+        });
+
+        console.log('Email enviado exitosamente:', {
+            to: options.to,
+            messageId: result.header['message-id']
+        });
+
+        return result;
+    } catch (error) {
+        console.error('Error en envío de email:', {
+            error: error.message,
+            code: error.code,
+            command: error.command
+        });
+        throw error;
+    }
+};
+
+// Manejador principal del formulario de contacto
+const emailHandler = async (req, res) => {
+    try {
+        const {
+            name,
+            email,
+            phone,
+            company,
+            contactPreference,
+            contactDays,
+            contactTime,
+            appointmentDate,
+            appointmentTime,
+            appointmentMedium,
+            observations
+        } = req.body;
+
+        console.log('Procesando formulario de contacto:', { name, email, phone });
+
+        // Validación de campos requeridos
+        if (!email || !name || !phone || !observations) {
+            return res.status(400).json({
+                success: false,
+                error: 'campos_requeridos',
+                message: 'Faltan campos requeridos (nombre, email, teléfono, observaciones)'
+            });
+        }
+
+        // Carga y preparación de templates
+        const clientTemplate = fs.readFileSync(
+            path.join(__dirname, 'clientEmailTemplate.html'),
+            'utf8'
+        )
+            .replace(/{nombre}/g, name)
+            .replace(/{appointmentDate}/g, appointmentDate || 'No especificada')
+            .replace(/{appointmentTime}/g, appointmentTime || 'No especificada')
+            .replace(/{appointmentMedium}/g, appointmentMedium || 'No especificado');
+
+        const adminTemplate = fs.readFileSync(
+            path.join(__dirname, 'adminEmailTemplate.html'),
+            'utf8'
+        )
+            .replace(/{nombre}/g, name)
+            .replace(/{email}/g, email)
+            .replace(/{telefono}/g, phone)
+            .replace(/{empresa}/g, company || 'No especificada')
+            .replace(/{preferencia_contacto}/g, Array.isArray(contactPreference) ? contactPreference.join(', ') : 'No especificada')
+            .replace(/{dias_contacto}/g, Array.isArray(contactDays) ? contactDays.join(', ') : 'No especificado')
+            .replace(/{horario_contacto}/g, Array.isArray(contactTime) ? contactTime.join(', ') : 'No especificado')
+            .replace(/{appointmentDate}/g, appointmentDate || 'No especificada')
+            .replace(/{appointmentTime}/g, appointmentTime || 'No especificada')
+            .replace(/{appointmentMedium}/g, appointmentMedium || 'No especificado')
+            .replace(/{observaciones}/g, observations);
+
+        // Envío de emails
+        await Promise.all([
+            sendEmail({
+                to: email,
+                subject: 'Confirmación de contacto - QuantumWeb',
+                html: clientTemplate
+            }),
+            sendEmail({
+                to: CONFIG.ADMIN_EMAIL,
+                subject: 'Nuevo contacto recibido - QuantumWeb',
+                html: adminTemplate
+            })
+        ]);
+
+        console.log('Proceso de contacto completado exitosamente');
+        res.status(200).json({
+            success: true,
+            message: 'Formulario procesado exitosamente'
+        });
+
+    } catch (error) {
+        console.error('Error en procesamiento de formulario:', error);
+        res.status(500).json({
+            success: false,
+            error: 'error_envio',
+            message: process.env.NODE_ENV === 'development' ?
+                `Error: ${error.message}` :
+                'Error al procesar el formulario'
+        });
+    }
+};
+
+// Función de prueba de conexión
 export const testConnection = async () => {
     try {
         console.log('Iniciando prueba de conexión SMTP...');
-        
-        await smtpClient.sendAsync({
-            text: 'Test connection',
-            from: process.env.EMAIL_USER,
-            to: process.env.ADMIN_EMAIL,
-            subject: 'Test Email'
+
+        await sendEmail({
+            to: CONFIG.ADMIN_EMAIL,
+            subject: 'Prueba de Conexión SMTP',
+            html: `
+                <h1>Prueba de Conexión SMTP</h1>
+                <p>Esta es una prueba de conexión realizada el ${new Date().toLocaleString()}</p>
+            `
         });
 
-        console.log('¡Prueba de conexión SMTP exitosa!');
+        console.log('Prueba de conexión exitosa');
         return true;
     } catch (error) {
-        console.error('Error en prueba SMTP:', error);
+        console.error('Error en prueba de conexión:', error);
         return false;
     }
 };
 
-// Función principal de manejo de emails
-const emailHandler = async (req, res) => {
-    const {
-        name,
-        email,
-        phone,
-        company,
-        contactPreference,
-        contactDays,
-        contactTime,
-        appointmentDate,
-        appointmentTime,
-        appointmentMedium,
-        observations
-    } = req.body;
-
-    try {
-        console.log('Iniciando envío de email...');
-
-        // Enviar correo al cliente
-        let clientHtml = clientTemplate
-            .replace('{nombre}', name)
-            .replace('{appointmentDate}', appointmentDate || 'No especificada')
-            .replace('{appointmentTime}', appointmentTime || 'No especificada')
-            .replace('{appointmentMedium}', appointmentMedium || 'No especificado');
-
-        console.log('Enviando email al cliente:', email);
-
-        await smtpClient.sendAsync({
-            text: 'Gracias por contactarnos',
-            from: `"Axion Dev" <${process.env.EMAIL_USER}>`,
-            to: email,
-            subject: 'Confirmación de recepción - Axion Dev',
-            attachment: [
-                { data: clientHtml, alternative: true }
-            ]
-        });
-
-        console.log('Email al cliente enviado exitosamente');
-        console.log('Enviando email al administrador...');
-
-        // Enviar correo al administrador
-        let adminHtml = adminTemplate
-            .replace('{nombre}', name)
-            .replace('{email}', email)
-            .replace('{telefono}', phone)
-            .replace('{empresa}', company || 'No especificada')
-            .replace('{preferencia_contacto}', Array.isArray(contactPreference) ? contactPreference.join(', ') : contactPreference)
-            .replace('{dias_contacto}', Array.isArray(contactDays) ? contactDays.join(', ') : contactDays)
-            .replace('{horario_contacto}', Array.isArray(contactTime) ? contactTime.join(', ') : contactTime)
-            .replace('{appointmentDate}', appointmentDate || 'No especificada')
-            .replace('{appointmentTime}', appointmentTime || 'No especificada')
-            .replace('{appointmentMedium}', appointmentMedium || 'No especificado')
-            .replace('{observaciones}', observations || 'Sin observaciones');
-
-        await smtpClient.sendAsync({
-            text: 'Nuevo formulario de contacto recibido',
-            from: `"Axion Dev" <${process.env.EMAIL_USER}>`,
-            to: process.env.ADMIN_EMAIL,
-            subject: 'Nuevo formulario de contacto - Axion Dev',
-            attachment: [
-                { data: adminHtml, alternative: true }
-            ]
-        });
-
-        console.log('Email al administrador enviado exitosamente');
-        res.status(200).json({ message: 'Formulario enviado con éxito' });
-    } catch (error) {
-        console.error('Error al enviar email:', error);
-        res.status(500).json({
-            error: 'Error al procesar el formulario',
-            details: error.message,
-            stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
-        });
-    }
-};
-
-// Solo exportamos una vez cada función
 export default emailHandler;

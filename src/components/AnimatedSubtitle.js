@@ -4,42 +4,71 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 
 const SubtitleContainer = styled(motion.div)`
-  font-size: 2rem;
+  font-size: clamp(1.2rem, 3vw, 2.2rem);
   color: ${props => props.theme.colors.secondaryBackground};
-  line-height: 1.8;
-  max-width: 1200px;
-  margin: 3rem auto;
-  padding: 2rem;
-  height: 100px;
+  line-height: 1.6;
+  max-width: min(1200px, 90vw);
+  margin: clamp(1.5rem, 3vw, 3rem) auto;
+  min-height: clamp(80px, 15vh, 120px);
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  
-  @media (max-width: 768px) {
-    font-size: 1.5rem;
-    padding: 1.5rem;
-    height: 120px;
-    margin: 2rem auto;
-  }
 `;
 
 const TextWrapper = styled(motion.p)`
   margin: 0;
-  background-color: rgba(0, 0, 0, 0.7);
-  padding: 3rem 3rem;
-  border-radius: 12px;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.7) 0%,
+    rgba(0, 0, 0, 0.8) 100%
+  );
+  padding: clamp(1.5rem, 3vw, 3rem);
+  border-radius: 16px;
   width: 100%;
-  border: 1px solid ${props => props.theme.colors.secondaryBackground};
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
-  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  
+  // Efecto de brillo en los bordes
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.1),
+      transparent
+    );
+    transition: 0.8s;
+    animation: shine 8s infinite;
+  }
+  
+  @keyframes shine {
+    0% {
+      left: -100%;
+    }
+    20% {
+      left: 100%;
+    }
+    100% {
+      left: 100%;
+    }
+  }
 `;
 
 const AnimatedSubtitle = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const { t } = useTranslation();
 
-    // Obtener los subtítulos traducidos
     const subtitleTexts = [
         t('home.subtitle.1'),
         t('home.subtitle.2'),
@@ -61,21 +90,23 @@ const AnimatedSubtitle = () => {
             <AnimatePresence mode="wait">
                 <TextWrapper
                     key={currentIndex}
-                    initial={{ opacity: 0, scale: 0.8 }}
+                    initial={{ opacity: 0, scale: 0.9, y: 20 }}
                     animate={{
                         opacity: 1,
                         scale: 1,
+                        y: 0,
                         transition: {
-                            duration: 0.7,
-                            ease: "easeOut"
+                            duration: 0.8,
+                            ease: [0.6, -0.05, 0.01, 0.99]
                         }
                     }}
                     exit={{
                         opacity: 0,
-                        scale: 1.1,
+                        scale: 0.9,
+                        y: -20,
                         transition: {
-                            duration: 0.5,
-                            ease: "easeIn"
+                            duration: 0.6,
+                            ease: [0.6, -0.05, 0.01, 0.99]
                         }
                     }}
                 >

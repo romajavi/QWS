@@ -2,8 +2,12 @@ import React from 'react';
 import styled from 'styled-components';
 import { glowButtonStyles, subtleGlowStyles } from '../styles/Animations.js';
 
-const StyledButton = styled.button`
-  /* Estilos base */
+// Filtramos las props que no queremos que lleguen al DOM
+const StyledButton = styled.button.withConfig({
+  shouldComponentUpdate: props => {
+    return !['isActive'].includes(props);
+  },
+})`
   background: ${props => props.theme.colors.primary};
   color: ${props => props.theme.colors.buttonText};
   border: none;
@@ -14,19 +18,30 @@ const StyledButton = styled.button`
   text-transform: uppercase;
   letter-spacing: 1px;
   
-  /* Tamaños */
-  padding: ${({ $size }) => $size === 'small' ? '0.5rem 1rem' : '0.75rem 1.5rem'};
-  font-size: ${({ $size }) => $size === 'medium' ? '0.875rem' : '1rem'};
-  min-width: ${({ $size }) => $size === 'large' ? '100px' : '150px'};
+  padding: ${({ $size }) =>
+    $size === 'small' ? '0.5rem 1rem' :
+      $size === 'medium' ? '0.75rem 1.5rem' :
+        '1rem 2rem'
+  };
   
-  /* Variantes */
+  font-size: ${({ $size }) =>
+    $size === 'small' ? '0.875rem' :
+      $size === 'medium' ? '1rem' :
+        '1.125rem'
+  };
+  
+  min-width: ${({ $size }) =>
+    $size === 'small' ? '100px' :
+      $size === 'medium' ? '150px' :
+        '200px'
+  };
+  
   background: ${({ $variant, theme }) =>
     $variant === 'secondary'
       ? theme.colors.secondaryBackground
       : theme.colors.primary
   };
   
-  /* Efectos de resplandor */
   ${({ $glow, $variant, $glowIntensity = 1 }) =>
     $glow && $variant === 'primary' ? glowButtonStyles($glowIntensity) : ''}
   ${({ $glow, $variant, $glowIntensity = 0.5 }) =>
@@ -56,15 +71,19 @@ const Button = ({
   variant = 'primary',
   size = 'medium',
   glow = false,
-  glowIntensity = 1, // Nueva prop para controlar la intensidad
+  glowIntensity = 1,
+  className,
+  isActive,  // Capturamos isActive aquí para que no se pase al DOM
   ...props
 }) => {
+  // Omitimos isActive de las props que se pasan al StyledButton
   return (
     <StyledButton
       $variant={variant}
       $size={size}
       $glow={glow}
       $glowIntensity={glowIntensity}
+      className={className}
       {...props}
     >
       {children}

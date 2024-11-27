@@ -1,37 +1,33 @@
-name: Deploy Staging Site
+name: Deploy to Staging
 
 on:
   push:
-    branches:
-      - staging
+    branches: [ staging ]
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '20'
-      
-      - name: Install Dependencies
-        run: npm install
-
-      - name: Build
-        run: npm run build
+      - name: Build Production
         env:
-          CI: false
-          REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL_STAGING }}
+          ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_SECURE: ${{ secrets.SMTP_SECURE }}
 
-      - name: Deploy to Staging
+      - name: Deploy to Production
         uses: SamKirkland/FTP-Deploy-Action@4.0.0
         with:
           server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME_STAGING}}
-          password: ${{ secrets.FTP_PASSWORD_STAGING }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD_PROD }}
           local-dir: ./build/
-          server-dir: /public_html/staging/
+          server-dir: /
           protocol: ftp
           security: loose
+          timeout: 120000
+          exclude: |
+            **/.git*/**
+            **/.git*/**
+            **/node_modules/**

@@ -1,16 +1,23 @@
 const path = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const PreloadWebpackPlugin = require('@vue/preload-webpack-plugin');
+
+
 
 module.exports = {
-    entry: './src/index.js',
+    entry: {
+        main: './src/index.js',
+        // Separamos las dependencias críticas
+        vendor: ['react', 'react-dom', 'react-router-dom', 'framer-motion', 'styled-components']
+    },
     output: {
         path: path.resolve(__dirname, 'build'),
         filename: '[name].[contenthash].js',
+        chunkFilename: '[name].[chunkhash].js',
         publicPath: '/',
         clean: true
     },
@@ -20,11 +27,16 @@ module.exports = {
             new TerserPlugin({
                 terserOptions: {
                     compress: {
-                        drop_console: true,
+                        drop_console: process.env.NODE_ENV === 'production',
+                        drop_debugger: true
                     },
+                    output: {
+                        comments: false
+                    }
                 },
+                extractComments: false
             }),
-            new CssMinimizerPlugin(),
+            new CssMinimizerPlugin()
         ],
         splitChunks: {
             chunks: 'all',
@@ -35,8 +47,17 @@ module.exports = {
                     test: /[\\/]node_modules[\\/]/,
                     name: 'vendors',
                     chunks: 'all',
-                    priority: 20
+                    priority: 20,
+                    enforce: true
                 },
+                // Nuevo grupo para las animaciones
+                animations: {
+                    test: /[\\/]components[\\/].*Animation/,
+                    name: 'animations',
+                    chunks: 'async',
+                    priority: 15
+                },
+                // Nuevo grupo para componentes comunes
                 common: {
                     name: 'common',
                     minChunks: 2,
@@ -47,7 +68,9 @@ module.exports = {
                 }
             }
         },
-        runtimeChunk: 'single'
+        runtimeChunk: {
+            name: 'runtime'
+        }
     },
     module: {
         rules: [
@@ -61,11 +84,17 @@ module.exports = {
                             ['@babel/preset-env', {
                                 modules: false,
                                 useBuiltIns: 'usage',
-                                corejs: 3
+                                corejs: 3,
+                                targets: {
+                                    browsers: ['>0.2%', 'not dead', 'not op_mini all']
+                                }
                             }],
                             '@babel/preset-react'
                         ],
-                        plugins: ['@babel/plugin-transform-runtime']
+                        plugins: [
+                            '@babel/plugin-transform-runtime',
+                            'babel-plugin-styled-components'
+                        ]
                     }
                 }
             },
@@ -117,6 +146,15 @@ module.exports = {
                 minifyURLs: true,
             }
         }),
+        new PreloadWebpackPlugin({
+            rel: 'preload',
+            include: 'initial',
+            fileBlacklist: [/\.map$/, /hot-update\.js$/]
+        }),
+        new PreloadWebpackPlugin({
+            rel: 'prefetch',
+            include: 'asyncChunks'
+        }),
         new MiniCssExtractPlugin({
             filename: '[name].[contenthash].css',
             chunkFilename: '[id].[contenthash].css'
@@ -148,9 +186,9 @@ module.exports = {
         }
     },
     performance: {
-        hints: process.env.NODE_ENV === 'production' ? 'warning' : false,
         maxEntrypointSize: 512000,
-        maxAssetSize: 512000
+        maxAssetSize: 512000,
+        hints: 'warning'
     },
     devServer: {
         historyApiFallback: true,

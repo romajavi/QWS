@@ -1,26 +1,43 @@
-import React, { Suspense, lazy, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
+import React, { Suspense, lazy, useEffect, useState } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import Layout from './components/Layout.js';
 import LoadingSpinner from './components/LoadingSpinner.js';
-import PageAnimation from './components/PageAnimation.js';
 import GlobalStyles from './styles/GlobalStyles.js';
-import styled from 'styled-components';
 import './translations/i18n.js';
 import LanguageSelector from './components/LanguageSelector.js';
-import WhatsAppButton from './components/WhatsAppButton.js'; // Importa el nuevo componente
+import WhatsAppButton from './components/WhatsAppButton.js';
 
+// Implementamos un componente de carga inicial
+const InitialLoadingScreen = () => (
+    <div style={{
+        position: 'fixed',
+        inset: 0,
+        background: '#000000',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        opacity: 1,
+        transition: 'opacity 0.5s ease-in-out'
+    }}>
+        <LoadingSpinner />
+    </div>
+);
 
+// Modificamos el lazy loading para incluir preload
+const preloadComponent = (importFn) => {
+    const Component = lazy(importFn);
+    Component.preload = importFn;
+    return Component;
+};
 
-
-// Lazy loading para las páginas
-const Home = lazy(() => import('./pages/Home.js'));
-const Blog = lazy(() => import(/* webpackChunkName: "blog" */ './pages/Blog.js'));
-const Services = lazy(() => import(/* webpackChunkName: "services" */ './pages/Services.js'));
-const Portfolio = lazy(() => import(/* webpackChunkName: "portfolio" */ './pages/Portfolio.js'));
-const Contact = lazy(() => import(/* webpackChunkName: "contact" */ './pages/Contact.js'));
-const UnderConstruction = lazy(() => import('./components/UnderConstruction.js'));
-
+// Implementamos lazy loading con preload
+const Home = preloadComponent(() => import('./pages/Home.js'));
+const Blog = preloadComponent(() => import('./pages/Blog.js'));
+const Services = preloadComponent(() => import('./pages/Services.js'));
+const Portfolio = preloadComponent(() => import('./pages/Portfolio.js'));
+const Contact = preloadComponent(() => import('./pages/Contact.js'));
+const UnderConstruction = preloadComponent(() => import('./components/UnderConstruction.js'));
 export const theme = {
     colors: {
         primary: '#FFD700', // Dorado: un tono vibrante que destaca como color principal.
@@ -45,26 +62,60 @@ export const theme = {
 };
 
 
+// Componente para manejar la precarga
+const PreloadManager = ({ children }) => {
+    useEffect(() => {
+        // Precargamos las rutas principales inmediatamente
+        Home.preload();
+
+        // Precargamos el resto después de que la página principal esté lista
+        const timer = setTimeout(() => {
+            Contact.preload();
+            Services.preload();
+        }, 3000);
+
+        return () => clearTimeout(timer);
+    }, []);
+
+    return children;
+};
+
 function App() {
+    const [isInitialLoad, setIsInitialLoad] = useState(true);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setIsInitialLoad(false);
+        }, 1000);
+
+        return () => clearTimeout(timer);
+    }, []);
+
     return (
         <ThemeProvider theme={theme}>
             <Router>
-                <LanguageSelector />
-                <GlobalStyles />
-                <Layout>
-                    <Suspense fallback={<LoadingSpinner />}>
-                        <Routes>
-                            <Route path="/" element={<Home />} />
-                            <Route path="/blog" element={<UnderConstruction pageName="Blog" />} />
-                            <Route path="/services" element={<Services />} />
-                            <Route path="/portfolio" element={<UnderConstruction pageName="Porttfolio" />} />
-                            <Route path="/contact" element={<Contact />} />
-                            <Route path="/about-us" element={<UnderConstruction pageName="Sobre Nosotros" />} />
-                            {/* <Route path="/faq" element={<UnderConstruction pageName="Preguntas Frecuentes" />} /> */}
-                        </Routes>
-                    </Suspense>
-                </Layout>
-                <WhatsAppButton phoneNumber="5491168805604" /> {/* Agregar número aquí */}
+                <PreloadManager>
+                    <LanguageSelector />
+                    <GlobalStyles />
+                    {isInitialLoad && <InitialLoadingScreen />}
+                    <Layout>
+                        <Suspense fallback={<LoadingSpinner />}>
+                            <Routes>
+                                <Route path="/" element={<Home />} />
+                                <Route path="/blog" element={<UnderConstruction pageName="Blog" />} />
+                                <Route path="/services" element={<Services />} />
+                                <Route path="/portfolio" element={
+                                    <UnderConstruction pageName="Portfolio" />
+                                } />
+                                <Route path="/contact" element={<Contact />} />
+                                <Route path="/about-us" element={
+                                    <UnderConstruction pageName="Sobre Nosotros" />
+                                } />
+                            </Routes>
+                        </Suspense>
+                    </Layout>
+                    <WhatsAppButton phoneNumber="5491168805604" />
+                </PreloadManager>
             </Router>
         </ThemeProvider>
     );

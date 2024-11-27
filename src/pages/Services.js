@@ -17,6 +17,7 @@ const ServicesWrapper = styled.div`
   flex: 1 0 auto;
   width: 100%;
   padding-bottom: 5rem;
+  position: relative; // Add this
 `;
 
 const ServicesContainer = styled.div`
@@ -26,6 +27,8 @@ const ServicesContainer = styled.div`
   gap: 3rem;
   margin: 1.5rem 0;
   padding: 2rem;
+  position: relative; // Add this
+  z-index: 1; // Add this to ensure proper stacking
 `;
 
 const Title = styled.h1`
@@ -34,9 +37,14 @@ const Title = styled.h1`
   margin: 2rem 0;
   font-size: 2.5rem;
   text-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+  height: 3.5rem; // Add fixed height to reserve space
+  display: flex;
+  align-items: center;
+  justify-content: center;
   
   @media (max-width: 768px) {
     font-size: 1.8rem;
+    height: 2.8rem; // Adjust height for mobile
     margin: 1.5rem 0;
   }
 `;
@@ -82,12 +90,14 @@ function Services() {
         <PageContainer>
             <ServicesWrapper>
                 <Title>
-                    <ReactTyped
-                        strings={[t('services.title')]}
-                        typeSpeed={50}
-                        showCursor={true}
-                        cursorChar="|"
-                    />
+                    <div style={{ minHeight: '1em' }}>
+                        <ReactTyped
+                            strings={[t('services.title')]}
+                            typeSpeed={50}
+                            showCursor={true}
+                            cursorChar="|"
+                        />
+                    </div>
                 </Title>
                 <ServicesContainer>
                     {services.map((serviceKey) => (

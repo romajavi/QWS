@@ -1,35 +1,52 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import fs from 'fs';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import emailRouter, { testConnection } from './emailHandler.js';
 import compression from 'compression';
+import { dirname } from 'path';
 
-// Configuración de entorno
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __dirname = dirname(__filename);
+
+// Configurar NODE_ENV si no está definido
+if (!process.env.NODE_ENV) {
+    process.env.NODE_ENV = 'development';
+}
 
 // Cargar variables de entorno según el ambiente
 const envPath = process.env.NODE_ENV === 'production'
-    ? path.join(process.cwd(), 'config/production.env')
-    : path.join(process.cwd(), 'config/development.env');
+    ? path.join(__dirname, '../config/production.env')
+    : path.join(__dirname, '../config/development.env');
 
+console.log('Loading environment from:', envPath);
 dotenv.config({ path: envPath });
 
 const app = express();
 const PORT = process.env.SERVER_PORT || 5000;
 
-// Configuración de CORS
+// Log de configuración
+console.log('Server configuration:', {
+    NODE_ENV: process.env.NODE_ENV,
+    PORT: PORT,
+    CORS_ORIGIN: process.env.CORS_ORIGIN
+});
+
 const corsOptions = {
-    origin: process.env.NODE_ENV === 'production'
-        ? [process.env.CORS_ORIGIN]
-        : ['http://localhost:3000'],
+    origin: process.env.CORS_ORIGIN || 'https://axiondev.tech',
     credentials: true,
     methods: ['GET', 'POST', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
 };
+
+// Log de verificación
+console.log('CORS Configuration:', {
+    origin: corsOptions.origin,
+    environment: process.env.NODE_ENV,
+    allowed_methods: corsOptions.methods
+});
+
 
 // Middlewares
 app.use(cors(corsOptions));
@@ -82,14 +99,17 @@ app.get('*', (req, res) => {
 // Iniciar servidor
 app.listen(PORT, () => {
     console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
-    console.log(`CORS enabled for: ${corsOptions.origin.join(', ')}`);
+    // Corregido el log de CORS para manejar tanto string como array
+    console.log(`CORS enabled for: ${Array.isArray(corsOptions.origin)
+        ? corsOptions.origin.join(', ')
+        : corsOptions.origin}`);
 });
 
 // Manejo de errores no capturados
 process.on('unhandledRejection', (err) => {
-    console.log('Unhandled Rejection:', err);
+    console.error('Unhandled Rejection:', err);
 });
 
 process.on('uncaughtException', (err) => {
-    console.log('Uncaught Exception:', err);
+    console.error('Uncaught Exception:', err);
 });

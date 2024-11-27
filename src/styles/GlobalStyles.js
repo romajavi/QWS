@@ -124,19 +124,20 @@ const GlobalStyles = createGlobalStyle`
 
   html, body {
     height: 100%;
+    width: 100%;
     overflow-x: hidden;
   }
 
   body, #root {
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    height: 100%; /* Cambiado de min-height */
     margin: 0;
     font-family: ${props => props.theme.fonts.secondary};
     background-color: ${props => props.theme.colors.background};
     color: ${props => props.theme.colors.text};
     line-height: 1.6;
-  }
+}
 
   h1, h2, h3, h4, h5, h6 {
     font-family: ${props => props.theme.fonts.main};

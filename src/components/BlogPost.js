@@ -40,10 +40,6 @@ const ButtonContainer = styled.div`
   margin-bottom: 1rem;
 `;
 
-const SocialButtons = styled.div`
-  display: flex;
-  gap: 0.5rem;
-`;
 
 const CommentSection = styled.div`
   margin-top: 1rem;
