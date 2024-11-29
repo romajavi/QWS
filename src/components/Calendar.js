@@ -251,7 +251,7 @@ const Calendar = ({ onSelectDate, minDate }) => {
                     &lt;
                 </CalendarNavButton>
                 <MonthYear>
-                    {`${monthNames[i18n.language] || monthNames.es}[currentDate.getMonth()] ${currentDate.getFullYear()}`}
+                    {`${(monthNames[i18n.language] || monthNames.es)[currentDate.getMonth()]} ${currentDate.getFullYear()}`}
                 </MonthYear>
                 <CalendarNavButton
                     variant="calendar"
