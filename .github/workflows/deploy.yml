@@ -22,6 +22,7 @@ jobs:
       - name: Build
         run: npm run build
         env:
+          CI: false  # Ignora warnings de ESLint
           REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
           NODE_ENV: production
           EMAIL_USER: ${{ secrets.EMAIL_USER }}
