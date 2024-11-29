@@ -20,6 +20,11 @@ const FooterWrapper = styled.footer`
   padding: 2rem 2rem 1.5rem;
   position: relative;
   overflow: hidden;
+  width: 100vw;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
 
   &::before {
     content: '';
@@ -131,6 +136,10 @@ const Footer = () => {
     navigate('/services#faq');
   };
 
+  const handleEmailClick = () => {
+    window.location.href = 'mailto:help@axiondev.tech';
+  };
+
   const renderSectionContent = (key, section) => {
     switch (key) {
       case 'company':
@@ -161,7 +170,7 @@ const Footer = () => {
               <ExternalLink size={16} />
               {section.links.faq}
             </NavLink>
-            <NavLink to="#" onClick={handleWhatsAppClick}>
+            <NavLink to="#" onClick={handleEmailClick}>
               <Phone size={16} />
               {section.links.support}
             </NavLink>

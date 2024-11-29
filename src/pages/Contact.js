@@ -1,19 +1,18 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, Suspense, lazy } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { ReactTyped } from 'react-typed';
 import { useTranslation } from 'react-i18next';
-import Calendar from '../components/Calendar.js';
-import StandardPopup from '../components/StandardPopup.js';
-import LoadingSpinner from '../components/LoadingSpinner.js';
 import PageContainer from '../components/PageContainer.js';
 import Button from '../components/Button.js';
-import Captcha from '../components/Captcha.js';
 import { glowButtonStyles } from '../styles/Animations.js';
 import { useAnimationController } from '../utils/animationController.js';
-import { motion } from 'framer-motion';
 
-
+// Componentes que se cargarán de forma diferida
+const Calendar = lazy(() => import('../components/Calendar.js'));
+const StandardPopup = lazy(() => import('../components/StandardPopup.js'));
+const LoadingSpinner = lazy(() => import('../components/LoadingSpinner.js'));
+const Captcha = lazy(() => import('../components/Captcha.js'));
 
 
 const ContactWrapper = styled.div`
@@ -62,8 +61,8 @@ const CheckboxTitle = styled.h3`
 
 
 const FormContainer = styled.div`
-  width: 90%;
-  max-width: 1200px;
+  width: 150%;
+  max-width: 1300px;
   margin: 1.5rem 0;  // Match ServicesContainer margin
   padding: 2rem;  // Match ServicesContainer padding
   background: ${props => props.theme.colors.cardBackground};
@@ -87,7 +86,8 @@ const FormContainer = styled.div`
   @media (max-width: 768px) {
     width: 95%;
     padding: 1.5rem;
-    margin: 1rem auto;
+    margin: 0.5rem auto;
+    gap: 2rem;
   }
 `;
 
@@ -113,7 +113,7 @@ const FormGrid = styled.div`
 const Section = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 1rem; // Ajustamos el gap para mantener consistencia
   width: 100%;
   padding: 1rem;
 
@@ -162,14 +162,16 @@ const Input = styled.input`
 const TextArea = styled.textarea`
   width: 100%;
   padding: 0.8rem;
-  margin-bottom: 1rem;
   background: rgba(30, 30, 30, 0.7);
   border: 1px solid ${props => props.$hasError ? '#ff3333' : `${props.theme.colors.secondaryBackground}40`};
   border-radius: 8px;
   color: ${props => props.theme.colors.text};
-  min-height: 100px;
+  flex: 1; // Permitimos que crezca para llenar el espacio
+  min-height: 200px; // Altura mínima que coincide con el captcha
+  height: calc(100% - 2rem); // Restamos el espacio del título
   resize: vertical;
   transition: all 0.3s ease;
+  margin-bottom: 0; // Eliminamos el margen inferior
 
   &:focus {
     outline: none;
@@ -178,20 +180,24 @@ const TextArea = styled.textarea`
   }
 `;
 
+const baseSpacing = {
+  marginBottom: '1rem',
+  containerGap: '1.5rem' // Añadimos un valor consistente para el espacio entre contenedores
+};
+
+
 const Select = styled.select`
-  width: auto;  // Change from 100% to auto
-  min-width: 120px;  // Add minimum width
+  width: 100%; // Cambiado a ancho completo
+  max-width: 250px; // Mismo ancho máximo que RadioLabel
   padding: 0.8rem;
-  margin: 0 auto 1rem auto;  // Center the select element
-  display: block;  // Make it a block element
+  margin: 0 auto 1rem auto;
+  display: block;
   background: rgba(30, 30, 30, 0.7);
   border: 1px solid ${props => props.theme.colors.secondaryBackground}40;
   border-radius: 8px;
   color: ${props => props.theme.colors.text};
   cursor: pointer;
-  transition: all 0.3s ease;
-  text-align: center;  // Center the text inside
-  transition: all 0.3s ease;
+  text-align: center;
 
   &:focus {
     outline: none;
@@ -210,22 +216,49 @@ const PreferenceGroup = styled.div`
   background: rgba(30, 30, 30, 0.5);
   padding: 1.2rem;
   border-radius: 8px;
-  margin-bottom: 1rem;
   border: ${props => props.theme.colors.secondaryBackground};
+  margin-bottom: ${baseSpacing.marginBottom};
+
+  @media (min-width: 768px) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+`;
+
+
+const PreferencesContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: ${baseSpacing.containerGap}; // Usamos gap en lugar de margin para un espaciado más consistente
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 `;
 
 const RadioContainer = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;  // Add this to center the radio buttons
+  align-items: center;
+  width: 100%;
+
+  /* Espaciado consistente para móvil */
   gap: 1rem;
-  width: 100%;  // Add this to ensure full width
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+    justify-content: center;
+    gap: 1rem;
+  }
 `;
+
 
 const RadioLabel = styled.label`
   display: flex;
   align-items: center;
-  justify-content: center;  // Add this to center the content
+  justify-content: center;
   gap: 0.5rem;
   font-size: 0.9rem;
   color: ${props => props.theme.colors.text};
@@ -233,8 +266,8 @@ const RadioLabel = styled.label`
   padding: 0.8rem 1.2rem;
   background: rgba(30, 30, 30, 0.7);
   border-radius: 5px;
-  width: 100%;  // Add this to make labels full width
-  max-width: 300px;  // Add this to control the maximum width
+  width: 100%; // Ancho completo
+  max-width: 250px; // Limitar el ancho máximo para mejor apariencia
   transition: all 0.3s ease;
 
   &:hover {
@@ -268,6 +301,9 @@ const RadioLabel = styled.label`
         background: ${props => props.theme.colors.background};
       }
     }
+  }
+    @media (min-width: 768px) {
+    width: calc(50% - 0.5rem); // Distribuye el espacio equitativamente
   }
 `;
 
@@ -311,16 +347,17 @@ const PopupMessage = styled.div`
 `;
 
 const FormSection = styled.div`
-  display: grid;
-  grid-template-rows: auto 1fr;
-  gap: 1.5rem;
+  display: flex;
+  flex-direction: column;
   height: 100%;
+  flex: 1; // Asegura que ocupe todo el espacio vertical disponible
 `;
 
 const TextAreaContainer = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
+  height: 100%; // Aseguramos que ocupe todo el espacio vertical disponible
 `;
 
 const CustomButtonGroup = styled.div`
@@ -348,29 +385,48 @@ const ErrorMessage = styled.p`
   margin-top: 0.5rem;
 `;
 
+const FadeIn = styled.div`
+  animation: fadeIn 0.3s ease-in;
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+`;
+
+
+const ContentFadeIn = styled.div`
+  opacity: 0;
+  animation: fadeIn 0.3s ease-in forwards;
+  animation-delay: 1s;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+`;
+
+
 
 const Contact = () => {
   const { shouldAnimate, animationLevel } = useAnimationController();
 
   // Configuramos las animaciones del formulario
   const getFormAnimation = () => {
-    if (!shouldAnimate || animationLevel === 'minimal') {
-      return {};
-    }
-
-    if (animationLevel === 'reduced') {
-      return {
-        initial: { opacity: 0 },
-        animate: { opacity: 1 },
-        transition: { duration: 0.3 }
-      };
-    }
-
-    return {
-      initial: { opacity: 0, y: 20 },
-      animate: { opacity: 1, y: 0 },
-      transition: { duration: 0.5, ease: 'easeOut' }
-    };
+    // Retornar un objeto vacío para evitar cualquier animación
+    return {};
   };
 
   const formAnimation = getFormAnimation();
@@ -407,8 +463,28 @@ const Contact = () => {
   });
   const [isCaptchaVerified, setIsCaptchaVerified] = useState(false);
 
+  // Nuevos estados para carga progresiva
+  const [showTitle, setShowTitle] = useState(false);
+  const [isAppointmentLoading, setIsAppointmentLoading] = useState(true);
+
+
+
   const navigate = useNavigate();
   const formRef = useRef(null);
+
+  useEffect(() => {
+    // Mostrar título primero
+    setShowTitle(true);
+
+    // Después de la animación del título, cargar el contenido
+    const contentTimer = setTimeout(() => {
+      setIsAppointmentLoading(false);
+    }, 1000); // Este delay da tiempo para que el título termine su animación
+
+    return () => {
+      clearTimeout(contentTimer);
+    };
+  }, []);
 
   useEffect(() => {
     if (formStatus.isSuccess) {
@@ -446,7 +522,7 @@ const Contact = () => {
   // 3. Update handleSubmit function
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true); // Activar spinner
+    setIsLoading(true);
 
     if (!validateForm()) {
       setSubmitStatus({
@@ -455,37 +531,50 @@ const Contact = () => {
         message: t('contact.form.errors.required')
       });
       setShowPopup(true);
-      setIsLoading(false); // Desactivar spinner
+      setIsLoading(false);
       return;
     }
 
     try {
-      const response = await fetch('/api/contact', {
+      console.log('Enviando datos:', formData); // Debug
+
+      const response = await fetch('http://localhost:5000/api/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json'
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(formData)
       });
+
+      console.log('Response status:', response.status); // Debug
+      console.log('Response headers:', response.headers); // Debug
+
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        throw new Error('Respuesta no válida del servidor');
+      }
+
+      const data = await response.json();
+      console.log('Response data:', data); // Debug
 
       if (response.ok) {
         setFormStatus({ isSubmitting: false, isSuccess: true, error: null });
         handleReset();
       } else {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Server response was not ok');
+        throw new Error(data.message || 'Error en el servidor');
       }
     } catch (error) {
+      console.error('Error detallado:', error); // Debug
       setFormStatus({
         isSubmitting: false,
         isSuccess: false,
-        error: error.message === 'email_error' ? 'contact.form.errors.clientEmailError' : 'contact.form.errors.required'
+        error: error.message
       });
     } finally {
-      setIsLoading(false); // Siempre desactivar spinner
+      setIsLoading(false);
     }
   };
-
 
   // 4. Update handleReset function
   const handleReset = (e) => {
@@ -543,10 +632,7 @@ const Contact = () => {
   // Función para manejar la selección de fecha
   const handleDateSelect = (date) => {
     if (!date) return;
-
-    // Formatear la fecha para el formato ISO
     const formattedDate = date.toISOString().split('T')[0];
-
     setSelectedDate(date);
     setFormData(prev => ({
       ...prev,
@@ -554,13 +640,9 @@ const Contact = () => {
     }));
   };
 
-
-
-  // Función para cerrar el popup
   const handleClosePopup = () => {
     setShowPopup(false);
     if (submitStatus.success) {
-      // Redirigir a la página principal después de un envío exitoso
       setTimeout(() => navigate('/'), 500);
     }
   };
@@ -573,358 +655,401 @@ const Contact = () => {
 
   return (
     <PageContainer>
-      {isLoading && <LoadingSpinner />}
+      {isLoading && <LoadingSpinner fullScreen={true} />}
       <ContactWrapper>
-        <motion.div {...formAnimation}>
-        <Title>
-          <ReactTyped
-            strings={[t('contact.title')]}
-            typeSpeed={50}
-            showCursor={true}
-            cursorChar="|"
-          />
-        </Title>
-        <FormContainer $hasError={Object.keys(errors).length > 0}>
-          <form onSubmit={handleSubmit} ref={formRef}>
-            <FormGrid>
+        <Suspense fallback={<LoadingSpinner />}>
+          <Title>
+            <FadeIn>
+              <ReactTyped
+                strings={[t('contact.title')]}
+                typeSpeed={50}
+                showCursor={true}
+                cursorChar="|"
+                startDelay={300}
+              />
+            </FadeIn>
+          </Title>
+          <ContentFadeIn>
+            <FormContainer $hasError={Object.keys(errors).length > 0}>
+              <form onSubmit={handleSubmit} ref={formRef}>
+                <FormGrid>
+                  {/* Sección de información personal - carga inmediata */}
+                  <Section>
+                    <h2>{t('contact.form.sections.personal')}</h2>
 
-              {/* personal information */}
-              <Section>
-                <h2>{t('contact.form.sections.personal')}</h2>
-
-                {/* Inputs personales */}
-                <Input
-                  type="text"
-                  name="name"
-                  placeholder={t('contact.form.inputs.name')}
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  $hasError={errors.name}
-                  autoComplete="given-name"
-                />
-
-                <Input
-                  type="email"
-                  name="email"
-                  placeholder={t('contact.form.inputs.email')}
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  $hasError={errors.email}
-                  autoComplete="email"
-                />
-
-                <Input
-                  type="tel"
-                  name="phone"
-                  placeholder={t('contact.form.inputs.phone')}
-                  value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  $hasError={errors.phone}
-                  autoComplete="tel"
-                />
-
-                <Input
-                  type="text"
-                  name="company"
-                  placeholder={t('contact.form.inputs.company')}
-                  value={formData.company}
-                  onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                  autoComplete="organization"
-                />
-
-                {/* Preferencias de Contacto */}
-                <PreferenceGroup $hasError={errors.contactPreference}>
-                  <CheckboxTitle $error={errors.contactPreference}>
-                    {t('contact.form.preferences.contact.title')}
-                  </CheckboxTitle>
-                  <RadioContainer>
-                    <RadioLabel $hasError={errors.contactPreference}>
-                      <input
-                        type="radio"
-                        name="contactPreference"
-                        value="phone"
-                        checked={formData.contactPreference.includes('phone')}
-                        onChange={(e) => {
-                          setFormData({
-                            ...formData,
-                            contactPreference: [e.target.value]
-                          });
-                          if (errors.contactPreference) {
-                            setErrors(prev => ({ ...prev, contactPreference: false }));
-                          }
-                        }}
-                      />
-                      {t('contact.form.preferences.contact.options.phone')}
-                    </RadioLabel>
-                    <RadioLabel $hasError={errors.contactPreference}>
-                      <input
-                        type="radio"
-                        name="contactPreference"
-                        value="email"
-                        checked={formData.contactPreference.includes('email')}
-                        onChange={(e) => {
-                          setFormData({
-                            ...formData,
-                            contactPreference: [e.target.value]
-                          });
-                          if (errors.contactPreference) {
-                            setErrors(prev => ({ ...prev, contactPreference: false }));
-                          }
-                        }}
-                      />
-                      {t('contact.form.preferences.contact.options.email')}
-                    </RadioLabel>
-                  </RadioContainer>
-                </PreferenceGroup>
-
-                {/* Días de Contacto */}
-                <PreferenceGroup $hasError={errors.contactDays}>
-                  <CheckboxTitle $error={errors.contactDays}>
-                    {t('contact.form.preferences.days.title')}
-                  </CheckboxTitle>
-                  <RadioContainer>
-                    <RadioLabel $hasError={errors.contactDays}>
-                      <input
-                        type="radio"
-                        name="contactDays"
-                        value="weekdays"
-                        checked={formData.contactDays.includes('weekdays')}
-                        onChange={(e) => {
-                          setFormData({
-                            ...formData,
-                            contactDays: [e.target.value]
-                          });
-                          if (errors.contactDays) {
-                            setErrors(prev => ({ ...prev, contactDays: false }));
-                          }
-                        }}
-                      />
-                      {t('contact.form.preferences.days.options.weekdays')}
-                    </RadioLabel>
-                    <RadioLabel $hasError={errors.contactDays}>
-                      <input
-                        type="radio"
-                        name="contactDays"
-                        value="weekend"
-                        checked={formData.contactDays.includes('weekend')}
-                        onChange={(e) => {
-                          setFormData({
-                            ...formData,
-                            contactDays: [e.target.value]
-                          });
-                          if (errors.contactDays) {
-                            setErrors(prev => ({ ...prev, contactDays: false }));
-                          }
-                        }}
-                      />
-                      {t('contact.form.preferences.days.options.weekend')}
-                    </RadioLabel>
-                  </RadioContainer>
-                </PreferenceGroup>
-
-                {/* Horario de Contacto */}
-                <PreferenceGroup $hasError={errors.contactTime}>
-                  <CheckboxTitle $error={errors.contactTime}>
-                    {t('contact.form.preferences.time.title')}
-                  </CheckboxTitle>
-                  <RadioContainer>
-                    <RadioLabel $hasError={errors.contactTime}>
-                      <input
-                        type="radio"
-                        name="contactTime"
-                        value="morning"
-                        checked={formData.contactTime.includes('morning')}
-                        onChange={(e) => {
-                          setFormData({
-                            ...formData,
-                            contactTime: [e.target.value]
-                          });
-                          if (errors.contactTime) {
-                            setErrors(prev => ({ ...prev, contactTime: false }));
-                          }
-                        }}
-                      />
-                      {t('contact.form.preferences.time.options.morning')}
-                    </RadioLabel>
-                    <RadioLabel $hasError={errors.contactTime}>
-                      <input
-                        type="radio"
-                        name="contactTime"
-                        value="afternoon"
-                        checked={formData.contactTime.includes('afternoon')}
-                        onChange={(e) => {
-                          setFormData({
-                            ...formData,
-                            contactTime: [e.target.value]
-                          });
-                          if (errors.contactTime) {
-                            setErrors(prev => ({ ...prev, contactTime: false }));
-                          }
-                        }}
-                      />
-                      {t('contact.form.preferences.time.options.afternoon')}
-                    </RadioLabel>
-                  </RadioContainer>
-                </PreferenceGroup>
-
-                {/* Sección de Observaciones */}
-                <FormSection>
-                  <TextAreaContainer>
-                    <CheckboxTitle $error={errors.contactTime}>
-                      {t('contact.form.inputs.observations')}
-                    </CheckboxTitle>
-                    <TextArea
-                      name="observations"
-                      value={formData.observations}
-                      onChange={(e) => setFormData({ ...formData, observations: e.target.value })}
-                      style={{ flex: 1, minHeight: '150px' }}
-                      $hasError={errors.observations}
+                    {/* Los inputs básicos se mantienen igual ya que son ligeros */}
+                    <Input
+                      type="text"
+                      name="name"
+                      placeholder={t('contact.form.inputs.name')}
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      $hasError={errors.name}
+                      autoComplete="given-name"
                     />
-                  </TextAreaContainer>
-                </FormSection>
-              </Section>
 
-              <Divider />
+                    <Input
+                      type="email"
+                      name="email"
+                      placeholder={t('contact.form.inputs.email')}
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      $hasError={errors.email}
+                      autoComplete="email"
+                    />
 
-              {/* appointment information */}
-              <Section>
-                <h2>{t('contact.form.sections.appointment')}</h2>
-                <Calendar
-                  onSelectDate={handleDateSelect}
-                  selectedDate={selectedDate}
-                />
+                    <Input
+                      type="tel"
+                      name="phone"
+                      placeholder={t('contact.form.inputs.phone')}
+                      value={formData.phone}
+                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      $hasError={errors.phone}
+                      autoComplete="tel"
+                    />
 
-                <PreferenceGroup>
-                  <CheckboxTitle>
-                    {t('contact.form.appointment.time')}
-                  </CheckboxTitle>
-                  <Select
-                    name="appointmentTime"
-                    value={formData.appointmentTime}
-                    onChange={(e) => setFormData({
-                      ...formData,
-                      appointmentTime: e.target.value
-                    })}
-                    $hasError={errors.appointmentTime}
+                    <Input
+                      type="text"
+                      name="company"
+                      placeholder={t('contact.form.inputs.company')}
+                      value={formData.company}
+                      onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                      autoComplete="organization"
+                    />
+
+                    {/* Grupos de preferencias - carga progresiva */}
+                    <Suspense fallback={<LoadingSpinner />}>
+                      <PreferencesContainer>
+                        <PreferenceGroup $hasError={errors.contactPreference}>
+                          <CheckboxTitle $error={errors.contactPreference}>
+                            {t('contact.form.preferences.contact.title')}
+                          </CheckboxTitle>
+                          <RadioContainer>
+                            <RadioLabel $hasError={errors.contactPreference}>
+                              <input
+                                type="radio"
+                                name="contactPreference"
+                                value="phone"
+                                checked={formData.contactPreference.includes('phone')}
+                                onChange={(e) => {
+                                  setFormData({
+                                    ...formData,
+                                    contactPreference: [e.target.value]
+                                  });
+                                  if (errors.contactPreference) {
+                                    setErrors(prev => ({ ...prev, contactPreference: false }));
+                                  }
+                                }}
+                              />
+                              {t('contact.form.preferences.contact.options.phone')}
+                            </RadioLabel>
+                            <RadioLabel $hasError={errors.contactPreference}>
+                              <input
+                                type="radio"
+                                name="contactPreference"
+                                value="email"
+                                checked={formData.contactPreference.includes('email')}
+                                onChange={(e) => {
+                                  setFormData({
+                                    ...formData,
+                                    contactPreference: [e.target.value]
+                                  });
+                                  if (errors.contactPreference) {
+                                    setErrors(prev => ({ ...prev, contactPreference: false }));
+                                  }
+                                }}
+                              />
+                              {t('contact.form.preferences.contact.options.email')}
+                            </RadioLabel>
+                          </RadioContainer>
+                        </PreferenceGroup>
+                      </PreferencesContainer>
+
+
+
+                      {/* Grupos de días y horarios */}
+                      <PreferenceGroup $hasError={errors.contactDays}>
+                        <CheckboxTitle $error={errors.contactDays}>
+                          {t('contact.form.preferences.days.title')}
+                        </CheckboxTitle>
+                        <RadioContainer>
+                          <RadioLabel $hasError={errors.contactDays}>
+                            <input
+                              type="radio"
+                              name="contactDays"
+                              value="weekdays"
+                              checked={formData.contactDays.includes('weekdays')}
+                              onChange={(e) => {
+                                setFormData({
+                                  ...formData,
+                                  contactDays: [e.target.value]
+                                });
+                                if (errors.contactDays) {
+                                  setErrors(prev => ({ ...prev, contactDays: false }));
+                                }
+                              }}
+                            />
+                            {t('contact.form.preferences.days.options.weekdays')}
+                          </RadioLabel>
+                          <RadioLabel $hasError={errors.contactDays}>
+                            <input
+                              type="radio"
+                              name="contactDays"
+                              value="weekend"
+                              checked={formData.contactDays.includes('weekend')}
+                              onChange={(e) => {
+                                setFormData({
+                                  ...formData,
+                                  contactDays: [e.target.value]
+                                });
+                                if (errors.contactDays) {
+                                  setErrors(prev => ({ ...prev, contactDays: false }));
+                                }
+                              }}
+                            />
+                            {t('contact.form.preferences.days.options.weekend')}
+                          </RadioLabel>
+                        </RadioContainer>
+                      </PreferenceGroup>
+
+                      <PreferenceGroup $hasError={errors.contactTime}>
+                        <CheckboxTitle $error={errors.contactTime}>
+                          {t('contact.form.preferences.time.title')}
+                        </CheckboxTitle>
+                        <RadioContainer>
+                          <RadioLabel $hasError={errors.contactTime}>
+                            <input
+                              type="radio"
+                              name="contactTime"
+                              value="morning"
+                              checked={formData.contactTime.includes('morning')}
+                              onChange={(e) => {
+                                setFormData({
+                                  ...formData,
+                                  contactTime: [e.target.value]
+                                });
+                                if (errors.contactTime) {
+                                  setErrors(prev => ({ ...prev, contactTime: false }));
+                                }
+                              }}
+                            />
+                            {t('contact.form.preferences.time.options.morning')}
+                          </RadioLabel>
+                          <RadioLabel $hasError={errors.contactTime}>
+                            <input
+                              type="radio"
+                              name="contactTime"
+                              value="afternoon"
+                              checked={formData.contactTime.includes('afternoon')}
+                              onChange={(e) => {
+                                setFormData({
+                                  ...formData,
+                                  contactTime: [e.target.value]
+                                });
+                                if (errors.contactTime) {
+                                  setErrors(prev => ({ ...prev, contactTime: false }));
+                                }
+                              }}
+                            />
+                            {t('contact.form.preferences.time.options.afternoon')}
+                          </RadioLabel>
+                        </RadioContainer>
+                      </PreferenceGroup>
+                    </Suspense>
+
+                    {/* Área de observaciones */}
+                    <FormSection>
+                      <TextAreaContainer>
+                        <CheckboxTitle $error={errors.contactTime}>
+                          {t('contact.form.inputs.observations')}
+                        </CheckboxTitle>
+                        <TextArea
+                          name="observations"
+                          value={formData.observations}
+                          onChange={(e) => setFormData({ ...formData, observations: e.target.value })}
+                          style={{ flex: 1, minHeight: '150px' }}
+                          $hasError={errors.observations}
+                        />
+                      </TextAreaContainer>
+                    </FormSection>
+                  </Section>
+
+                  <Divider />
+                  {/* Sección de cita - carga diferida */}
+                  <Section>
+                    <h2>{t('contact.form.sections.appointment')}</h2>
+                    <Suspense fallback={
+                      <LoadingSpinner
+                        fullScreen={false}
+                        size="30px"
+                        borderWidth="3px"
+                        height="100%"
+                      />
+                    }>
+                      {isAppointmentLoading ? (
+                        <div style={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          minHeight: '300px'
+                        }}>
+                          <LoadingSpinner
+                            fullScreen={false}
+                            size="30px"
+                            borderWidth="3px"
+                            height="auto"
+                          />
+                        </div>
+                      ) : (
+                        <FadeIn>
+                          <PreferencesContainer> {/* Agregamos el contenedor principal para mantener consistencia */}
+                            <Calendar
+                              onSelectDate={handleDateSelect}
+                              selectedDate={selectedDate}
+                            />
+
+                            <PreferenceGroup>
+                              <CheckboxTitle>
+                                {t('contact.form.appointment.time')}
+                              </CheckboxTitle>
+                              <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}> {/* Contenedor para centrado */}
+                                <Select
+                                  name="appointmentTime"
+                                  value={formData.appointmentTime}
+                                  onChange={(e) => setFormData({
+                                    ...formData,
+                                    appointmentTime: e.target.value
+                                  })}
+                                  $hasError={errors.appointmentTime}
+                                >
+                                  <option value="09:00">09:00</option>
+                                  <option value="10:00">10:00</option>
+                                  <option value="11:00">11:00</option>
+                                  <option value="12:00">12:00</option>
+                                  <option value="13:00">13:00</option>
+                                  <option value="14:00">14:00</option>
+                                  <option value="15:00">15:00</option>
+                                  <option value="16:00">16:00</option>
+                                  <option value="17:00">17:00</option>
+                                </Select>
+                              </div>
+                            </PreferenceGroup>
+
+                            <PreferenceGroup>
+                              <CheckboxTitle>
+                                {t('contact.form.appointment.medium.title')}
+                              </CheckboxTitle>
+                              <RadioContainer>
+                                <RadioLabel>
+                                  <input
+                                    type="radio"
+                                    name="appointmentMedium"
+                                    value="zoom"
+                                    checked={formData.appointmentMedium === 'zoom'}
+                                    onChange={(e) => setFormData({
+                                      ...formData,
+                                      appointmentMedium: e.target.value
+                                    })}
+                                  />
+                                  {t('contact.form.appointment.medium.options.zoom')}
+                                </RadioLabel>
+                                <RadioLabel>
+                                  <input
+                                    type="radio"
+                                    name="appointmentMedium"
+                                    value="meet"
+                                    checked={formData.appointmentMedium === 'meet'}
+                                    onChange={(e) => setFormData({
+                                      ...formData,
+                                      appointmentMedium: e.target.value
+                                    })}
+                                  />
+                                  {t('contact.form.appointment.medium.options.meet')}
+                                </RadioLabel>
+                                <RadioLabel>
+                                  <input
+                                    type="radio"
+                                    name="appointmentMedium"
+                                    value="whatsapp"
+                                    checked={formData.appointmentMedium === 'whatsapp'}
+                                    onChange={(e) => setFormData({
+                                      ...formData,
+                                      appointmentMedium: e.target.value
+                                    })}
+                                  />
+                                  {t('contact.form.appointment.medium.options.whatsapp')}
+                                </RadioLabel>
+                              </RadioContainer>
+                            </PreferenceGroup>
+
+                            <PreferenceGroup>
+                              <CheckboxTitle $error={errors.captcha}>
+                                {t('contact.captcha.title')}
+                              </CheckboxTitle>
+                              <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}> {/* Contenedor para centrado */}
+                                <Captcha
+                                  onVerify={(verified) => {
+                                    setIsCaptchaVerified(verified);
+                                    if (verified) {
+                                      setErrors(prev => ({ ...prev, captcha: false }));
+                                    } else {
+                                      setErrors(prev => ({ ...prev, captcha: true }));
+                                    }
+                                  }}
+                                />
+                              </div>
+                              {errors.captcha && (
+                                <ErrorMessage>{t('contact.captcha.required')}</ErrorMessage>
+                              )}
+                            </PreferenceGroup>
+                          </PreferencesContainer>
+                        </FadeIn>
+                      )}
+                    </Suspense>
+                  </Section>
+                </FormGrid>
+
+                <CustomButtonGroup>
+                  <ClearButton
+                    variant="secondary"
+                    size="small"
+                    onClick={handleReset}
                   >
-                    <option value="09:00">09:00</option>
-                    <option value="10:00">10:00</option>
-                    <option value="11:00">11:00</option>
-                    <option value="12:00">12:00</option>
-                    <option value="13:00">13:00</option>
-                    <option value="14:00">14:00</option>
-                    <option value="15:00">15:00</option>
-                    <option value="16:00">16:00</option>
-                    <option value="17:00">17:00</option>
-                  </Select>
-                </PreferenceGroup>
-
-                <PreferenceGroup>
-                  <CheckboxTitle>
-                    {t('contact.form.appointment.medium.title')}
-                  </CheckboxTitle>
-                  <RadioContainer>
-                    <RadioLabel>
-                      <input
-                        type="radio"
-                        name="appointmentMedium"
-                        value="zoom"
-                        checked={formData.appointmentMedium === 'zoom'}
-                        onChange={(e) => setFormData({
-                          ...formData,
-                          appointmentMedium: e.target.value
-                        })}
-                      />
-                      {t('contact.form.appointment.medium.options.zoom')}
-                    </RadioLabel>
-                    <RadioLabel>
-                      <input
-                        type="radio"
-                        name="appointmentMedium"
-                        value="meet"
-                        checked={formData.appointmentMedium === 'meet'}
-                        onChange={(e) => setFormData({
-                          ...formData,
-                          appointmentMedium: e.target.value
-                        })}
-                      />
-                      {t('contact.form.appointment.medium.options.meet')}
-                    </RadioLabel>
-                    <RadioLabel>
-                      <input
-                        type="radio"
-                        name="appointmentMedium"
-                        value="whatsapp"
-                        checked={formData.appointmentMedium === 'whatsapp'}
-                        onChange={(e) => setFormData({
-                          ...formData,
-                          appointmentMedium: e.target.value
-                        })}
-                      />
-                      {t('contact.form.appointment.medium.options.whatsapp')}
-                    </RadioLabel>
-                  </RadioContainer>
-                </PreferenceGroup>
-
-                {/* Implementación del Captcha */}
-                <PreferenceGroup>
-                  <CheckboxTitle $error={errors.captcha}>
-                    {t('contact.captcha.title')}
-                  </CheckboxTitle>
-                  <Captcha
-                    onVerify={(verified) => {
-                      setIsCaptchaVerified(verified);
-                      if (verified) {
-                        setErrors(prev => ({ ...prev, captcha: false }));
-                      } else {
-                        setErrors(prev => ({ ...prev, captcha: true }));
-                      }
-                    }}
-                  />
-                  {errors.captcha && (
-                    <ErrorMessage>
-                      {t('contact.captcha.required')}
-                    </ErrorMessage>
-                  )}
-                </PreferenceGroup>
-              </Section>
-            </FormGrid>
-
-            <CustomButtonGroup>
-              <ClearButton
-                variant="secondary"
-                size="small"
-                onClick={handleReset}
-              >
-                {t('contact.form.buttons.clear')}
-              </ClearButton>
-              <SubmitButton
-                variant="primary"
-                size="small"
-                type="submit"
-              >
-                {t('contact.form.buttons.submit')}
-              </SubmitButton>
-            </CustomButtonGroup>
-          </form>
-          </FormContainer>
-        </motion.div>
+                    {t('contact.form.buttons.clear')}
+                  </ClearButton>
+                  <SubmitButton
+                    variant="primary"
+                    size="small"
+                    type="submit"
+                  >
+                    {t('contact.form.buttons.submit')}
+                  </SubmitButton>
+                </CustomButtonGroup>
+              </form>
+            </FormContainer>
+          </ContentFadeIn>
+        </Suspense>
       </ContactWrapper>
 
-      <StandardPopup
-        isOpen={showPopup}
-        onClose={handleClosePopup}
-        titleKey={submitStatus.titleKey}  // Asegúrate que sea titleKey y no title
-      >
-        <PopupMessage>
-          <StatusIcon>
-            {submitStatus.success ? "✅" : "❌"}
-          </StatusIcon>
-          <MessageText>
-            {submitStatus.message}
-          </MessageText>
-        </PopupMessage>
-      </StandardPopup>
+      {/* Popup - carga diferida */}
+      {showPopup && (
+        <Suspense fallback={null}>
+          <StandardPopup
+            isOpen={showPopup}
+            onClose={handleClosePopup}
+            titleKey={submitStatus.titleKey}
+          >
+            <PopupMessage>
+              <StatusIcon>
+                {submitStatus.success ? "✅" : "❌"}
+              </StatusIcon>
+              <MessageText>
+                {submitStatus.message}
+              </MessageText>
+            </PopupMessage>
+          </StandardPopup>
+        </Suspense>
+      )}
     </PageContainer>
   );
 }

@@ -10,7 +10,7 @@
         "title": "Desarrollo Web y Soluciones Digitales",
         "subtitle": {
             "1": "🎯 Desarrollo de sitios web modernos y accesibles para pequeñas y medianas empresas",
-            "2": "💻 Desarrollo y diseño de páginas de aterrizaje atractivas y optimizadas",
+            "2": "💻 Desarrollo y diseño de Landing Pages atractivas y optimizadas",
             "3": "⚡ Mantenimiento y actualizaciones de sitios web en WordPress",
             "4": "📱 Diseño responsivo para una experiencia perfecta en todos los dispositivos",
             "5": "🔍 Implementación de SEO para mejorar tu visibilidad en línea"
@@ -44,8 +44,8 @@
         "moreInfo": "Más información",
         "categories": {
             "landingPages": {
-                "name": "Páginas de Aterrizaje y Sitios Web",
-                "price": "Desde u$ d149",
+                "name": "Landing Pages y Sitios Web",
+                "price": "Desde u$d 149",
                 "features": [
                     {
                         "title": "Diseño Responsivo",
@@ -70,6 +70,36 @@
                     {
                         "title": "Entrega según lo acordado",
                         "description": "Nos aseguramos de entregar tu proyecto en el tiempo pactado y con alta calidad. ⏳🎯🏆"
+                    }
+                ]
+            },
+            "onlineStorePhotos": {
+                "name": "Tienda Online + Fotos",
+                "price": "Desde u$d 399",
+                "features": [
+                    {
+                        "title": "Creación de Tienda Online",
+                        "description": "Desarrollamos tu tienda online personalizada para la compra y venta de productos. 🛒🌐💼"
+                    },
+                    {
+                        "title": "Diseño Responsivo",
+                        "description": "Tu tienda será completamente adaptable a móviles, tablets y computadoras. 📱💻✨"
+                    },
+                    {
+                        "title": "Gestión de Productos",
+                        "description": "Configuramos un sistema para que puedas agregar, editar o eliminar productos fácilmente. 📦📋⚙️"
+                    },
+                    {
+                        "title": "Integración de Pasarelas de Pago",
+                        "description": "Incluimos las principales pasarelas de pago para facilitar las transacciones. 💳💵✅"
+                    },
+                    {
+                        "title": "Fotos Profesionales",
+                        "description": "Realizamos fotografías de tus productos con calidad profesional, ideales para destacar tu catálogo. 📸✨🛍️"
+                    },
+                    {
+                        "title": "Sesión en Tienda o Estudio",
+                        "description": "Las fotos pueden tomarse en tu tienda o en un estudio, según prefieras. 🏪📷🎯"
                     }
                 ]
             },
@@ -137,7 +167,7 @@
         "contactPopup": {
             "title": "¿Cómo deseas proceder?",
             "schedule": "Agendar cita",
-            "directContact": "Contacto Directo"
+            "directContact": "WhatsApp"
         }
     },
     "contact": {
@@ -157,21 +187,21 @@
             },
             "preferences": {
                 "contact": {
-                    "title": "Preferencias de Contacto *",
+                    "title": "Preferencias de Contacto",
                     "options": {
                         "phone": "Teléfono",
                         "email": "Correo Electrónico"
                     }
                 },
                 "days": {
-                    "title": "Días de Contacto *",
+                    "title": "Días de Contacto",
                     "options": {
                         "weekdays": "Lun-Vie",
                         "weekend": "Fin de Semana"
                     }
                 },
                 "time": {
-                    "title": "Horario de Contacto *",
+                    "title": "Horario de Contacto",
                     "options": {
                         "morning": "Mañana",
                         "afternoon": "Tarde"
@@ -198,11 +228,11 @@
             "status": {
                 "success": {
                     "title": "🎉 ¡Éxito absoluto!",
-                    "message": "Tu formulario se ha enviado con éxito, viajando a través de los cables del universo digital directamente a nuestra bandeja de entrada. ✉️✨ ¡Gracias por escribirnos! Nuestro equipo revisará tu mensaje y se pondrá en contacto contigo a la brevedad. 🚀🌟"
+                    "message": "Su formulario ha sido recibido correctamente. Nuestro equipo lo revisará y le contactará pronto."
                 },
                 "error": {
                     "title": "🚧 ¡Ups! Algo salió mal...",
-                    "message": "Parece que el formulario tropezó en el camino. 🐾💨 No te preocupes, ya estamos revisándolo. Mientras tanto, revisa tu conexión o inténtalo de nuevo. Si el problema persiste, estamos aquí para ayudarte. 🛠️✨"
+                    "message": "Se ha producido un error en el envío. Por favor, verifique su conexión e intente nuevamente."
                 }
             },
             "errors": {
@@ -313,8 +343,8 @@
                         "answer": "El SEO (Optimización para Motores de Búsqueda) es el proceso de mejorar tu sitio web para que ocupe mejores posiciones en Google y otros motores de búsqueda. Incluye la optimización de palabras clave, enlaces, velocidad del sitio y otros factores. Un buen SEO ayuda a que más personas encuentren tu sitio de forma natural."
                     },
                     {
-                        "question": "¿Qué es una página de aterrizaje?",
-                        "answer": "Una página de aterrizaje es una página web diseñada específicamente para captar la atención de los usuarios y motivarlos a realizar una acción específica, como registrarse o realizar una compra. Estas páginas están optimizadas para la conversión con un objetivo claro y específico."
+                        "question": "¿Qué es una Landing Page",
+                        "answer": "Una Landing Page es una página web diseñada específicamente para captar la atención de los usuarios y motivarlos a realizar una acción específica, como registrarse o realizar una compra. Estas páginas están optimizadas para la conversión con un objetivo claro y específico."
                     }
                 ]
             },

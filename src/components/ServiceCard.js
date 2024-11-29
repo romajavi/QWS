@@ -12,7 +12,7 @@ const Card = styled(motion.div)`
   border: 1px solid ${props => props.theme.colors.secondaryBackground};
   border-radius: 15px;
   padding: 1.5rem 1.2rem;
-  width: 320px;
+  width: 350px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -29,33 +29,38 @@ const Card = styled(motion.div)`
   }
 `;
 
+// Opcional: Si necesitas ajustar también el tamaño del texto para las tarjetas más grandes
 const ServiceName = styled.h3`
   color: ${props => props.theme.colors.accent};
-  font-size: 1rem;
+  font-size: 1.2rem;
   font-family: ${props => props.theme.fonts.secondary};
-  margin-bottom: 1rem;
-  position: relative;
-  z-index: 2;
-  background: ${props => props.theme.effects.accent};
-  padding: 0.6rem 1rem;
-  border-radius: 8px;
   width: 100%;
+  text-align: center;
+  margin-bottom: 1rem;
+  background: ${props => props.theme.effects.accent};
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
   box-shadow: ${props => props.theme.effects.glow};
 `;
-
 const Price = styled.p`
-  font-size: 1rem;
+  font-size: 0.9rem;
   color: ${props => props.theme.colors.secondaryBackground};
+  margin: 1.2rem 0;
   margin-bottom: 1rem;
   font-weight: bold;
 `;
 
 const FeatureList = styled.ul`
   list-style-type: none;
-  padding: 0;
+  padding: 0 1.5rem; // Aumentado el padding horizontal
   text-align: left;
   width: 100%;
-  margin: 1rem 0;
+  margin: 1.2rem 0;
+  font-size: 1rem; // Aumentado el tamaño de fuente
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 `;
 
 const FeatureItem = styled.li`
@@ -100,6 +105,17 @@ const FeatureDescription = styled(motion.div)`
   margin-bottom: 5px;
 `;
 
+const StyledCard = styled(Card)`
+  /* El FeatureList debe crecer para ocupar el espacio disponible */
+  & > ${FeatureList} {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+`;
+
+
 // Componente Feature
 const Feature = ({ feature, description }) => {
   const [showDescription, setShowDescription] = useState(false);
@@ -134,7 +150,7 @@ const ServiceCard = ({ serviceKey, onContactClick }) => {
   const { t } = useTranslation();
 
   return (
-    <Card>
+    <StyledCard> {/* Usamos StyledCard aquí en lugar de Card */}
       <ServiceName>
         {t(`services.categories.${serviceKey}.name`)}
       </ServiceName>
@@ -146,8 +162,8 @@ const ServiceCard = ({ serviceKey, onContactClick }) => {
           .map((feature, index) => (
             <Feature
               key={index}
-              feature={feature.title} // Título
-              description={feature.description} // Descripción
+              feature={feature.title}
+              description={feature.description}
             />
           ))}
       </FeatureList>
@@ -160,7 +176,7 @@ const ServiceCard = ({ serviceKey, onContactClick }) => {
       >
         {t('services.moreInfo')}
       </Button>
-    </Card>
+    </StyledCard>
   );
 };
 

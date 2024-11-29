@@ -81,15 +81,34 @@ const WeekdayHeader = styled.div`
 `;
 
 
+// Reemplazar el CalendarNavButton existente con:
 const CalendarNavButton = styled(Button)`
-  padding: 0.3rem 0.6rem;
-  min-width: auto;
+  /* Heredar los estilos base del botón pero ajustar el tamaño */
+  padding: 0.3rem;
+  min-width: 24px;
+  height: 24px;
   font-size: 0.8rem;
-  background:  ${props => props.theme.colors.primary};
+  
+  /* Ajustes específicos para el calendario */
+  background: transparent;
   border: 1px solid ${props => props.theme.colors.accent}40;
+  color: ${props => props.theme.colors.text};
+  margin: 0;
+  
+  /* Modificar los efectos de hover para este caso específico */
+  &:hover::before {
+    background: ${props => props.theme.colors.accent}40;
+    animation: none;
+  }
   
   &:hover {
-    background: ${props => props.theme.colors.accent}10;
+    transform: translateY(0);
+    box-shadow: 0 0 8px ${props => props.theme.colors.accent}40;
+  }
+  
+  /* Mantener el efecto al hacer click pero más sutil */
+  &:active {
+    transform: scale(0.95);
   }
 `;
 
@@ -124,7 +143,7 @@ const Calendar = ({ onSelectDate, minDate }) => {
             "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
         ]
     };
-    
+
     const weekdaysText = {
         es: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
         en: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],

@@ -70,19 +70,42 @@ const PopupTitle = styled.h2`
 
 const ButtonContainer = styled.div`
   display: flex;
-  flex-direction: column;
   gap: 1rem;
-  align-items: center;
+  align-items: stretch;
   justify-content: center;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
 
-  @media (min-width: 480px) {
-    flex-direction: row;
-    gap: 2rem;
+  // Mantenemos la dirección en row incluso en móvil
+  flex-direction: row;
+`;
+
+const PopupButton = styled.div`
+  flex: 1;
+  min-width: 120px; // Reducimos el ancho mínimo para móvil
+  max-width: 200px;
+
+  @media (max-width: 479px) {
+    min-width: 100px; // Ajustamos el ancho mínimo para móvil
+    max-width: 150px; // Limitamos el ancho máximo en móvil
+  }
+
+  > button {
+    width: 100%;
+    height: 40px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0 0.75rem; // Reducimos el padding en móvil
+    font-size: 0.9rem; // Reducimos ligeramente el tamaño de la fuente en móvil
   }
 `;
 
 const StandardPopup = ({ isOpen, onClose, titleKey, children }) => {
-  const { t } = useTranslation(); useEffect(() => {
+  const { t } = useTranslation();
+
+  useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
     }
@@ -92,6 +115,11 @@ const StandardPopup = ({ isOpen, onClose, titleKey, children }) => {
   }, [isOpen]);
 
   if (!isOpen) return null;
+
+  // Función auxiliar para envolver los children con PopupButton
+  const wrappedChildren = React.Children.map(children, child => (
+    <PopupButton>{child}</PopupButton>
+  ));
 
   return (
     <AnimatePresence>
@@ -110,7 +138,7 @@ const StandardPopup = ({ isOpen, onClose, titleKey, children }) => {
           <CloseButton onClick={onClose}>×</CloseButton>
           <PopupTitle>{t(titleKey)}</PopupTitle>
           <ButtonContainer>
-            {children}
+            {wrappedChildren}
           </ButtonContainer>
         </PopupContainer>
       </PopupOverlay>

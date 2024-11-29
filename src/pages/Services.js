@@ -22,13 +22,22 @@ const ServicesWrapper = styled.div`
 
 const ServicesContainer = styled.div`
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   justify-content: center;
-  gap: 3rem;
-  margin: 1.5rem 0;
+  gap: 2.5rem;
+  margin: 1.5rem auto;
   padding: 2rem;
-  position: relative; // Add this
-  z-index: 1; // Add this to ensure proper stacking
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    padding: 1rem;
+    overflow-x: visible;
+  }
 `;
 
 const Title = styled.h1`
@@ -36,18 +45,13 @@ const Title = styled.h1`
   color: ${props => props.theme.colors.secondaryBackground};
   margin: 2rem 0;
   font-size: 2.5rem;
-  text-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
-  height: 3.5rem; // Add fixed height to reserve space
-  display: flex;
-  align-items: center;
-  justify-content: center;
   
-  @media (max-width: 768px) {
-    font-size: 1.8rem;
-    height: 2.8rem; // Adjust height for mobile
-    margin: 1.5rem 0;
+  @media (max-width: 968px) {
+    margin: 1.5rem 0; // Reducimos el margen en móvil
+    font-size: 1.5rem; // Reducimos el tamaño de fuente
   }
 `;
+
 
 function Services() {
     const { t } = useTranslation();
@@ -55,20 +59,37 @@ function Services() {
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [selectedService, setSelectedService] = useState(null);
 
-    const services = ['landingPages', 'wordpress', 'optimization'];
+    const services = ['landingPages', 'onlineStorePhotos', 'wordpress', 'optimization'];
+
 
     const handleContactClick = (serviceKey) => {
         setSelectedService(serviceKey);
         setIsPopupOpen(true);
     };
 
+    const SERVICE_NAMES_ES = {
+        landingPages: 'Landing Pages',
+        wordpress: 'WordPress',
+        optimization: 'Optimización Web',
+        onlineStorePhotos: 'Tienda Oline + Fotos Profesionales'
+    };
+
+
+
     const handleContact = (method) => {
         if (method === 'WHATSAPP') {
-            // Formatear el mensaje según el servicio seleccionado
-            const serviceName = selectedService ? t(`services.services.${selectedService}.name`) : '';
-            const message = selectedService
-                ? `¡Hola! Me interesa obtener más información sobre el servicio de ${serviceName}.`
-                : '¡Hola! Me gustaría obtener más información sobre sus servicios.';
+            // Obtenemos el nombre del servicio en español del objeto
+            const serviceNameES = selectedService ? SERVICE_NAMES_ES[selectedService] : '';
+
+            // Construimos el mensaje base
+            let message = '¡Hola! ';
+
+            // Agregamos la información del servicio si hay uno seleccionado
+            if (selectedService) {
+                message += `Me interesa obtener más información sobre el servicio de ${serviceNameES}.`;
+            } else {
+                message += 'Me gustaría obtener más información sobre sus servicios.';
+            }
 
             const whatsappUrl = `https://wa.me/5491168805604?text=${encodeURIComponent(message)}`;
             window.open(whatsappUrl, '_blank');

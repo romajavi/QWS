@@ -3,17 +3,17 @@ import { useTranslation } from 'react-i18next';
 import styled, { keyframes } from 'styled-components';
 import { useAnimationController } from '../utils/animationController.js';
 
-// Mantenemos la animación original de deslizamiento
-const slideIn = keyframes`
-  from {
-    transform: translateX(-100%) scale(1);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0) scale(1);
-    opacity: 1;
-  }
-`;
+// // Mantenemos la animación original de deslizamiento
+// const slideIn = keyframes`
+//   from {
+//     transform: translateX(-100%) scale(1);
+//     opacity: 0;
+//   }
+//   to {
+//     transform: translateX(0) scale(1);
+//     opacity: 1;
+//   }
+// `;
 
 // Contenedor principal con animación condicional
 const LanguageSelectorContainer = styled.div`
@@ -30,10 +30,7 @@ const LanguageSelectorContainer = styled.div`
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   border: 1px solid ${props => props.theme.colors.secondaryBackground}40;
   transform-origin: left center;
-  animation: ${props => props.$shouldAnimate ? slideIn : 'none'} 0.6s ease-out forwards;
-  opacity: ${props => props.$shouldAnimate ? 0 : 1};
-  will-change: transform, opacity;
-
+  
   @media (max-width: 768px) {
     top: 150px;
     transform: scale(0.7);
@@ -56,18 +53,26 @@ const LanguageButton = styled.button`
   position: relative;
   overflow: hidden;
   
+  // Eliminamos el outline por defecto
+  outline: none;
+  
+  // Agregamos un estilo personalizado para el focus que coincide con nuestro tema
+  &:focus-visible {
+    box-shadow: 0 0 0 2px ${props => props.theme.colors.accent}40;
+  }
+  
   &:hover {
     transform: scale(1.3);
     opacity: 1;
   }
   
-  &:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px ${props => props.theme.colors.accent};
-  }
-  
   &:active {
     transform: scale(0.95);
+  }
+  
+  // Eliminamos el focus cuando se hace click y se mueve el mouse
+  &:focus:not(:focus-visible) {
+    box-shadow: none;
   }
   
   img {
@@ -75,7 +80,7 @@ const LanguageButton = styled.button`
     height: 100%;
     object-fit: cover;
     border-radius: 50%;
-    transform: translateZ(0); // Optimización GPU
+    transform: translateZ(0);
   }
 
   @media (max-width: 768px) {
@@ -167,7 +172,6 @@ const LanguageSelector = () => {
 
   return (
     <LanguageSelectorContainer
-      $shouldAnimate={shouldAnimate && animationLevel !== 'minimal'}
       role="region"
       aria-label="Selector de idioma"
     >

@@ -41,19 +41,19 @@
     },
     "services": {
         "title": "Serviços de Desenvolvimento Web",
-        "moreInfo": "Mais Informações",
+        "moreInfo": "Mais informações",
         "categories": {
             "landingPages": {
-                "name": "Páginas de Destino e Sites",
-                "price": "A partir de u$d 149",
+                "name": "Landing Pages e Sites",
+                "price": "A partir de $149",
                 "features": [
                     {
                         "title": "Design Responsivo",
-                        "description": "Seu site terá uma ótima aparência em qualquer dispositivo, seja celular, tablet ou computador. 📱💻✨"
+                        "description": "Seu site ficará incrível em qualquer dispositivo, seja celular, tablet ou computador. 📱💻✨"
                     },
                     {
                         "title": "Até 5 Seções",
-                        "description": "Organizamos seu conteúdo em até 5 seções para maior clareza e funcionalidade. 🗂️📑✅"
+                        "description": "Organizamos seu conteúdo em até 5 seções para clareza e funcionalidade. 🗂️📑✅"
                     },
                     {
                         "title": "Formulário de Contato",
@@ -61,29 +61,60 @@
                     },
                     {
                         "title": "SEO Básico",
-                        "description": "Configuramos seu site para que seja facilmente encontrado nos motores de busca. 🔍📈🌐"
+                        "description": "Configuramos seu site para ser facilmente encontrado nos motores de busca. 🔍📈🌐"
                     },
                     {
                         "title": "Links para Redes Sociais",
-                        "description": "Conectamos seu site aos seus perfis nas redes sociais para maior alcance. 🔗📲📢"
+                        "description": "Conectamos seu site com seus perfis de redes sociais para maior alcance. 🔗📲📢"
                     },
                     {
-                        "title": "Entrega Conforme o Acordado",
+                        "title": "Entrega Conforme Acordado",
                         "description": "Garantimos a entrega do seu projeto no prazo combinado e com alta qualidade. ⏳🎯🏆"
                     }
                 ]
             },
+            "onlineStorePhotos": {
+                "name": "Loja Online + Fotos",
+                "price": "A partir de $399",
+                "features": [
+                    {
+                        "title": "Criação de Loja Online",
+                        "description": "Desenvolvemos sua loja online personalizada para compra e venda de produtos. 🛒🌐💼"
+                    },
+                    {
+                        "title": "Design Responsivo",
+                        "description": "Sua loja será totalmente adaptável a celulares, tablets e computadores. 📱💻✨"
+                    },
+                    {
+                        "title": "Gestão de Produtos",
+                        "description": "Configuramos um sistema para que você possa adicionar, editar ou remover produtos facilmente. 📦📋⚙️"
+                    },
+                    {
+                        "title": "Integração de Meios de Pagamento",
+                        "description": "Incluímos os principais meios de pagamento para facilitar as transações. 💳💵✅"
+                    },
+                    {
+                        "title": "Fotos Profissionais",
+                        "description": "Fazemos fotos de alta qualidade dos seus produtos, perfeitas para destacar seu catálogo. 📸✨🛍️"
+                    },
+                    {
+                        "title": "Sessão em Loja ou Estúdio",
+                        "description": "As fotos podem ser tiradas em sua loja ou em um estúdio, conforme sua preferência. 🏪📷🎯"
+                    }
+                
+                ]
+            },
             "wordpress": {
                 "name": "Manutenção de WordPress",
-                "price": "A partir de u$d 49/mês",
+                "price": "A partir de $49/mês",
                 "features": [
                     {
                         "title": "Atualizações de Segurança",
-                        "description": "Mantenho seu site protegido com atualizações regulares de segurança. 🔐🛡️⚙️"
+                        "description": "Mantemos seu site protegido com atualizações de segurança regulares. 🔐🛡️⚙️"
                     },
                     {
                         "title": "Backups Regulares",
-                        "description": "Realizamos backups periódicos para proteger suas informações. 💾🗂️🔄"
+                        "description": "Fazemos backups periódicos para proteger suas informações. 💾🗂️🔄"
                     },
                     {
                         "title": "Atualizações de Conteúdo",
@@ -91,37 +122,37 @@
                     },
                     {
                         "title": "Monitoramento de Uptime",
-                        "description": "Monitoro seu site para garantir que esteja sempre online e funcionando corretamente. 🌐🔎⏱️"
+                        "description": "Garantimos que seu site esteja sempre online e funcionando corretamente. 🌐🔎⏱️"
                     },
                     {
                         "title": "Suporte por E-mail",
-                        "description": "Estou disponível para resolver suas dúvidas por e-mail. 📬❓🤓"
+                        "description": "Estamos disponíveis para responder suas dúvidas por e-mail. 📬❓🤓"
                     },
                     {
                         "title": "Relatórios Mensais",
-                        "description": "Você recebe um resumo mensal com as tarefas realizadas no seu site. 📊🗓️📜"
+                        "description": "Receba um resumo mensal das tarefas realizadas em seu site. 📊🗓️📜"
                     }
                 ]
             },
             "optimization": {
-                "name": "Otimização Básica de Sites",
-                "price": "A partir de u$d 99",
+                "name": "Otimização Web Básica",
+                "price": "A partir de $99",
                 "features": [
                     {
                         "title": "Otimização de Imagens",
                         "description": "Reduzimos o tamanho das suas imagens sem perder qualidade para melhorar a velocidade. 🖼️⚡🚀"
                     },
                     {
-                        "title": "Descrições Meta",
+                        "title": "Meta Descriptions",
                         "description": "Adicionamos metadados importantes para melhorar o posicionamento do seu site nos motores de busca. 🏷️🔍📈"
                     },
                     {
                         "title": "Melhorias de Velocidade",
-                        "description": "Realizamos ajustes técnicos para que seu site carregue mais rápido. 🚀⏩🌐"
+                        "description": "Fazemos ajustes técnicos para que seu site carregue mais rápido. 🚀⏩🌐"
                     },
                     {
                         "title": "Implementação de SSL",
-                        "description": "Configuramos o certificado SSL para garantir a segurança da conexão do seu site. 🔒📶🌍"
+                        "description": "Configuramos o certificado SSL para proteger a conexão do seu site. 🔒📶🌍"
                     },
                     {
                         "title": "Compatível com Dispositivos Móveis",
@@ -136,8 +167,8 @@
         },
         "contactPopup": {
             "title": "Como deseja prosseguir?",
-            "schedule": "Agendar consulta",
-            "directContact": "Contato Direto"
+            "schedule": "Agendar",
+            "directContact": "WhatsApp"
         }
     },
     "contact": {
@@ -164,14 +195,14 @@
                     }
                 },
                 "days": {
-                    "title": "Dias de Contato *",
+                    "title": "Dias de Contato",
                     "options": {
                         "weekdays": "Seg-Sex",
                         "weekend": "Fim de Semana"
                     }
                 },
                 "time": {
-                    "title": "Horário de Contato *",
+                    "title": "Horário de Contato",
                     "options": {
                         "morning": "Manhã",
                         "afternoon": "Tarde"
@@ -198,11 +229,11 @@
             "status": {
                 "success": {
                     "title": "🎉 Sucesso Absoluto!",
-                    "message": "Seu formulário foi enviado com sucesso, viajando pelos cabos do universo digital diretamente para nossa caixa de entrada. ✉️✨ Obrigado por entrar em contato! Nossa equipe revisará sua mensagem e retornará a você em breve."
+                    "message": "Seu formulário foi recebido com êxito. Nossa equipe analisará e retornará em breve."
                 },
                 "error": {
                     "title": "🚧 Ops! Algo deu errado...",
-                    "message": "Parece que o formulário tropeçou no caminho. 🐾💨 Não se preocupe, já estamos verificando. Enquanto isso, verifique sua conexão ou tente novamente. Se o problema persistir, estamos aqui para ajudar. 🛠️✨"
+                    "message": "Ocorreu um erro no envio. Por favor, verifique sua conexão e tente novamente."
                 }
             },
             "errors": {
@@ -269,7 +300,7 @@
                 "title": "Contato",
                 "links": {
                     "whatsapp": "WhatsApp",
-                    "email": "contact@axiondev.tech",
+                    "email": "info@axiondev.tech",
                     "schedule": "Seg - Sex: 9:00 - 18:00"
                 }
             },

@@ -52,6 +52,15 @@ console.log('CORS Configuration:', {
 app.use(cors(corsOptions));
 app.use(compression());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Middleware para logging
+app.use((req, res, next) => {
+    console.log(`${req.method} ${req.url}`);
+    console.log('Body:', req.body);
+    next();
+});
+
 
 // Configuración de archivos estáticos
 if (process.env.NODE_ENV === 'production') {
@@ -63,23 +72,23 @@ if (process.env.NODE_ENV === 'production') {
 // Rutas
 app.get('/api/test-email', async (req, res) => {
     try {
-        console.log('Iniciando prueba de email...');
+        console.log('Iniciando prueba de email detallada...');
         const result = await testConnection();
-        if (result) {
-            res.json({ success: true, message: 'Test de email exitoso' });
-        } else {
-            res.status(500).json({ success: false, message: 'Error en prueba de email' });
-        }
+        console.log('Resultado de prueba:', result);
+        res.json({ success: true, message: 'Test de email exitoso' });
     } catch (error) {
-        console.error('Error en prueba de email:', error);
+        console.error('Error detallado en prueba de email:', {
+            message: error.message,
+            stack: error.stack,
+            code: error.code
+        });
         res.status(500).json({
             success: false,
             message: 'Error en prueba de email',
-            error: error.message
+            details: error.message
         });
     }
 });
-
 app.post('/api/contact', emailRouter);
 
 // Manejo de errores

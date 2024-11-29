@@ -9,8 +9,8 @@ const CaptchaContainer = styled.div`
   align-items: center;
   gap: 1rem;
   margin: 0.5rem 0;
-  padding: 0.5rem;
-  background: ${props => props.theme.colors.cardBackground};
+  padding: 1rem;
+  background: ${props => props.theme.colors.primaryBackground};
   border-radius: 8px;
   border: 1px solid ${props => props.$hasError ? '#ff3333' : `${props.theme.colors.secondaryBackground}40`};
 `;
@@ -23,7 +23,7 @@ const CaptchaDisplay = styled.div`
   border-radius: 4px;
   user-select: none;
   padding: 0.5rem 1rem;
-  ${floatingStyles()} // Llamamos a la función dentro de una función
+  ${floatingStyles()} 
 `;
 
 const CaptchaInput = styled.input`

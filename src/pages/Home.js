@@ -94,7 +94,7 @@ const gradientAnimation = css`
 `;
 
 const StyledButton = styled(Button)`
-  width: min(100%, 300px);
+  width: min(100%, 220px);
   padding: 0.85em 2em;
   font-size: clamp(0.875rem, 2vw, 1rem);
   position: relative;
@@ -126,6 +126,13 @@ const StyledButton = styled(Button)`
       0 10px 20px rgba(0, 255, 255, 0.2),
       0 6px 6px rgba(0, 255, 255, 0.1),
       0 0 100px -20px ${props => props.theme.colors.primary};
+  }
+
+  @media (max-width: 768px) {
+    width: 140px; // Reducido de 150px a 140px
+    padding: 0.6em 1em; // Reducido el padding
+    font-size: 0.9rem; // Reducido el tamaño de fuente
+    margin-bottom: 80px; // Agregado margen inferior para evitar choque con WhatsApp
   }
 `;
 

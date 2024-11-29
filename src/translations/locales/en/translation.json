@@ -41,31 +41,31 @@
     },
     "services": {
         "title": "Web Development Services",
-        "moreInfo": "More Information",
+        "moreInfo": "More information",
         "categories": {
             "landingPages": {
                 "name": "Landing Pages and Websites",
-                "price": "From u$d 149",
+                "price": "From $149",
                 "features": [
                     {
                         "title": "Responsive Design",
-                        "description": "Your website will look great on any device, whether mobile, tablet, or desktop. 📱💻✨"
+                        "description": "Your website will look great on any device, whether it's a phone, tablet, or computer. 📱💻✨"
                     },
                     {
                         "title": "Up to 5 Sections",
-                        "description": "We organize your content into up to 5 sections for clarity and functionality. 🗂️📑✅"
+                        "description": "We organize your content into a maximum of 5 sections for clarity and functionality. 🗂️📑✅"
                     },
                     {
                         "title": "Contact Form",
-                        "description": "Includes an easy-to-use form so your clients can contact you directly. 📨🤝📋"
+                        "description": "Includes an easy-to-use form so your customers can contact you directly. 📨🤝📋"
                     },
                     {
                         "title": "Basic SEO",
-                        "description": "We configure your site to be easily found on search engines. 🔍📈🌐"
+                        "description": "We set up your site to be easily found in search engines. 🔍📈🌐"
                     },
                     {
                         "title": "Social Media Links",
-                        "description": "We connect your website to your social media profiles for greater reach. 🔗📲📢"
+                        "description": "We connect your site with your social media profiles for greater reach. 🔗📲📢"
                     },
                     {
                         "title": "Delivery as Agreed",
@@ -73,17 +73,47 @@
                     }
                 ]
             },
+            "onlineStorePhotos": {
+                "name": "Online Store + Photos",
+                "price": "From $399",
+                "features": [
+                    {
+                        "title": "Online Store Creation",
+                        "description": "We develop your personalized online store for buying and selling products. 🛒🌐💼"
+                    },
+                    {
+                        "title": "Responsive Design",
+                        "description": "Your store will be fully adaptable to mobile phones, tablets, and computers. 📱💻✨"
+                    },
+                    {
+                        "title": "Product Management",
+                        "description": "We set up a system so you can easily add, edit, or remove products. 📦📋⚙️"
+                    },
+                    {
+                        "title": "Payment Gateway Integration",
+                        "description": "We include major payment gateways to facilitate transactions. 💳💵✅"
+                    },
+                    {
+                        "title": "Professional Photos",
+                        "description": "We take high-quality photos of your products, perfect for showcasing your catalog. 📸✨🛍️"
+                    },
+                    {
+                        "title": "In-Store or Studio Sessions",
+                        "description": "Photos can be taken at your store or in a studio, as you prefer. 🏪📷🎯"
+                    }
+                ]
+            },
             "wordpress": {
                 "name": "WordPress Maintenance",
-                "price": "From u$d 49/month",
+                "price": "From $49/month",
                 "features": [
                     {
                         "title": "Security Updates",
-                        "description": "Keep your site protected with regular security updates. 🔐🛡️⚙️"
+                        "description": "We keep your site protected with regular security updates. 🔐🛡️⚙️"
                     },
                     {
                         "title": "Regular Backups",
-                        "description": "We perform regular backups to safeguard your data. 💾🗂️🔄"
+                        "description": "We perform periodic backups to protect your information. 💾🗂️🔄"
                     },
                     {
                         "title": "Content Updates",
@@ -91,11 +121,11 @@
                     },
                     {
                         "title": "Uptime Monitoring",
-                        "description": "We monitor your site to ensure it stays online and functional. 🌐🔎⏱️"
+                        "description": "We ensure your site is always online and running smoothly. 🌐🔎⏱️"
                     },
                     {
                         "title": "Email Support",
-                        "description": "We are available to resolve your questions via email. 📬❓🤓"
+                        "description": "We're available to answer your questions via email. 📬❓🤓"
                     },
                     {
                         "title": "Monthly Reports",
@@ -105,7 +135,7 @@
             },
             "optimization": {
                 "name": "Basic Web Optimization",
-                "price": "From u$d 99",
+                "price": "From $99",
                 "features": [
                     {
                         "title": "Image Optimization",
@@ -113,31 +143,31 @@
                     },
                     {
                         "title": "Meta Descriptions",
-                        "description": "We add key metadata to improve your site's ranking on search engines. 🏷️🔍📈"
+                        "description": "We add key metadata to improve your site's search engine ranking. 🏷️🔍📈"
                     },
                     {
                         "title": "Speed Improvements",
-                        "description": "We make technical adjustments to ensure your site loads faster. 🚀⏩🌐"
+                        "description": "We make technical adjustments so your site loads faster. 🚀⏩🌐"
                     },
                     {
                         "title": "SSL Implementation",
-                        "description": "We configure an SSL certificate to secure your site's connection. 🔒📶🌍"
+                        "description": "We set up an SSL certificate to secure your site's connection. 🔒📶🌍"
                     },
                     {
-                        "title": "Mobile Friendly",
+                        "title": "Mobile-Friendly",
                         "description": "We ensure your site is fully functional on mobile devices. 📱🖥️✅"
                     },
                     {
                         "title": "Improvement Report",
-                        "description": "You will receive a detailed summary of the optimizations made. 📄✅📊"
+                        "description": "We provide you with a detailed summary of the optimizations performed. 📄✅📊"
                     }
                 ]
             }
         },
         "contactPopup": {
             "title": "How would you like to proceed?",
-            "schedule": "Schedule appointment",
-            "directContact": "Direct Contact"
+            "schedule": "Book",
+            "directContact": "WhatsApp"
         }
     },
     "contact": {
@@ -157,14 +187,14 @@
             },
             "preferences": {
                 "contact": {
-                    "title": "Contact Preferences *",
+                    "title": "Contact Preferences",
                     "options": {
                         "phone": "Phone",
                         "email": "Email"
                     }
                 },
                 "days": {
-                    "title": "Contact Days *",
+                    "title": "Contact Days",
                     "options": {
                         "weekdays": "Mon-Fri",
                         "weekend": "Weekend"
@@ -198,11 +228,11 @@
             "status": {
                 "success": {
                     "title": "🎉 Absolute Success!",
-                    "message": "Your form has been successfully submitted, traveling through the wires of the digital universe straight to our inbox. ✉️✨Thank you for reaching out! Our team will review your message and get back to you shortly. 🚀🌟"
+                    "message": "Your form has been successfully received. Our team will review it and contact you shortly."
                 },
                 "error": {
                     "title": "🚧 Oops! Something went wrong...",
-                    "message": "It seems the form tripped along the way. 🐾💨 Don't worry, we're already looking into it. In the meantime, check your connection or try again. If the issue persists, we're here to help. 🛠️✨"
+                    "message": "An error occurred during submission. Please check your connection and try again."
                 }
             },
             "errors": {

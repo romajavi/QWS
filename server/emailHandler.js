@@ -1,11 +1,10 @@
-import { SMTPClient } from 'emailjs';
+import nodemailer from 'nodemailer';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 import { dirname } from 'path';
 
-// Configuración de rutas base
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -17,86 +16,65 @@ const loadConfig = () => {
     console.log(`Cargando configuración de: ${configPath}`);
     dotenv.config({ path: configPath });
 
-    // Validamos y retornamos la configuración necesaria
     const config = {
         EMAIL_USER: process.env.EMAIL_USER,
         EMAIL_PASS: process.env.EMAIL_PASS,
         SMTP_HOST: process.env.SMTP_HOST,
-        SMTP_PORT: parseInt(process.env.SMTP_PORT) || 587, // Puerto por defecto para TLS
+        SMTP_PORT: parseInt(process.env.SMTP_PORT) || 587,
         ADMIN_EMAIL: process.env.ADMIN_EMAIL,
-        EMAIL_FROM_NAME: process.env.EMAIL_FROM_NAME || 'QuantumWeb'
+        EMAIL_FROM_NAME: process.env.EMAIL_FROM_NAME || 'QuantumWeb',
+        SMTP_SECURE: process.env.SMTP_SECURE === 'true'
     };
 
-    // Verificación de configuración requerida
-    const requiredFields = ['EMAIL_USER', 'EMAIL_PASS', 'SMTP_HOST', 'ADMIN_EMAIL'];
-    const missingFields = requiredFields.filter(field => !config[field]);
-
-    if (missingFields.length) {
-        throw new Error(`Configuración incompleta. Campos faltantes: ${missingFields.join(', ')}`);
-    }
+    console.log('Configuración cargada:', {
+        host: config.SMTP_HOST,
+        port: config.SMTP_PORT,
+        user: config.EMAIL_USER,
+        secure: config.SMTP_SECURE
+    });
 
     return config;
 };
 
 const CONFIG = loadConfig();
 
-// Función mejorada para crear el cliente SMTP
-const createSmtpClient = () => {
-    const config = {
-        user: CONFIG.EMAIL_USER,
-        password: CONFIG.EMAIL_PASS,
+const createTransporter = () => {
+    const transportConfig = {
         host: CONFIG.SMTP_HOST,
-        port: 587, // Puerto específico para Gmail con TLS
-        tls: {
-            ciphers: 'SSLv3',
-            rejectUnauthorized: false
+        port: CONFIG.SMTP_PORT,
+        secure: CONFIG.SMTP_SECURE,
+        auth: {
+            user: CONFIG.EMAIL_USER,
+            pass: CONFIG.EMAIL_PASS
         },
-        timeout: 30000,
-        debug: true
+        debug: true,
+        logger: true
     };
 
-    console.log('Configuración SMTP:', {
-        host: config.host,
-        port: config.port,
-        user: config.user,
-        debug: config.debug
+    console.log('Creando transportador con configuración:', {
+        ...transportConfig,
+        auth: { user: CONFIG.EMAIL_USER }
     });
 
-    return new SMTPClient(config);
+    return nodemailer.createTransport(transportConfig);
 };
 
-// Función mejorada para envío de emails
 const sendEmail = async (options) => {
-    const client = createSmtpClient();
+    const transporter = createTransporter();
+    console.log('====== INICIO ENVÍO EMAIL ======');
 
     try {
-        console.log('Iniciando envío de email:', {
-            to: options.to,
-            subject: options.subject
-        });
-
-        const result = await client.sendAsync({
+        const info = await transporter.sendMail({
             from: `"${CONFIG.EMAIL_FROM_NAME}" <${CONFIG.EMAIL_USER}>`,
             to: options.to,
             subject: options.subject,
-            attachment: [{
-                data: options.html,
-                alternative: true
-            }]
+            html: options.html
         });
 
-        console.log('Email enviado exitosamente:', {
-            to: options.to,
-            messageId: result.header['message-id']
-        });
-
-        return result;
+        console.log('Email enviado exitosamente:', info);
+        return info;
     } catch (error) {
-        console.error('Error en envío de email:', {
-            error: error.message,
-            code: error.code,
-            command: error.command
-        });
+        console.error('Error al enviar email:', error);
         throw error;
     }
 };
@@ -104,6 +82,8 @@ const sendEmail = async (options) => {
 // Manejador principal del formulario de contacto
 const emailHandler = async (req, res) => {
     try {
+        console.log('Recibiendo request de contacto:', req.body); // Debug inicial
+
         const {
             name,
             email,
@@ -118,10 +98,22 @@ const emailHandler = async (req, res) => {
             observations
         } = req.body;
 
-        console.log('Procesando formulario de contacto:', { name, email, phone });
+        // Log detallado de los campos recibidos
+        console.log('Datos del formulario:', {
+            name, email, phone, company,
+            contactPreference, contactDays, contactTime,
+            appointmentDate, appointmentTime, appointmentMedium
+        });
 
         // Validación de campos requeridos
         if (!email || !name || !phone || !observations) {
+            console.log('Validación fallida - campos faltantes:', {
+                email: !email,
+                name: !name,
+                phone: !phone,
+                observations: !observations
+            });
+
             return res.status(400).json({
                 success: false,
                 error: 'campos_requeridos',
@@ -129,60 +121,80 @@ const emailHandler = async (req, res) => {
             });
         }
 
-        // Carga y preparación de templates
-        const clientTemplate = fs.readFileSync(
-            path.join(__dirname, 'clientEmailTemplate.html'),
-            'utf8'
-        )
-            .replace(/{nombre}/g, name)
-            .replace(/{appointmentDate}/g, appointmentDate || 'No especificada')
-            .replace(/{appointmentTime}/g, appointmentTime || 'No especificada')
-            .replace(/{appointmentMedium}/g, appointmentMedium || 'No especificado');
+        try {
+            // Carga y preparación de templates
+            console.log('Cargando templates de email...');
 
-        const adminTemplate = fs.readFileSync(
-            path.join(__dirname, 'adminEmailTemplate.html'),
-            'utf8'
-        )
-            .replace(/{nombre}/g, name)
-            .replace(/{email}/g, email)
-            .replace(/{telefono}/g, phone)
-            .replace(/{empresa}/g, company || 'No especificada')
-            .replace(/{preferencia_contacto}/g, Array.isArray(contactPreference) ? contactPreference.join(', ') : 'No especificada')
-            .replace(/{dias_contacto}/g, Array.isArray(contactDays) ? contactDays.join(', ') : 'No especificado')
-            .replace(/{horario_contacto}/g, Array.isArray(contactTime) ? contactTime.join(', ') : 'No especificado')
-            .replace(/{appointmentDate}/g, appointmentDate || 'No especificada')
-            .replace(/{appointmentTime}/g, appointmentTime || 'No especificada')
-            .replace(/{appointmentMedium}/g, appointmentMedium || 'No especificado')
-            .replace(/{observaciones}/g, observations);
+            const clientTemplate = fs.readFileSync(
+                path.join(__dirname, 'clientEmailTemplate.html'),
+                'utf8'
+            )
+                .replace(/{nombre}/g, name)
+                .replace(/{appointmentDate}/g, appointmentDate || 'No especificada')
+                .replace(/{appointmentTime}/g, appointmentTime || 'No especificada')
+                .replace(/{appointmentMedium}/g, appointmentMedium || 'No especificado');
 
-        // Envío de emails
-        await Promise.all([
-            sendEmail({
-                to: email,
-                subject: 'Confirmación de contacto - QuantumWeb',
-                html: clientTemplate
-            }),
-            sendEmail({
-                to: CONFIG.ADMIN_EMAIL,
-                subject: 'Nuevo contacto recibido - QuantumWeb',
-                html: adminTemplate
-            })
-        ]);
+            const adminTemplate = fs.readFileSync(
+                path.join(__dirname, 'adminEmailTemplate.html'),
+                'utf8'
+            )
+                .replace(/{nombre}/g, name)
+                .replace(/{email}/g, email)
+                .replace(/{telefono}/g, phone)
+                .replace(/{empresa}/g, company || 'No especificada')
+                .replace(/{preferencia_contacto}/g, Array.isArray(contactPreference) ? contactPreference.join(', ') : 'No especificada')
+                .replace(/{dias_contacto}/g, Array.isArray(contactDays) ? contactDays.join(', ') : 'No especificado')
+                .replace(/{horario_contacto}/g, Array.isArray(contactTime) ? contactTime.join(', ') : 'No especificado')
+                .replace(/{appointmentDate}/g, appointmentDate || 'No especificada')
+                .replace(/{appointmentTime}/g, appointmentTime || 'No especificada')
+                .replace(/{appointmentMedium}/g, appointmentMedium || 'No especificado')
+                .replace(/{observaciones}/g, observations);
 
-        console.log('Proceso de contacto completado exitosamente');
-        res.status(200).json({
-            success: true,
-            message: 'Formulario procesado exitosamente'
-        });
+            console.log('Templates preparados correctamente');
+
+            // Envío de emails
+            console.log('Iniciando envío de emails...');
+
+            const emailResults = await Promise.all([
+                sendEmail({
+                    to: email,
+                    subject: 'Confirmación de contacto - QuantumWeb',
+                    html: clientTemplate
+                }),
+                sendEmail({
+                    to: CONFIG.ADMIN_EMAIL,
+                    subject: 'Nuevo contacto recibido - QuantumWeb',
+                    html: adminTemplate
+                })
+            ]);
+
+            console.log('Emails enviados exitosamente:', emailResults);
+
+            res.status(200).json({
+                success: true,
+                message: 'Formulario procesado exitosamente'
+            });
+
+        } catch (templateError) {
+            console.error('Error en procesamiento de templates:', templateError);
+            throw new Error('Error al procesar las plantillas de email');
+        }
 
     } catch (error) {
-        console.error('Error en procesamiento de formulario:', error);
+        console.error('Error completo en procesamiento de formulario:', {
+            message: error.message,
+            stack: error.stack,
+            code: error.code
+        });
+
+        // Envía una respuesta de error más detallada en desarrollo
         res.status(500).json({
             success: false,
             error: 'error_envio',
-            message: process.env.NODE_ENV === 'development' ?
-                `Error: ${error.message}` :
-                'Error al procesar el formulario'
+            message: process.env.NODE_ENV === 'development'
+                ? `Error: ${error.message}`
+                : 'Error al procesar el formulario',
+            details: process.env.NODE_ENV === 'development' ? error.stack : undefined
         });
     }
 };
@@ -192,7 +204,7 @@ export const testConnection = async () => {
     try {
         console.log('Iniciando prueba de conexión SMTP...');
 
-        await sendEmail({
+        const result = await sendEmail({
             to: CONFIG.ADMIN_EMAIL,
             subject: 'Prueba de Conexión SMTP',
             html: `
@@ -201,10 +213,14 @@ export const testConnection = async () => {
             `
         });
 
-        console.log('Prueba de conexión exitosa');
+        console.log('Prueba de conexión exitosa:', result);
         return true;
     } catch (error) {
-        console.error('Error en prueba de conexión:', error);
+        console.error('Error detallado en prueba de conexión:', {
+            message: error.message,
+            code: error.code,
+            command: error.command
+        });
         return false;
     }
 };
