@@ -75,7 +75,7 @@
             },
             "onlineStorePhotos": {
                 "name": "Tienda Online + Fotos",
-                "price": "Desde u$d 399",
+                "price": "Desde u$d 299",
                 "features": [
                     {
                         "title": "Creación de Tienda Online",
@@ -166,7 +166,7 @@
         },
         "contactPopup": {
             "title": "¿Cómo deseas proceder?",
-            "schedule": "Agendar cita",
+            "schedule": "Agendar",
             "directContact": "WhatsApp"
         }
     },

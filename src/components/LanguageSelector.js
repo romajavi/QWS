@@ -1,21 +1,8 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 import { useAnimationController } from '../utils/animationController.js';
 
-// // Mantenemos la animación original de deslizamiento
-// const slideIn = keyframes`
-//   from {
-//     transform: translateX(-100%) scale(1);
-//     opacity: 0;
-//   }
-//   to {
-//     transform: translateX(0) scale(1);
-//     opacity: 1;
-//   }
-// `;
-
-// Contenedor principal con animación condicional
 const LanguageSelectorContainer = styled.div`
   position: fixed;
   left: 0;
@@ -32,14 +19,20 @@ const LanguageSelectorContainer = styled.div`
   transform-origin: left center;
   
   @media (max-width: 768px) {
-    top: 150px;
-    transform: scale(0.7);
-    padding: 6px;
-    gap: 3px;
+    position: absolute;
+    top: 125px; /* Posición debajo del header */
+    left: 53%;
+    transform: translateX(-50%) scale(0.84);
+    flex-direction: row;
+    justify-content: center;
+    padding: 8px;
+    gap: 12px;
+    border-radius: 8px;
+    width: fit-content;
+    margin: 0 auto;
   }
 `;
 
-// Botón de idioma mejorado con props transientes
 const LanguageButton = styled.button`
   width: 40px;
   height: 40px;
@@ -53,10 +46,8 @@ const LanguageButton = styled.button`
   position: relative;
   overflow: hidden;
   
-  // Eliminamos el outline por defecto
   outline: none;
   
-  // Agregamos un estilo personalizado para el focus que coincide con nuestro tema
   &:focus-visible {
     box-shadow: 0 0 0 2px ${props => props.theme.colors.accent}40;
   }
@@ -70,7 +61,6 @@ const LanguageButton = styled.button`
     transform: scale(0.95);
   }
   
-  // Eliminamos el focus cuando se hace click y se mueve el mouse
   &:focus:not(:focus-visible) {
     box-shadow: none;
   }
@@ -84,8 +74,8 @@ const LanguageButton = styled.button`
   }
 
   @media (max-width: 768px) {
-    width: 28px;
-    height: 28px;
+    width: 34px;
+    height: 34px;
     padding: 3px;
     
     &:hover {
@@ -93,6 +83,7 @@ const LanguageButton = styled.button`
     }
   }
 `;
+
 
 // Configuración de idiomas
 const LANGUAGES = {
@@ -112,7 +103,6 @@ const LANGUAGES = {
 
 const LanguageSelector = () => {
   const { i18n } = useTranslation();
-  const { shouldAnimate, animationLevel } = useAnimationController();
   const [isVisible, setIsVisible] = useState(false);
 
   // Efecto para manejar la visibilidad inicial

@@ -34,10 +34,11 @@ console.log('Server configuration:', {
 });
 
 const corsOptions = {
-    origin: process.env.CORS_ORIGIN || 'https://axiondev.tech',
+    origin: process.env.NODE_ENV === 'production'
+        ? 'http://localhost:3000'  // Cambiado para pruebas
+        : 'http://localhost:3000',
     credentials: true,
-    methods: ['GET', 'POST', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    methods: ['GET', 'POST', 'OPTIONS']
 };
 
 // Log de verificación
@@ -56,6 +57,10 @@ app.use(express.urlencoded({ extended: true }));
 
 // Middleware para logging
 app.use((req, res, next) => {
+    console.log('Request Headers:', req.headers);
+    console.log('Request Origin:', req.headers.origin);
+    console.log('Request Method:', req.method);
+    console.log('Request Path:', req.path);
     console.log(`${req.method} ${req.url}`);
     console.log('Body:', req.body);
     next();

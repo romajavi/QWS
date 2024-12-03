@@ -12,7 +12,7 @@ const Card = styled(motion.div)`
   border: 1px solid ${props => props.theme.colors.secondaryBackground};
   border-radius: 15px;
   padding: 1.5rem 1.2rem;
-  width: 350px;
+  width: 310px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -32,7 +32,7 @@ const Card = styled(motion.div)`
 // Opcional: Si necesitas ajustar también el tamaño del texto para las tarjetas más grandes
 const ServiceName = styled.h3`
   color: ${props => props.theme.colors.accent};
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   font-family: ${props => props.theme.fonts.secondary};
   width: 100%;
   text-align: center;
@@ -42,6 +42,8 @@ const ServiceName = styled.h3`
   border-radius: 8px;
   box-shadow: ${props => props.theme.effects.glow};
 `;
+
+
 const Price = styled.p`
   font-size: 0.9rem;
   color: ${props => props.theme.colors.secondaryBackground};

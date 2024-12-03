@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import PageContainer from '../components/PageContainer.js';
 import Button from '../components/Button.js';
 import { glowButtonStyles } from '../styles/Animations.js';
-import { useAnimationController } from '../utils/animationController.js';
+import { API_URL } from '../config/api.js';
 
 // Componentes que se cargarán de forma diferida
 const Calendar = lazy(() => import('../components/Calendar.js'));
@@ -421,15 +421,12 @@ const ContentFadeIn = styled.div`
 
 
 const Contact = () => {
-  const { shouldAnimate, animationLevel } = useAnimationController();
 
   // Configuramos las animaciones del formulario
   const getFormAnimation = () => {
     // Retornar un objeto vacío para evitar cualquier animación
     return {};
   };
-
-  const formAnimation = getFormAnimation();
 
 
   const { t } = useTranslation();
@@ -464,7 +461,7 @@ const Contact = () => {
   const [isCaptchaVerified, setIsCaptchaVerified] = useState(false);
 
   // Nuevos estados para carga progresiva
-  const [showTitle, setShowTitle] = useState(false);
+  const [setShowTitle] = useState(false);
   const [isAppointmentLoading, setIsAppointmentLoading] = useState(true);
 
 
@@ -474,7 +471,7 @@ const Contact = () => {
 
   useEffect(() => {
     // Mostrar título primero
-    setShowTitle(true);
+    // setShowTitle(true);
 
     // Después de la animación del título, cargar el contenido
     const contentTimer = setTimeout(() => {
@@ -485,6 +482,8 @@ const Contact = () => {
       clearTimeout(contentTimer);
     };
   }, []);
+
+
 
   useEffect(() => {
     if (formStatus.isSuccess) {
@@ -504,6 +503,9 @@ const Contact = () => {
     }
   }, [formStatus, t]);
 
+
+
+
   const validateForm = () => {
     console.log('Starting form validation');
     const newErrors = {};
@@ -518,8 +520,7 @@ const Contact = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  // Función para manejar el envío del formulario
-  // 3. Update handleSubmit function
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -536,9 +537,7 @@ const Contact = () => {
     }
 
     try {
-      console.log('Enviando datos:', formData); // Debug
-
-      const response = await fetch('http://localhost:5000/api/contact', {
+      const response = await fetch('http://localhost:5001/api/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -547,25 +546,20 @@ const Contact = () => {
         body: JSON.stringify(formData)
       });
 
-      console.log('Response status:', response.status); // Debug
-      console.log('Response headers:', response.headers); // Debug
-
-      const contentType = response.headers.get('content-type');
-      if (!contentType || !contentType.includes('application/json')) {
-        throw new Error('Respuesta no válida del servidor');
-      }
+      console.log('Response:', response);
 
       const data = await response.json();
-      console.log('Response data:', data); // Debug
+      console.log('Data:', data);
 
-      if (response.ok) {
-        setFormStatus({ isSubmitting: false, isSuccess: true, error: null });
-        handleReset();
-      } else {
+      if (!response.ok) {
         throw new Error(data.message || 'Error en el servidor');
       }
+
+      setFormStatus({ isSubmitting: false, isSuccess: true, error: null });
+      handleReset();
+
     } catch (error) {
-      console.error('Error detallado:', error); // Debug
+      console.error('Error:', error);
       setFormStatus({
         isSubmitting: false,
         isSuccess: false,
@@ -1023,6 +1017,20 @@ const Contact = () => {
                     type="submit"
                   >
                     {t('contact.form.buttons.submit')}
+                  </SubmitButton>
+                  <SubmitButton
+                    variant="secondary"
+                    size="small"
+                    type="button"
+                    onClick={() => {
+                      console.log('Testing API URL:', API_URL);
+                      fetch(`${API_URL}/api/test-email`)
+                        .then(res => res.json())
+                        .then(data => console.log('Test response:', data))
+                        .catch(err => console.error('Test error:', err));
+                    }}
+                  >
+                    Test API
                   </SubmitButton>
                 </CustomButtonGroup>
               </form>

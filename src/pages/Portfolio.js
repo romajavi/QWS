@@ -2,7 +2,6 @@ import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { motion, useAnimation } from 'framer-motion';
 import { ReactTyped } from 'react-typed';
-import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import PageAnimation from '../components/PageAnimation.js';
 import PageContainer from '../components/PageContainer.js';
