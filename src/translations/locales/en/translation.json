@@ -1,0 +1,478 @@
+{
+    "header": {
+        "home": "Home",
+        "services": "Services",
+        "portfolio": "Portfolio",
+        "contact": "Contact",
+        "blog": "Blog"
+    },
+    "home": {
+        "title": "Web Development and Digital Solutions",
+        "subtitle": {
+            "1": "🎯 Development of modern and accessible websites for small and medium businesses",
+            "2": "💻 Development and design of attractive and optimized landing pages",
+            "3": "⚡ WordPress website maintenance and updates",
+            "4": "📱 Responsive design for a perfect experience on all devices",
+            "5": "🔍 SEO implementation to improve your online visibility"
+        },
+        "exploreButton": "Discover more"
+    },
+    "portfolio": {
+        "title": "Web Projects Portfolio",
+        "viewProject": "View Project",
+        "projects": {
+            "1": {
+                "name": "Premium E-commerce",
+                "description": "E-commerce platform developed with React and Node.js. Includes payment gateway, inventory management, and admin panel."
+            },
+            "2": {
+                "name": "Educational Management System",
+                "description": "Web application for comprehensive management of educational institutions. Attendance control, grades, and parent communication."
+            },
+            "3": {
+                "name": "Analytical Dashboard",
+                "description": "Interactive dashboard for business data visualization. Real-time graphics and customizable reports."
+            },
+            "4": {
+                "name": "Delivery App",
+                "description": "Mobile application for home delivery service. Real-time tracking system and order management."
+            }
+        }
+    },
+    "services": {
+        "title": "Web Development",
+        "moreInfo": "More information",
+        "categories": {
+            "landingPages": {
+                "name": "Landing Pages and Websites",
+                "price": "From $149",
+                "features": [
+                    {
+                        "title": "Responsive Design",
+                        "description": "Your website will look great on any device, whether it's a phone, tablet, or computer. 📱💻✨"
+                    },
+                    {
+                        "title": "Up to 5 Sections",
+                        "description": "We organize your content into a maximum of 5 sections for clarity and functionality. 🗂️📑✅"
+                    },
+                    {
+                        "title": "Contact Form",
+                        "description": "Includes an easy-to-use form so your customers can contact you directly. 📨🤝📋"
+                    },
+                    {
+                        "title": "Basic SEO",
+                        "description": "We set up your site to be easily found in search engines. 🔍📈🌐"
+                    },
+                    {
+                        "title": "Social Media Links",
+                        "description": "We connect your site with your social media profiles for greater reach. 🔗📲📢"
+                    },
+                    {
+                        "title": "Delivery as Agreed",
+                        "description": "We ensure your project is delivered on time and with high quality. ⏳🎯🏆"
+                    }
+                ]
+            },
+            "onlineStorePhotos": {
+                "name": "Online Store + Photos",
+                "price": "From $299",
+                "features": [
+                    {
+                        "title": "Online Store Creation",
+                        "description": "We develop your personalized online store for buying and selling products. 🛒🌐💼"
+                    },
+                    {
+                        "title": "Responsive Design",
+                        "description": "Your store will be fully adaptable to mobile phones, tablets, and computers. 📱💻✨"
+                    },
+                    {
+                        "title": "Product Management",
+                        "description": "We set up a system so you can easily add, edit, or remove products. 📦📋⚙️"
+                    },
+                    {
+                        "title": "Payment Gateway Integration",
+                        "description": "We include major payment gateways to facilitate transactions. 💳💵✅"
+                    },
+                    {
+                        "title": "Professional Photos",
+                        "description": "We take high-quality photos of your products, perfect for showcasing your catalog. 📸✨🛍️"
+                    },
+                    {
+                        "title": "In-Store or Studio Sessions",
+                        "description": "Photos can be taken at your store or in a studio, as you prefer. 🏪📷🎯"
+                    }
+                ]
+            },
+            "wordpress": {
+                "name": "WordPress Maintenance",
+                "price": "From $49/month",
+                "features": [
+                    {
+                        "title": "Security Updates",
+                        "description": "We keep your site protected with regular security updates. 🔐🛡️⚙️"
+                    },
+                    {
+                        "title": "Regular Backups",
+                        "description": "We perform periodic backups to protect your information. 💾🗂️🔄"
+                    },
+                    {
+                        "title": "Content Updates",
+                        "description": "Keep your content updated professionally and quickly. ✍️🚀📅"
+                    },
+                    {
+                        "title": "Uptime Monitoring",
+                        "description": "We ensure your site is always online and running smoothly. 🌐🔎⏱️"
+                    },
+                    {
+                        "title": "Email Support",
+                        "description": "We're available to answer your questions via email. 📬❓🤓"
+                    },
+                    {
+                        "title": "Monthly Reports",
+                        "description": "Receive a monthly summary of the tasks performed on your site. 📊🗓️📜"
+                    }
+                ]
+            },
+            "optimization": {
+                "name": "Basic Web Optimization",
+                "price": "From $99",
+                "features": [
+                    {
+                        "title": "Image Optimization",
+                        "description": "We reduce the size of your images without losing quality to improve speed. 🖼️⚡🚀"
+                    },
+                    {
+                        "title": "Meta Descriptions",
+                        "description": "We add key metadata to improve your site's search engine ranking. 🏷️🔍📈"
+                    },
+                    {
+                        "title": "Speed Improvements",
+                        "description": "We make technical adjustments so your site loads faster. 🚀⏩🌐"
+                    },
+                    {
+                        "title": "SSL Implementation",
+                        "description": "We set up an SSL certificate to secure your site's connection. 🔒📶🌍"
+                    },
+                    {
+                        "title": "Mobile-Friendly",
+                        "description": "We ensure your site is fully functional on mobile devices. 📱🖥️✅"
+                    },
+                    {
+                        "title": "Improvement Report",
+                        "description": "We provide you with a detailed summary of the optimizations performed. 📄✅📊"
+                    }
+                ]
+            }
+        },
+        "contactPopup": {
+            "title": "How would you like to proceed?",
+            "schedule": "Book",
+            "directContact": "WhatsApp"
+        }
+    },
+
+    "serviceFlow": {
+        "title": "Our Process",
+        "steps": {
+          "step1": {
+            "title": "Consultation",
+            "description": "We understand your needs and establish the project scope"
+          },
+          "step2": {
+            "title": "Web Development",
+            "description": "We create your custom website following best practices and technologies"
+          },
+          "step3": {
+            "title": "Domain",
+            "description": "We acquire the domain for you and configure it"
+          },
+          "step4": {
+            "title": "Hosting",
+            "description": "We set up the most suitable hosting for your project"
+          },
+          "step5": {
+            "title": "Live Website",
+            "description": "We deploy and ensure everything works perfectly"
+          }
+        }
+      },
+
+
+    "contact": {
+        "title": "Contact",
+        "form": {
+            "sections": {
+                "personal": "Personal Information",
+                "appointment": "Schedule an Appointment"
+            },
+            "inputs": {
+                "name": "Name *",
+                "email": "Email *",
+                "phone": "Phone *",
+                "company": "Company (optional)",
+                "observations": "Observations *",
+                "noObservations": "No observations"
+            },
+            "preferences": {
+                "contact": {
+                    "title": "Contact Preferences",
+                    "options": {
+                        "phone": "Phone",
+                        "email": "Email"
+                    }
+                },
+                "days": {
+                    "title": "Contact Days",
+                    "options": {
+                        "weekdays": "Mon-Fri",
+                        "weekend": "Weekend"
+                    }
+                },
+                "time": {
+                    "title": "Contact Time *",
+                    "options": {
+                        "morning": "Morning",
+                        "afternoon": "Afternoon"
+                    }
+                }
+            },
+            "appointment": {
+                "date": "Appointment Date",
+                "time": "Appointment Time",
+                "notSpecified": "Not specified",
+                "medium": {
+                    "title": "Appointment Medium",
+                    "options": {
+                        "zoom": "Zoom",
+                        "meet": "Google Meet",
+                        "whatsapp": "WhatsApp"
+                    }
+                }
+            },
+            "buttons": {
+                "clear": "Clear",
+                "submit": "Submit"
+            },
+            "status": {
+                "success": {
+                    "title": "🎉 Absolute Success!",
+                    "message": "Your form has been successfully received. Our team will review it and contact you shortly."
+                },
+                "error": {
+                    "title": "🚧 Oops! Something went wrong...",
+                    "message": "An error occurred during submission. Please check your connection and try again."
+                }
+            },
+            "errors": {
+                "title": "Error",
+                "required": "Missing required fields",
+                "invalidEmail": "Invalid email format",
+                "clientEmailError": "Error sending confirmation email",
+                "adminEmailError": "Error sending notification to administrator"
+            },
+            "emails": {
+                "client": {
+                    "thankYou": "Thank you for contacting us!",
+                    "subject": "Reception Confirmation - Axion Dev",
+                    "greeting": "Dear",
+                    "received": "We have received your request and will contact you soon to confirm your appointment. Here are the details of your request:",
+                    "appointmentDetails": "Appointment Details",
+                    "followUp": "We will contact you shortly to confirm your appointment."
+                },
+                "admin": {
+                    "newContact": "New contact form received",
+                    "subject": "New Contact Form - Axion Dev",
+                    "details": "Contact Details"
+                }
+            },
+            "validation": {
+                "name": "Please enter your name",
+                "email": "Please enter a valid email",
+                "phone": "Please enter a valid phone number",
+                "contactPreference": "Please select a contact preference",
+                "contactDays": "Please select contact days",
+                "contactTime": "Please select contact time"
+            }
+        },
+        "captcha": {
+            "title": "Verification",
+            "placeholder": "Enter the code",
+            "error": "Incorrect code",
+            "required": "Please complete the captcha",
+            "verifying": "Verifying...",
+            "success": "Verification successful",
+            "retry": "Try again",
+            "loading": "Loading captcha..."
+        }
+    },
+    "footer": {
+        "sections": {
+            "company": {
+                "title": "AxionDev",
+                "links": {
+                    "about": "About Us",
+                    "services": "Services",
+                    "contact": "Contacto",
+                    "home": "Home"
+                }
+            },
+            "resources": {
+                "title": "Resources",
+                "links": {
+                    "blog": "Blog",
+                    "faq": "FAQs",
+                    "support": "Support"
+                }
+            },
+            "contact": {
+                "title": "Contact",
+                "links": {
+                    "whatsapp": "WhatsApp",
+                    "email": "info@axiondev.tech",
+                    "schedule": "Mon - Fri: 9:00 - 18:00"
+                }
+            },
+            "social": {
+                "title": "Síguenos",
+                "links": {
+                    "facebook": "Facebook",
+                    "twitter": "Twitter",
+                    "instagram": "Instagram",
+                    "linkedin": "LinkedIn"
+                }
+            },
+            "language": {
+                    "title": "Language"
+                }
+            },
+            "copyright": "© 2024 AxionDev. Todos los derechos reservados."
+    },
+    "underConstruction": {
+        "title": "We're working on something amazing",
+        "subtitle": "Come back soon to discover what's new!",
+        "message": "This section is currently under construction"
+    },
+    "faq": {
+        "title": "Frequently Asked Questions",
+        "categories": {
+            "conceptos": {
+                "title": "Basic Concepts",
+                "items": [
+                    {
+                        "question": "What is a web domain?",
+                        "answer": "A web domain is the unique name that identifies your site on the Internet, like 'mypage.com'. It's the address users type in their browser to visit your site. Domains are registered for 1-year periods and can be renewed annually to maintain ownership."
+                    },
+                    {
+                        "question": "What is hosting and why do I need it?",
+                        "answer": "Hosting or web hosting is the space on a server where all your website files are stored (images, text, code, etc.). It's essential for your site to be accessible on the Internet. Plans are usually contracted annually and include features like SSL and backups depending on the chosen plan."
+                    },
+                    {
+                        "question": "What is an SSL certificate?",
+                        "answer": "SSL is a security certificate that protects communication between the user and the server. When your site has SSL, its address starts with 'https://' and shows a padlock, which increases user trust. It's important for security and SEO, and must be renewed annually."
+                    },
+                    {
+                        "question": "What is SEO and why is it important?",
+                        "answer": "SEO (Search Engine Optimization) is the process of improving your website to rank better in Google and other search engines. It includes optimization of keywords, links, site speed, and other factors. Good SEO helps more people find your site naturally."
+                    },
+                    {
+                        "question": "What is a Landing Page?",
+                        "answer": "A landing page is a web page specifically designed to capture users' attention and encourage them to take a specific action, such as signing up or making a purchase. They are pages optimized for conversion with a clear and specific goal."
+                    }
+                ]
+            },
+            "servicios": {
+                "title": "Services",
+                "items": [
+                    {
+                        "question": "What does the hosting service include?",
+                        "answer": "Our hosting service includes server space to store website files, SSL certificate, regular backups, and technical support. Plans vary in storage capacity and additional features according to client needs."
+                    },
+                    {
+                        "question": "What are revision rounds?",
+                        "answer": "Revision rounds are opportunities to request changes and adjustments after the first project delivery. Each service includes a specific number of rounds that can be performed at no additional cost to perfect the work according to your needs."
+                    },
+                    {
+                        "question": "What does web maintenance include?",
+                        "answer": "Web maintenance includes security updates, link checking, periodic backups, content updates, and technical support. The frequency and scope of these services depend on the contracted plan (basic, standard, or premium)."
+                    },
+                    {
+                        "question": "What is speed optimization?",
+                        "answer": "Speed optimization is the process of improving your website's loading time through techniques such as image optimization, code minification, and server configuration improvement. A faster site improves user experience and SEO."
+                    }
+                ]
+            },
+            "soporte": {
+                "title": "Support",
+                "items": [
+                    {
+                        "question": "What is priority support?",
+                        "answer": "Priority support is a rapid response service for resolving urgent issues with your website. Clients with this service have access to faster responses and immediate solutions, especially useful in emergencies outside normal business hours."
+                    },
+                    {
+                        "question": "What happens if I need more revisions than included?",
+                        "answer": "If you need additional revisions beyond those included in your package, these will have an extra cost which we will inform you about before making any adjustments. You will always be notified and can approve the cost before proceeding."
+                    },
+                    {
+                        "question": "What does the post-delivery support period include?",
+                        "answer": "All projects include a 30-day free support period to correct possible errors. After this period, you can contract a maintenance plan to continue receiving support and updates."
+                    }
+                ]
+            },
+            "mantenimiento": {
+                "title": "Maintenance",
+                "items": [
+                    {
+                        "question": "What are backups and how often are they performed?",
+                        "answer": "Backups are copies of all your website files and database. Depending on the maintenance plan, we perform weekly or monthly backups to protect your information in case of any incident."
+                    },
+                    {
+                        "question": "How do content updates work?",
+                        "answer": "Content updates involve modifying or adding text, images, videos, or other elements to your website. The frequency of updates depends on the contracted maintenance plan, usually monthly or quarterly."
+                    },
+                    {
+                        "question": "What does image optimization include?",
+                        "answer": "Image optimization consists of reducing file sizes without sacrificing visual quality, thus improving site loading speed. It includes compression, resizing, and format optimization."
+                    }
+                ]
+            },
+            "políticas": {
+                "title": "Policies",
+                "items": [
+                    {
+                        "question": "What is the cancellation policy?",
+                        "answer": "If you decide to cancel a project after it has started, the advance payment is non-refundable as it covers initial work and resources. For annual services like hosting or domain, cancellation may involve partial retention of the fee."
+                    },
+                    {
+                        "question": "What is the revision policy?",
+                        "answer": "Each package includes a specific number of revision rounds, detailed in the contract. Additional revisions will be charged separately and will always be communicated in advance for approval."
+                    },
+                    {
+                        "question": "How does the post-delivery support policy work?",
+                        "answer": "We offer a 30-day free support period after delivery to correct possible errors. After this period, we recommend contracting a maintenance plan for continued support."
+                    }
+                ]
+            },
+            "costos": {
+                "title": "Costs",
+                "items": [
+                    {
+                        "question": "In what currency are the prices reflected?",
+                        "answer": "Our service prices are reflected in US dollars. However, you can make the payment in Argentine pesos at the day's exchange rate, as established by your bank or payment processor."
+                    },
+                    {
+                        "question": "Are domain and hosting costs included in the price?",
+                        "answer": "No, domain and hosting costs are not included in the price of our services. These services are contracted separately and renewed annually, according to the hosting and domain provider rates."
+                    },
+                    {
+                        "question": "Is the SSL certificate included in the price?",
+                        "answer": "The SSL certificate is not included in the standard price. If you want to add SSL to protect your site, which is mandatory with some service providers, it is contracted separately and usually renewed annually. An SSL is important for security and user trust in your website."
+                    },
+                    {
+                        "question": "Are there other additional costs I should consider?",
+                        "answer": "Some additional services, such as extra revisions or maintenance after the included period, may involve additional costs. Any additional expense will be communicated before proceeding so it can be approved."
+                    }
+                ]
+            }
+        }
+    }
+}
