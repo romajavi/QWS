@@ -24,7 +24,9 @@ const ContactWrapper = styled.div`
   min-height: calc(100vh - 80px);
   width: 100%;
   padding-top: 80px;
+  padding-bottom: 5rem; // Añadimos padding inferior
   scroll-margin-top: 80px;
+  margin-bottom: 3rem; // Añadimos margen inferior
 `;
 
 
@@ -38,10 +40,10 @@ const CheckboxTitle = styled.h3`
 
 
 const FormContainer = styled.div`
-  width: 150%;
+  width: 100%; // Cambiado de 150% a 100%
   max-width: 1300px;
-  margin: 1.5rem 0;  
-  padding: 2rem;  
+  margin: 1.5rem auto; // Añadido auto para centrar
+  padding: 2rem;
   background: ${props => props.theme.colors.cardBackground};
   backdrop-filter: blur(10px);
   border-radius: 20px;
@@ -51,20 +53,11 @@ const FormContainer = styled.div`
   min-width: min(90%, 1200px);
   box-sizing: border-box;
   
-  & > form {
-    width: 100%;
-    max-width: 100%;
-  }
-
-  @media (max-width: 1400px) {
-    max-width: 1000px;
-  }
-
   @media (max-width: 768px) {
     width: 95%;
-    padding: 1.5rem;
-    margin: 0.5rem auto;
-    gap: 2rem;
+    padding: 1rem;
+    margin: 1rem auto;
+    min-width: unset; // Removemos el min-width en móvil
   }
 `;
 
@@ -195,14 +188,14 @@ const PreferenceGroup = styled.div`
   border-radius: 8px;
   border: ${props => props.theme.colors.secondaryBackground};
   margin-bottom: ${baseSpacing.marginBottom};
+  width: 100%; // Aseguramos ancho completo
+  box-sizing: border-box; // Añadimos box-sizing
 
-  @media (min-width: 768px) {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  @media (max-width: 768px) {
+    padding: 1rem;
+    margin-bottom: 1rem;
   }
 `;
-
 
 const PreferencesContainer = styled.div`
   width: 100%;
@@ -401,6 +394,29 @@ const Contact = () => {
 
 
   const { t } = useTranslation();
+
+  const controls = useAnimation();
+  const [ref, inView] = useInView({
+    threshold: 0.2,
+    triggerOnce: true
+  });
+
+  useEffect(() => {
+    if (inView) {
+      const sequence = async () => {
+        // Primero animamos el título
+        await controls.start("titleVisible");
+        // Esperamos 600ms
+        await new Promise(resolve => setTimeout(resolve, 600));
+        // Luego animamos el contenido
+        await controls.start("contentVisible");
+      };
+      sequence();
+    }
+  }, [inView, controls]);
+
+
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -617,10 +633,37 @@ const Contact = () => {
 
   return (
     <PageContainer isLoading={isLoading}>
-      <ContactWrapper id="contact">
+      <ContactWrapper id="contact" ref={ref}>
         <Suspense fallback={<LoadingSpinner />}>
-          <TitlePages text={t('contact.title')}  />
-          <ContentFadeIn>
+          {/* Animación del título */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={controls}
+            variants={{
+              titleVisible: {
+                opacity: 1,
+                y: 0,
+                transition: { duration: 0.6, ease: "easeOut" }
+              }
+            }}
+          >
+            <TitlePages text={t('contact.title')} />
+          </motion.div>
+
+          {/* Animación del formulario */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={controls}
+            variants={{
+              contentVisible: {
+                opacity: 1,
+                transition: { 
+                  duration: 0.6,
+                  when: "beforeChildren",
+                }
+              }
+            }}
+          >
             <FormContainer $hasError={Object.keys(errors).length > 0}>
               <form onSubmit={handleSubmit} ref={formRef}>
                 <FormGrid>
@@ -978,11 +1021,11 @@ const Contact = () => {
                 </CustomButtonGroup>
               </form>
             </FormContainer>
-          </ContentFadeIn>
+          </motion.div>
         </Suspense>
       </ContactWrapper>
 
-      {/* Popup - carga diferida */}
+      {/* Popup mantiene su estructura original */}
       {showPopup && (
         <Suspense fallback={null}>
           <StandardPopup
@@ -1003,6 +1046,6 @@ const Contact = () => {
       )}
     </PageContainer>
   );
-}
 
+}
 export default Contact;

@@ -4,6 +4,7 @@ import { motion, AnimatePresence, useAnimation } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useInView } from 'react-intersection-observer';
 import TitlePages from './TitlePages.js';
+import { ScrollIndicator } from './ServiceFlow.js';
 
 
 
@@ -14,7 +15,10 @@ const FAQContainer = styled.section`
   margin: 0 auto;
   max-width: 800px;
   scroll-margin-top: 80px;
+  padding-bottom: 100px; 
+  position: relative; 
 `;
+
 
 const FAQItem = styled.div`
   margin-bottom: 1.5rem;
@@ -177,6 +181,29 @@ const FAQSection = () => {
           </CategorySection>
         ))}
       </motion.div>
+
+      <ScrollIndicator
+        onClick={() => {
+          const contactElement = document.getElementById('contact');
+          if (contactElement) {
+            contactElement.scrollIntoView({ behavior: 'smooth' });
+          }
+        }}
+        animate={{
+          y: [0, 10, 0],
+        }}
+        transition={{
+          duration: 2,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+        whileHover={{
+          scale: 1.1,
+          transition: { duration: 0.2 }
+        }}
+      >
+        <div className="arrow" />
+      </ScrollIndicator>
     </FAQContainer>
   );
 };

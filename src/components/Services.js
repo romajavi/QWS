@@ -13,7 +13,11 @@ import { ScrollIndicator } from './ServiceFlow.js'
 const ServicesWrapper = styled(motion.div)`
   width: 100%;
   max-width: 1600px;
-  margin-top: -7rem; // Agregar margen superior
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  padding-bottom: 2rem; // Reducido para dar espacio al ScrollIndicator
 `;
 
 
@@ -26,7 +30,7 @@ const ServicesContainer = styled.div`
   align-items: center;
   gap: 2rem;
   flex-wrap: nowrap;
-  margin-top: 2rem; // Agregar margen superior
+  margin: 2rem 0; // Ajustamos el margen para mantener el espaciado
 
   @media (max-width: 1200px) {
     flex-wrap: wrap;
@@ -38,6 +42,52 @@ const ServicesSection = styled.div`
   width: 100%;
   padding-top: 80px;
   scroll-margin-top: 80px;
+  position: relative;
+  overflow: hidden; // Prevenimos scroll horizontal
+`;
+
+const StyledScrollIndicator = styled(ScrollIndicator)`
+  position: relative;
+  margin-top: 5rem; // Reducido de 10rem para mejor visibilidad
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  
+  // Mantenemos los estilos originales del hover y arrow
+  &:hover {
+    .arrow {
+      border-color: ${({ theme }) => theme.colors.primary};
+      
+      &::before {
+        border-color: ${({ theme }) => theme.colors.primary};
+      }
+    }
+  }
+
+  .arrow {
+    width: 80px;
+    height: 80px;
+    border: 2px solid ${({ theme }) => theme.colors.accent};
+    border-radius: 50%;
+    position: relative;
+    
+    &::before {
+      content: '';
+      width: 12px;
+      height: 12px;
+      border-right: 2px solid ${({ theme }) => theme.colors.accent};
+      border-bottom: 2px solid ${({ theme }) => theme.colors.accent};
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(45deg);
+    }
+  }
+
+  @media (max-width: 768px) {
+    margin-top: 3rem; // Reducimos aún más el margen en móvil
+    padding: 10px; // Reducimos el padding en móvil
+  }
 `;
 
 

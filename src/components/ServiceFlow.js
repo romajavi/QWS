@@ -14,6 +14,11 @@ const ServiceFlowContainer = styled.div`
   background: ${({ theme }) => theme.colors.background};
   display: flex;
   flex-direction: column;
+
+  @media (max-width: 1024px) {
+    min-height: auto; // Permitir que la altura se ajuste al contenido
+    padding-top: 60px; // Reducir el padding superior
+  }
 `;
 
 const GradientOverlay = styled.div`
@@ -36,6 +41,10 @@ const FlowWrapper = styled.div`
   margin: 0 auto;
   padding: 2rem;
   position: relative;
+
+  @media (max-width: 1024px) {
+    padding: 1rem; // Reducir el padding en móvil
+  }
 `;
 
 const CardsContainer = styled.div`
@@ -48,7 +57,8 @@ const CardsContainer = styled.div`
   
   @media (max-width: 1024px) {
     flex-direction: column;
-    gap: 3rem;
+    gap: 1rem; // Reducido de 3rem a 1rem
+    padding: 0 1rem; // Añadido padding horizontal para mantener margen en móvil
   }
 `;
 
@@ -66,7 +76,11 @@ const Card = styled(motion.div)`
   justify-content: space-between;
   isolation: isolate;
 
-
+  @media (max-width: 1024px) {
+    height: auto; // Permitir altura automática en móvil
+    min-height: 250px; // Establecer altura mínima
+    padding: 1.5rem; // Reducir el padding
+  }
 `;
 
 const StepImage = styled.img`
@@ -124,8 +138,8 @@ const Connector = styled(motion.div)`
 
   @media (max-width: 1024px) {
     width: 2px;
-    height: 50px;
-    margin: 0 auto;
+    height: 30px; // Reducido de 50px a 30px
+    margin: 0.5rem auto; // Añadido margen más pequeño
 
     &::after {
       right: -4px;
@@ -137,14 +151,12 @@ const Connector = styled(motion.div)`
 
 export const ScrollIndicator = styled(motion.div)`
   position: relative;
+  margin-top: 5rem; // Reducido de 10rem para mejor visibilidad
+  width: 100%;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-  margin-top: 10rem;
-  cursor: pointer;
-  padding: 20px;
+  justify-content: center;
   
+  // Mantenemos los estilos originales del hover y arrow
   &:hover {
     .arrow {
       border-color: ${({ theme }) => theme.colors.primary};
@@ -173,6 +185,11 @@ export const ScrollIndicator = styled(motion.div)`
       left: 50%;
       transform: translate(-50%, -50%) rotate(45deg);
     }
+  }
+
+  @media (max-width: 768px) {
+    margin-top: 3rem; // Reducimos aún más el margen en móvil
+    padding: 10px; // Reducimos el padding en móvil
   }
 `;
 

@@ -11,7 +11,7 @@ const Card = styled(motion.div)`
   background: ${props => props.theme.colors.cardBackground};
   border: 1px solid ${props => props.theme.colors.secondaryBackground};
   border-radius: 15px;
-  padding: 1.2rem 1.2rem;
+  padding: 1.2rem;
   width: 340px;
   display: flex;
   flex-direction: column;
@@ -21,7 +21,14 @@ const Card = styled(motion.div)`
   overflow: visible;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease;
-  margin-bottom: -10rem;
+  margin-bottom: 2rem; // Cambiado de -10rem a 2rem
+
+  @media (max-width: 768px) {
+    width: 100%; 
+    max-width: 340px; 
+    min-width: 340px; 
+    margin: 1rem auto; 
+  }
 
   &:hover {
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
@@ -52,17 +59,23 @@ const Price = styled.p`
   font-weight: bold;
 `;
 
+
 const FeatureList = styled.ul`
   list-style-type: none;
-  padding: 0 2rem; 
+  padding: 0 2rem;
   text-align: left;
   width: 120%;
   margin: 1.2rem 0;
-  font-size: 1rem; 
+  font-size: 1rem;
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+
+  @media (max-width: 768px) {
+    width: 100%; // Ajustamos el ancho en móvil
+    padding: 0 1rem; // Reducimos el padding
+  }
 `;
 
 const FeatureItem = styled.li`

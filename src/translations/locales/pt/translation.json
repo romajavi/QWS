@@ -173,7 +173,7 @@
     },
 
     "serviceFlow": {
-        "title": "Nosso Processo",
+        "title": "Ciclo de Desenvolvimento",
         "steps": {
           "step1": {
             "title": "Consultoria",
