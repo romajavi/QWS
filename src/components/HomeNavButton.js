@@ -90,7 +90,7 @@ const HomeNavButton = () => {
     };
 
     return (
-        <ButtonContainer show={showButton} className="home-nav-button">
+        <ButtonContainer show={showButton ? true : undefined} className="home-nav-button">
             <HomeButton onClick={scrollToHome} aria-label="Go to home">
                 <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />

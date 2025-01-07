@@ -508,41 +508,40 @@ const Contact = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-
-    if (!validateForm()) {
-      setSubmitStatus({
-        success: false,
-        titleKey: 'contact.form.errors.title',
-        message: t('contact.form.errors.required')
-      });
-      setShowPopup(true);
-      setIsLoading(false);
-      return;
-    }
-
+    console.log('Sending to:', `${API_URL}/api/contact`);
+    
     try {
-      const response = await fetch(`${API_URL}/api/contact`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify(formData)
-      });
+        const response = await fetch(`${API_URL}/api/contact`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Origin': window.location.origin
+            },
+            mode: 'cors',
+            body: JSON.stringify(formData)
+        });
 
-      console.log('Response:', response);
+      console.log('Server response:', {
+        status: response.status,
+        headers: Object.fromEntries(response.headers)
+      });
 
       const data = await response.json();
-      console.log('Data:', data);
+      console.log('Response data:', data);
 
       if (!response.ok) {
-        throw new Error(data.message || 'Error en el servidor');
+        throw new Error(data.message || 'Server error');
       }
 
       setFormStatus({ isSubmitting: false, isSuccess: true, error: null });
       handleReset();
 
     } catch (error) {
+      console.error('Request error:', {
+        message: error.message,
+        stack: error.stack
+      });
       setFormStatus({
         isSubmitting: false,
         isSuccess: false,
@@ -657,7 +656,7 @@ const Contact = () => {
             variants={{
               contentVisible: {
                 opacity: 1,
-                transition: { 
+                transition: {
                   duration: 0.6,
                   when: "beforeChildren",
                 }

@@ -16,13 +16,13 @@ const SpinnerWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: ${props => props.fullScreen ? '100vh' : props.height || '100px'};
+  height: ${props => props.$fullScreen ? '100vh' : props.height || '100px'};
   width: 100%;
-  position: ${props => props.fullScreen ? 'fixed' : 'relative'};
-  top: ${props => props.fullScreen ? '0' : 'auto'};
-  left: ${props => props.fullScreen ? '0' : 'auto'};
-  z-index: ${props => props.fullScreen ? '9999' : '1'};
-  background: ${props => props.fullScreen ? props.theme.colors.background : 'transparent'};
+  position: ${props => props.$fullScreen ? 'fixed' : 'relative'};
+  top: ${props => props.$fullScreen ? '0' : 'auto'};
+  left: ${props => props.$fullScreen ? '0' : 'auto'};
+  z-index: ${props => props.$fullScreen ? '9999' : '1'};
+  background: ${props => props.$fullScreen ? props.theme.colors.background : 'transparent'};
 `;
 
 const Spinner = styled.div`

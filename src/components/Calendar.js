@@ -49,23 +49,23 @@ const DayCell = styled(motion.div)`
   min-width: 10px;  
   padding: 0.1rem;
   background: ${props =>
-        props.isSelected
+        props.$isSelected
             ? props.theme.colors.primary
-            : props.isDisabled
+            : props.$isDisabled
                 ? props.theme.colors.background + '40'
                 : 'transparent'
     };
   color: ${props =>
-        props.isSelected
+        props.$isSelected
             ? props.theme.colors.background
-            : props.isDisabled
+            : props.$isDisabled
                 ? props.theme.colors.text + '40'
                 : props.theme.colors.text
     };
   border-radius: 50%;
-  cursor: ${props => (props.isDisabled ? 'not-allowed' : 'pointer')};
+  cursor: ${props => (props.$isDisabled ? 'not-allowed' : 'pointer')};
   font-size: 0.7rem;
-  opacity: ${props => props.isDisabled ? 0.5 : 1};
+  opacity: ${props => props.$isDisabled ? 0.5 : 1};
   
   &:hover {
     background: ${props =>
@@ -228,8 +228,8 @@ const Calendar = ({ onSelectDate, minDate }) => {
                 <DayCell
                     key={day}
                     onClick={() => !isDisabled && handleDateClick(day)}
-                    isSelected={isSelected}
-                    isDisabled={isDisabled}
+                    $isSelected={isSelected}
+                    $isDisabled={isDisabled}
                     whileHover={!isDisabled ? { scale: 1.1 } : {}}
                     whileTap={!isDisabled ? { scale: 0.95 } : {}}
                 >
