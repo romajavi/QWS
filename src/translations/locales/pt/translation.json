@@ -245,7 +245,7 @@
                     "title": "Meio do Compromisso",
                     "options": {
                         "zoom": "Zoom",
-                        "meet": "Google Meet",
+                        "meet": "Meet",
                         "whatsapp": "WhatsApp"
                     }
                 }
@@ -346,7 +346,7 @@
                     "title": "Idioma"
                 }
             },
-            "copyright": "© 2024 AxionDev. Todos los derechos reservados."
+            "copyright": "© 2025 AxionDev. Todos los derechos reservados."
     },
     "underConstruction": {
         "title": "Estamos trabalhando em algo incrível",

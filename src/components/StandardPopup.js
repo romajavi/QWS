@@ -4,17 +4,25 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 
 const PopupOverlay = styled(motion.div)`
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
-  width: 100vw;
+  width: 100%;
   height: 100vh;
   background: rgba(0, 0, 0, 0.8);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999; /* Asegurar cobertura sobre todo */
+  z-index: 9999;
+  class-name: popup-overlay;
+
+  // Aseguramos que el popup sea visible en el viewport actual
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 `;
+
 
 const PopupContainer = styled(motion.div)`
   background: ${props => props.theme.colors.primaryBackground};
@@ -27,6 +35,12 @@ const PopupContainer = styled(motion.div)`
   position: relative;
   box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
   border: 1px solid ${props => props.theme.colors.accent};
+  margin: auto;
+  
+  // Aseguramos que el contenido esté centrado
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 const CloseButton = styled.button`

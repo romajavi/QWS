@@ -1,123 +1,182 @@
 import express from 'express';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import cors from 'cors';
+import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
-import emailRouter, { testConnection } from './emailHandler.js';
-import compression from 'compression';
-import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+import { dirname, resolve } from 'path';
+import fs from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-if (!process.env.NODE_ENV) {
-    process.env.NODE_ENV = 'development';
-}
-
+// Load environment variables based on environment
 const envPath = process.env.NODE_ENV === 'production'
-    ? path.join(__dirname, '../config/production.env')
-    : path.join(__dirname, '../config/development.env');
+    ? resolve(__dirname, '../config/production.env')
+    : resolve(__dirname, '../config/development.env');
 
+console.log('================== SERVER STARTUP ==================');
+console.log('Current directory:', __dirname);
 console.log('Loading environment from:', envPath);
+console.log('NODE_ENV:', process.env.NODE_ENV);
+
 dotenv.config({ path: envPath });
 
-const app = express();
-const PORT = process.env.SERVER_PORT || 5001;
-
-const corsOptions = {
-    origin: '*',  // Para desarrollo
-    methods: ['GET', 'POST', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Accept', 'Origin'],
-    credentials: false,
-    preflightContinue: false,
-    optionsSuccessStatus: 204
+// Email configuration
+const EMAIL_CONFIG = {
+    EMAIL_USER: process.env.EMAIL_USER,
+    EMAIL_PASS: process.env.EMAIL_PASS,
+    SMTP_HOST: process.env.SMTP_HOST,
+    SMTP_PORT: parseInt(process.env.SMTP_PORT) || 587,
+    ADMIN_EMAIL: process.env.ADMIN_EMAIL,
+    EMAIL_FROM_NAME: process.env.EMAIL_FROM_NAME || 'AxionDev',
+    SMTP_SECURE: process.env.SMTP_SECURE === 'true'
 };
 
-app.use(cors(corsOptions));
-app.options('*', cors(corsOptions));
-
-// Logging middleware
-app.use((req, res, next) => {
-    console.log('=== INCOMING REQUEST ===');
-    console.log('Headers:', JSON.stringify(req.headers, null, 2));
-    console.log('Method:', req.method);
-    console.log('Path:', req.path);
-    console.log('Origin:', req.headers.origin);
-    next();
+console.log('Email Configuration loaded:', {
+    host: EMAIL_CONFIG.SMTP_HOST,
+    port: EMAIL_CONFIG.SMTP_PORT,
+    user: EMAIL_CONFIG.EMAIL_USER,
+    secure: EMAIL_CONFIG.SMTP_SECURE
 });
 
-app.use(compression());
+// Create nodemailer transporter
+const createTransporter = () => {
+    const transportConfig = {
+        host: EMAIL_CONFIG.SMTP_HOST,
+        port: EMAIL_CONFIG.SMTP_PORT,
+        secure: EMAIL_CONFIG.SMTP_SECURE,
+        auth: {
+            user: EMAIL_CONFIG.EMAIL_USER,
+            pass: EMAIL_CONFIG.EMAIL_PASS
+        },
+        debug: true,
+        logger: true
+    };
+
+    console.log('Creating transporter with config:', {
+        ...transportConfig,
+        auth: { user: EMAIL_CONFIG.EMAIL_USER }
+    });
+
+    return nodemailer.createTransport(transportConfig);
+};
+
+const transporter = createTransporter();
+
+const app = express();
+
+// Middleware
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(cors({
+    origin: process.env.CORS_ORIGIN.split(','),
+    credentials: true
+}));
 
-// Request logging
-app.use((req, res, next) => {
-    if (req.method === 'POST') {
-        console.log('Request Body:', JSON.stringify(req.body, null, 2));
-    }
-    next();
+console.log('================== SERVER CONFIG ==================');
+console.log({
+    environment: process.env.NODE_ENV,
+    port: process.env.SERVER_PORT,
+    corsOrigin: process.env.CORS_ORIGIN,
+    apiUrl: process.env.REACT_APP_API_URL
 });
 
-// Error handling
-app.use((err, req, res, next) => {
-    console.error('Server Error:', {
-        message: err.message,
-        stack: err.stack,
-        path: req.path
-    });
-    res.status(500).json({
-        success: false,
-        error: err.message
-    });
+// Test route
+app.get('/api/test', (req, res) => {
+    console.log('Test route accessed');
+    res.json({ message: 'Server is running' });
 });
 
-if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.join(__dirname, '../build')));
-}
+// Contact form handler
+app.post('/api/contact', async (req, res) => {
+    console.log('================== NEW CONTACT REQUEST ==================');
+    console.log('Headers:', req.headers);
+    console.log('Body:', req.body);
 
-app.get('/api/test-email', async (req, res) => {
+    const {
+        name,
+        email,
+        phone,
+        appointmentDate,
+        appointmentTime,
+        appointmentMedium,
+        observations
+    } = req.body;
+
     try {
-        const result = await testConnection();
-        console.log('Email test result:', result);
-        res.json({ success: true });
+        // Validate required fields
+        if (!email || !name || !phone || !observations) {
+            console.log('Validation failed:', { email, name, phone, observations });
+            return res.status(400).json({
+                success: false,
+                error: 'campos_requeridos',
+                message: 'Faltan campos requeridos'
+            });
+        }
+
+        // Load email templates
+        console.log('Loading email templates...');
+        const clientTemplate = fs.readFileSync(
+            resolve(__dirname, './templates/clientEmailTemplate.html'),
+            'utf8'
+        )
+            .replace(/{nombre}/g, name)
+            .replace(/{appointmentDate}/g, appointmentDate || 'No especificada')
+            .replace(/{appointmentTime}/g, appointmentTime || 'No especificada')
+            .replace(/{appointmentMedium}/g, appointmentMedium || 'No especificado');
+
+        const adminTemplate = fs.readFileSync(
+            resolve(__dirname, './templates/adminEmailTemplate.html'),
+            'utf8'
+        )
+            .replace(/{nombre}/g, name)
+            .replace(/{email}/g, email)
+            .replace(/{telefono}/g, phone)
+            .replace(/{appointmentDate}/g, appointmentDate || 'No especificada')
+            .replace(/{appointmentTime}/g, appointmentTime || 'No especificada')
+            .replace(/{appointmentMedium}/g, appointmentMedium || 'No especificado')
+            .replace(/{observaciones}/g, observations);
+
+        console.log('Sending emails...');
+        const emailResults = await Promise.all([
+            transporter.sendMail({
+                from: `"${EMAIL_CONFIG.EMAIL_FROM_NAME}" <${EMAIL_CONFIG.EMAIL_USER}>`,
+                to: email,
+                subject: 'Confirmación de contacto - AxionDev|',
+                html: clientTemplate
+            }),
+            transporter.sendMail({
+                from: `"${EMAIL_CONFIG.EMAIL_FROM_NAME}" <${EMAIL_CONFIG.EMAIL_USER}>`,
+                to: EMAIL_CONFIG.ADMIN_EMAIL,
+                subject: 'Nuevo contacto recibido - AxionDev|',
+                html: adminTemplate
+            })
+        ]);
+
+        console.log('Email results:', emailResults);
+        res.status(200).json({
+            success: true,
+            message: 'Formulario procesado exitosamente'
+        });
+
     } catch (error) {
-        console.error('Email test error:', error);
+        console.error('================== ERROR ==================');
+        console.error('Error details:', {
+            message: error.message,
+            stack: error.stack,
+            code: error.code
+        });
         res.status(500).json({
             success: false,
-            error: error.message
+            error: 'error_envio',
+            message: process.env.NODE_ENV === 'development'
+                ? `Error: ${error.message}`
+                : 'Error al procesar el formulario'
         });
     }
 });
 
-app.post('/api/contact', (req, res, next) => {
-    console.log('Contact endpoint hit:', {
-        url: req.url,
-        method: req.method,
-        headers: req.headers,
-        body: req.body
-    });
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'POST, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Accept, Origin');
-    next();
-}, emailRouter);
-
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../',
-        process.env.NODE_ENV === 'production' ? 'build' : 'public',
-        'index.html'
-    ));
-});
-
+const PORT = process.env.SERVER_PORT || 5000;
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT} (${process.env.NODE_ENV})`);
-    console.log('CORS configuration:', corsOptions);
-});
-
-process.on('unhandledRejection', (err) => {
-    console.error('Unhandled Rejection:', err);
-});
-
-process.on('uncaughtException', (err) => {
-    console.error('Uncaught Exception:', err);
+    console.log(`Server running on port ${PORT}`);
+    console.log('================== SERVER READY ==================');
 });

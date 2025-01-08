@@ -244,7 +244,7 @@
                     "title": "Appointment Medium",
                     "options": {
                         "zoom": "Zoom",
-                        "meet": "Google Meet",
+                        "meet": "Meet",
                         "whatsapp": "WhatsApp"
                     }
                 }
@@ -345,7 +345,7 @@
                     "title": "Language"
                 }
             },
-            "copyright": "© 2024 AxionDev. Todos los derechos reservados."
+            "copyright": "© 2025 AxionDev. Todos los derechos reservados."
     },
     "underConstruction": {
         "title": "We're working on something amazing",
