@@ -9,6 +9,12 @@ import Button from './Button.js';
 import { glowButtonStyles } from '../styles/Animations.js';
 import { API_URL } from '../config/api.js';
 import TitlePages from './TitlePages.js';
+import { init, send } from '@emailjs/browser';
+
+const SERVICE_ID = 'service_qosvqm2';
+const TEMPLATE_ID_CLIENT = 'template_dpkma1g';
+const TEMPLATE_ID_ADMIN = 'template_wqf1ilf';
+const PUBLIC_KEY = 'M0DzdRq9LJ30ljZpD'; 
 
 // Componentes que se cargarán de forma diferida
 const Calendar = lazy(() => import('../components/Calendar.js'));
@@ -431,6 +437,7 @@ const Contact = () => {  // Inicio del componente
 
   // Efectos
   useEffect(() => {
+    init(PUBLIC_KEY); // key emils
     if (inView) {
       const sequence = async () => {
         await controls.start("titleVisible");
@@ -469,17 +476,17 @@ const Contact = () => {  // Inicio del componente
   // Funciones auxiliares
   const handleClosePopup = () => {
     setShowPopup(false);
-    
+
     if (submitStatus.success) {
-        handleReset(); // Solo reseteamos el formulario después de cerrar el popup exitoso
-        const homeSection = document.getElementById('home');
-        if (homeSection) {
-            setTimeout(() => {
-                homeSection.scrollIntoView({ behavior: 'smooth' });
-            }, 100);
-        }
+      handleReset(); // Solo reseteamos el formulario después de cerrar el popup exitoso
+      const homeSection = document.getElementById('home');
+      if (homeSection) {
+        setTimeout(() => {
+          homeSection.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+      }
     }
-};
+  };
 
   const validateForm = () => {
     console.log('Starting form validation');
@@ -496,83 +503,81 @@ const Contact = () => {  // Inicio del componente
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const currentPosition = window.scrollY;
 
     if (!validateForm()) {
-        console.log('Form validation failed');
-        return;
+      console.log('Form validation failed');
+      return;
     }
 
     setIsLoading(true);
-    const apiUrl = `${API_URL}/api/contact`;
-    console.log('================== FORM SUBMISSION ==================');
-    console.log('API URL:', apiUrl);
-    console.log('Form Data:', formData);
 
     try {
-        // Test server connection
-        console.log('Testing server connection...');
-        const testResponse = await fetch(`${API_URL}/api/test`, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json'
-            }
-        });
-        console.log('Test response:', await testResponse.json());
-
-        // Send form data
-        console.log('Sending form data...');
-        const response = await fetch(apiUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Origin': window.location.origin
-            },
-            mode: 'cors',
-            body: JSON.stringify(formData)
-        });
-
-        console.log('Response status:', response.status);
-        const data = await response.json();
-        console.log('Response data:', data);
-
-        if (!response.ok) {
-            throw new Error(data.message || t('contact.form.status.error.message'));
+      // Enviar email al cliente
+      await send(
+        SERVICE_ID,
+        TEMPLATE_ID_CLIENT,
+        {
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          appointmentDate: formData.appointmentDate,
+          appointmentTime: formData.appointmentTime,
+          appointmentMedium: formData.appointmentMedium
         }
+      );
 
-        // Update success state and show popup
-        setSubmitStatus({
-            success: true,
-            titleKey: 'contact.form.status.success.title',
-            message: t('contact.form.status.success.message')
-        });
-        
-        setFormStatus({ isSubmitting: false, isSuccess: true, error: null });
-        setShowPopup(true);
+      // Enviar email al admin
+      await send(
+        SERVICE_ID,
+        TEMPLATE_ID_ADMIN,
+        {
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          appointmentDate: formData.appointmentDate,
+          appointmentTime: formData.appointmentTime,
+          appointmentMedium: formData.appointmentMedium,
+          observations: formData.observations
+        }
+      );
 
-        // NO hacemos handleReset aquí, lo moveremos al handleClosePopup
+      // Actualizar estado de éxito
+      setSubmitStatus({
+        success: true,
+        titleKey: 'contact.form.status.success.title',
+        message: t('contact.form.status.success.message')
+      });
+      setShowPopup(true);
+
+      window.scrollTo({
+        top: currentPosition,
+        behavior: 'instant'
+      });
 
     } catch (error) {
-        console.error('================== ERROR ==================');
-        console.error('Error type:', error.name);
-        console.error('Error message:', error.message);
-        console.error('Error stack:', error.stack);
+      console.error('================== ERROR ==================');
+      console.error('Error type:', error.name);
+      console.error('Error message:', error.message);
+      console.error('Error stack:', error.stack);
 
-        setSubmitStatus({
-            success: false,
-            titleKey: 'contact.form.status.error.title',
-            message: t('contact.form.status.error.message')
-        });
-        setShowPopup(true);
-        setFormStatus({
-            isSubmitting: false,
-            isSuccess: false,
-            error: error.message
-        });
+      setSubmitStatus({
+        success: false,
+        titleKey: 'contact.form.status.error.title',
+        message: t('contact.form.status.error.message')
+      });
+      setShowPopup(true);
+
+      window.scrollTo({
+        top: currentPosition,
+        behavior: 'instant'
+      });
     } finally {
-        setIsLoading(false);
+      setIsLoading(false);
     }
-};
+  };
+
+
   const handleReset = () => {
     setFormData({
       name: '',
@@ -834,7 +839,7 @@ const Contact = () => {  // Inicio del componente
           >
             <PopupMessage>
               <StatusIcon>
-                {submitStatus.success ? "🎉" : "🚧"}
+                {submitStatus.success ? "✅" : "⚠️"}
               </StatusIcon>
               <MessageText>
                 {submitStatus.message}

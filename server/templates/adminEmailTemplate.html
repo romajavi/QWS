@@ -3,51 +3,49 @@
 <body
     style="font-family: 'Roboto', Arial, sans-serif; line-height: 1.6; color: #FFFFFF; background-color: #000000; max-width: 600px; margin: 0 auto; padding: 20px;">
     <div style="background-color: #333333; padding: 20px; border-radius: 10px;">
-        <h1 style="color: #FFD700; text-align: center; font-family: 'Orbitron', sans-serif;">Nuevo formulario de
-            contacto</h1>
+        <div style="text-align: center; margin-bottom: 20px;">
+            <img src="https://axiondev.tech/static/media/logo.7d88756d3ee202b5a614.png" alt="Axion Dev Logo"
+                style="max-width: 80px; height: auto; margin: 0 auto; display: block;">
+        </div>
 
-        <table style="width: 100%; border-collapse: collapse;">
-            <tr style="background-color: #a5aa9a;">
-                <td style="padding: 10px; border: 1px solid #FFA500; color: #000000;"><strong>Nombre:</strong></td>
-                <td style="padding: 10px; border: 1px solid #FFA500; color: #000000;">{nombre}</td>
-            </tr>
-            <tr>
-                <td style="padding: 10px; border: 1px solid #FFA500;"><strong>Email:</strong></td>
-                <td style="padding: 10px; border: 1px solid #FFA500;">{email}</td>
-            </tr>
-            <tr style="background-color: #a5aa9a;">
-                <td style="padding: 10px; border: 1px solid #FFA500; color: #000000;"><strong>Teléfono:</strong></td>
-                <td style="padding: 10px; border: 1px solid #FFA500; color: #000000;">{telefono}</td>
-            </tr>
-            <tr>
-                <td style="padding: 10px; border: 1px solid #FFA500;"><strong>Empresa:</strong></td>
-                <td style="padding: 10px; border: 1px solid #FFA500;">{empresa}</td>
-            </tr>
-            <tr style="background-color: #a5aa9a;">
-                <td style="padding: 10px; border: 1px solid #FFA500; color: #000000;"><strong>Preferencia de
-                        contacto:</strong></td>
-                <td style="padding: 10px; border: 1px solid #FFA500; color: #000000;">{preferencia_contacto}</td>
-            </tr>
-            <tr>
-                <td style="padding: 10px; border: 1px solid #FFA500;"><strong>Días de contacto:</strong></td>
-                <td style="padding: 10px; border: 1px solid #FFA500;">{dias_contacto}</td>
-            </tr>
-            <tr style="background-color: #a5aa9a;">
-                <td style="padding: 10px; border: 1px solid #FFA500; color: #000000;"><strong>Horario de
-                        contacto:</strong></td>
-                <td style="padding: 10px; border: 1px solid #FFA500; color: #000000;">{horario_contacto}</td>
-            </tr>
-        </table>
+        <h1 style="color: #FFD700; text-align: center; font-family: 'Orbitron', sans-serif;">
+            Nuevo formulario de contacto
+        </h1>
 
-        <h2 style="color: #00FFFF; margin-top: 30px; font-family: 'Orbitron', sans-serif;">Detalles de la cita</h2>
+        <div style="background-color: #a5aa9a; color: #000000; padding: 15px; border-radius: 5px; margin: 20px 0;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                    <td style="padding: 10px; border: 1px solid #333333;"><strong>Nombre:</strong></td>
+                    <td style="padding: 10px; border: 1px solid #333333;">{{name}}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px; border: 1px solid #333333;"><strong>Email:</strong></td>
+                    <td style="padding: 10px; border: 1px solid #333333;">{{email}}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px; border: 1px solid #333333;"><strong>Teléfono:</strong></td>
+                    <td style="padding: 10px; border: 1px solid #333333;">{{phone}}</td>
+                </tr>
+            </table>
+        </div>
 
-        <ul style="background-color: #a5aa9a; color: #000000; padding: 15px; border-radius: 5px;">
-            <li><strong>Fecha de cita:</strong> {appointmentDate}</li>
-            <li><strong>Hora de cita:</strong> {appointmentTime}</li>
-            <li><strong>Medio de cita:</strong> {appointmentMedium}</li>
-        </ul>
+        <div style="background-color: #a5aa9a; color: #000000; padding: 15px; border-radius: 5px; margin: 20px 0;">
+            <h2 style="color: #333333; margin-top: 0; font-family: 'Orbitron', sans-serif;">
+                Detalles de la cita
+            </h2>
+            <ul style="list-style: none; padding-left: 0; margin: 0;">
+                <li style="padding: 5px 0;"><strong>Fecha de cita:</strong> {{appointmentDate}}</li>
+                <li style="padding: 5px 0;"><strong>Hora de cita:</strong> {{appointmentTime}}</li>
+                <li style="padding: 5px 0;"><strong>Medio de cita:</strong> {{appointmentMedium}}</li>
+            </ul>
+        </div>
 
-        <p style="margin-top: 30px;"><strong>Observaciones:</strong> {observaciones}</p>
+        <div style="background-color: #a5aa9a; color: #000000; padding: 15px; border-radius: 5px; margin: 20px 0;">
+            <h2 style="color: #333333; margin-top: 0; font-family: 'Orbitron', sans-serif;">
+                Observaciones
+            </h2>
+            <p style="margin: 0;">{{observations}}</p>
+        </div>
 
         <footer style="margin-top: 30px; text-align: center; font-size: 0.8em; color: #a5aa9a;">
             Este es un email automático. Por favor, no responda a este mensaje.

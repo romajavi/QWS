@@ -119,22 +119,22 @@ app.post('/api/contact', async (req, res) => {
             resolve(__dirname, './templates/clientEmailTemplate.html'),
             'utf8'
         )
-            .replace(/{nombre}/g, name)
-            .replace(/{appointmentDate}/g, appointmentDate || 'No especificada')
-            .replace(/{appointmentTime}/g, appointmentTime || 'No especificada')
-            .replace(/{appointmentMedium}/g, appointmentMedium || 'No especificado');
+            .replace(/{{name}}/g, name)  
+            .replace(/{{appointmentDate}}/g, appointmentDate || 'No especificada')  
+            .replace(/{{appointmentTime}}/g, appointmentTime || 'No especificada')  
+            .replace(/{{appointmentMedium}}/g, appointmentMedium || 'No especificado');  
 
-        const adminTemplate = fs.readFileSync(
-            resolve(__dirname, './templates/adminEmailTemplate.html'),
-            'utf8'
-        )
-            .replace(/{nombre}/g, name)
-            .replace(/{email}/g, email)
-            .replace(/{telefono}/g, phone)
-            .replace(/{appointmentDate}/g, appointmentDate || 'No especificada')
-            .replace(/{appointmentTime}/g, appointmentTime || 'No especificada')
-            .replace(/{appointmentMedium}/g, appointmentMedium || 'No especificado')
-            .replace(/{observaciones}/g, observations);
+            const adminTemplate = fs.readFileSync(
+                resolve(__dirname, './templates/adminEmailTemplate.html'),
+                'utf8'
+            )
+                .replace(/{{name}}/g, name) 
+                .replace(/{{email}}/g, email)
+                .replace(/{{phone}}/g, phone) 
+                .replace(/{{appointmentDate}}/g, appointmentDate || 'No especificada')
+                .replace(/{{appointmentTime}}/g, appointmentTime || 'No especificada')
+                .replace(/{{appointmentMedium}}/g, appointmentMedium || 'No especificado')
+                .replace(/{{observations}}/g, observations);  
 
         console.log('Sending emails...');
         const emailResults = await Promise.all([
