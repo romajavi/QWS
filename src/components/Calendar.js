@@ -9,12 +9,12 @@ const CalendarWrapper = styled.div`
   background: ${props => props.theme.colors.background};
   border: 1px solid ${props => props.theme.colors.primary};
   border-radius: 8px;
-  padding: 1rem;
+  padding: 0.5rem;
   font-size: 0.8rem;
   width: 100%;
   max-width: 300px;
   margin: 0 auto;
-  margin-bottom: 2rem; // Agregar margen inferior
+  margin-bottom: 0.5rem; // Reducido significativamente
   display: flex;
   flex-direction: column;
 `;

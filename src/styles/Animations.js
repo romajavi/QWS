@@ -28,13 +28,21 @@ export const floatingStyles = (intensity = 1) => css`
 
 // Los otros estilos que ya convertimos a funciones
 export const glowButtonStyles = (intensity = 1) => css`
-  animation: ${glowPulse} 2s infinite;
+  position: relative;
+  overflow: hidden;
+  animation: ${gradientGlow} 4s ease-in-out infinite;
+  background-size: 200% auto;
   transition: all 0.3s ease;
   
   &:hover {
     animation: none;
-    box-shadow: 0 0 ${12 * intensity}px rgba(255, 215, 0, 0.8), 
-                0 0 ${50 * intensity}px rgba(255, 215, 0, 0.5);
+    background: linear-gradient(
+      90deg,
+      ${props => props.theme.colors.primary},
+      ${props => props.theme.colors.accent}
+    );
+    background-size: 200% auto;
+    box-shadow: 0 0 ${10 * intensity}px rgba(0, 255, 255, 0.4);
   }
 `;
 
@@ -46,5 +54,25 @@ export const subtleGlowStyles = (intensity = 0.5) => css`
     animation: none;
     box-shadow: 0 0 ${15 * intensity}px rgba(255, 215, 0, 0.6), 
                 0 0 ${30 * intensity}px rgba(255, 215, 0, 0.4);
+  }
+`;
+
+const gradientGlow = keyframes`
+  0% {
+    box-shadow: none;
+    background: ${props => props.theme.colors.primary};
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+    background: linear-gradient(
+      90deg,
+      ${props => props.theme.colors.primary},
+      ${props => props.theme.colors.accent},
+      ${props => props.theme.colors.primary}
+    );
+  }
+  100% {
+    box-shadow: none;
+    background: ${props => props.theme.colors.primary};
   }
 `;

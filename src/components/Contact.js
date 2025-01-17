@@ -14,7 +14,7 @@ import { init, send } from '@emailjs/browser';
 const SERVICE_ID = 'service_qosvqm2';
 const TEMPLATE_ID_CLIENT = 'template_dpkma1g';
 const TEMPLATE_ID_ADMIN = 'template_wqf1ilf';
-const PUBLIC_KEY = 'M0DzdRq9LJ30ljZpD'; 
+const PUBLIC_KEY = 'M0DzdRq9LJ30ljZpD';
 
 // Componentes que se cargarán de forma diferida
 const Calendar = lazy(() => import('../components/Calendar.js'));
@@ -38,11 +38,10 @@ const ContactWrapper = styled.div`
 const CheckboxTitle = styled.h3`
   color: ${props => props.theme.colors.accent};
   font-size: 1rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem; // Reducido
   text-align: center;
   text-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
 `;
-
 
 const FormContainer = styled.div`
   width: 100%; // Cambiado de 150% a 100%
@@ -88,14 +87,15 @@ const FormGrid = styled.div`
 const Section = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1rem; // Ajustamos el gap para mantener consistencia
+  gap: 0.5rem;
   width: 100%;
-  padding: 1rem;
-
+  height: 100%;
+  padding: 0.75rem;
+  
   h2 {
     color: ${props => props.theme.colors.primary};
     font-size: 1.5rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
     text-align: left;
     position: relative;
 
@@ -113,6 +113,9 @@ const Section = styled.div`
         transparent
       );
     }
+    &:last-child {
+    justify-content: flex-start; // Alinea al inicio
+  }
   }
 `;
 
@@ -136,17 +139,19 @@ const Input = styled.input`
 
 const TextArea = styled.textarea`
   width: 100%;
-  padding: 0.8rem;
+  padding: 0.6rem;
   background: rgba(30, 30, 30, 0.7);
   border: 1px solid ${props => props.$hasError ? '#ff3333' : `${props.theme.colors.secondaryBackground}40`};
   border-radius: 8px;
   color: ${props => props.theme.colors.text};
-  flex: 1; // Permitimos que crezca para llenar el espacio
-  min-height: 200px; // Altura mínima que coincide con el captcha
-  height: calc(100% - 2rem); // Restamos el espacio del título
+  
+  height: 120px; // Establecemos una altura fija más pequeña
+  min-height: 120px; // Establecemos la misma altura mínima
+  max-height: 330px; // Limitamos la altura máxima
+  
   resize: vertical;
   transition: all 0.3s ease;
-  margin-bottom: 0; // Eliminamos el margen inferior
+  margin-bottom: 0;
 
   &:focus {
     outline: none;
@@ -189,12 +194,17 @@ const Select = styled.select`
 
 const PreferenceGroup = styled.div`
   background: rgba(30, 30, 30, 0.5);
-  padding: 1.2rem;
+  padding: 0.5rem; // Reducido
   border-radius: 8px;
   border: ${props => props.theme.colors.secondaryBackground};
-  margin-bottom: ${baseSpacing.marginBottom};
-  width: 100%; // Aseguramos ancho completo
-  box-sizing: border-box; // Añadimos box-sizing
+  margin-bottom: 0.5rem; // Reducido
+  width: 100%;
+  box-sizing: border-box;
+
+  /* Ajuste específico para el selector de hora */
+  &:nth-child(2) {
+    margin-bottom: 0.5rem;
+  }
 
   @media (max-width: 768px) {
     padding: 1rem;
@@ -206,26 +216,23 @@ const PreferencesContainer = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: ${baseSpacing.containerGap}; // Usamos gap en lugar de margin para un espaciado más consistente
-
-  &:last-child {
-    margin-bottom: 0;
-  }
+  gap: 0.75rem;
+  height: calc(100% - 2rem); // Resta el espacio del título
+  justify-content: space-between; // Distribuye el espacio entre los elementos
 `;
 
 const RadioContainer = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
+  justify-content: center;
   width: 100%;
+  gap: 0.5rem;
+  padding: 0.25rem 0; // Reducido el padding vertical
 
-  /* Espaciado consistente para móvil */
-  gap: 1rem;
-
-  @media (min-width: 768px) {
-    flex-direction: row;
-    justify-content: center;
-    gap: 1rem;
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 0.5rem;
   }
 `;
 

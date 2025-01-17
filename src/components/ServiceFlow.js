@@ -9,7 +9,7 @@ const ServiceFlowContainer = styled.div`
   position: relative;
   min-height: calc(100vh - 80px);
   width: 100%;
-  padding-top: 80px;
+  padding-top: 40px;
   scroll-margin-top: 80px;
   background: ${({ theme }) => theme.colors.background};
   display: flex;
@@ -201,14 +201,14 @@ const ServiceFlow = () => {
     });
 
     const handleScrollToServices = useCallback(() => {
-        setTimeout(() => { // Añadimos un pequeño delay
+        setTimeout(() => { // delay
             const servicesElement = document.getElementById('services');
             if (servicesElement) {
                 servicesElement.scrollIntoView({
                     behavior: 'smooth',
                     block: 'start'
                 });
-                // Alternativa por si scrollIntoView no funciona
+                // por si scrollIntoView no funciona
                 window.scrollTo({
                     top: servicesElement.offsetTop,
                     behavior: 'smooth'

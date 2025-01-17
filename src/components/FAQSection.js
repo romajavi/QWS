@@ -15,7 +15,7 @@ const FAQContainer = styled.section`
   margin: 0 auto;
   max-width: 800px;
   scroll-margin-top: 80px;
-  padding-bottom: 100px; 
+  // padding-bottom: 100px; 
   position: relative; 
 `;
 

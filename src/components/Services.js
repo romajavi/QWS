@@ -40,7 +40,7 @@ const ServicesContainer = styled.div`
 const ServicesSection = styled.div`
   min-height: calc(100vh - 80px);
   width: 100%;
-  padding-top: 80px;
+//   padding-top: 80px;
   scroll-margin-top: 80px;
   position: relative;
   overflow: hidden; // Prevenimos scroll horizontal
