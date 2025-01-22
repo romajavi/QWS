@@ -22,26 +22,27 @@ const TextWrapper = styled(motion.p)`
    rgba(0, 0, 0, 0.85) 0%,
    rgba(0, 0, 0, 0.95) 100%
  );
- padding: 2rem 3rem;
+ padding: 2rem 1rem;
  border-radius: 12px;
- width: calc(100% - 90px);
+ width: calc(100% - 30px);
  height: 100%;
  display: flex;
  align-items: center;
  justify-content: center;
  border: 1px solid rgba(255, 255, 255, 0.1);
  backdrop-filter: blur(8px);
- letter-spacing: 0.5px;
+ letter-spacing: 0.3px;
  font-family: ${({ theme }) => theme.fonts.mono};
  font-size: 2.0rem;
  text-align: center; 
  
  @media (max-width: 768px) {
-   margin: 0 10px;
+   margin: 10px 10px;
    padding: 1rem;
    width: calc(100% - 30px);
-   letter-spacing: 0.3px;
-   font-size: 1.1rem;
+   letter-spacing: 0.2px;
+   font-size: 1.2rem;
+   
  }
 `;
 

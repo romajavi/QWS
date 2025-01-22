@@ -42,7 +42,7 @@ const StaticTitle = styled.h1`
 const HomeWrapper = styled.div`
   position: relative;
   width: 100%;
-  min-height: calc(100vh - 120px);
+  min-height: calc(80vh - 120px);
   height: auto;
   display: flex;
   align-items: center;

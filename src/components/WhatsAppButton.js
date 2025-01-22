@@ -25,8 +25,8 @@ const WhatsAppContainer = styled.div`
   }
 
     @media (max-width: 768px) {
-  bottom: 25px;
-  right: 30px;
+  bottom: 50px;
+  right: 40px;
 `;
 
 const WhatsAppLink = styled.a`
