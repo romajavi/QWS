@@ -12,7 +12,7 @@ const CalendarWrapper = styled.div`
   padding: 0.5rem;
   font-size: 0.8rem;
   width: 100%;
-  max-width: 300px;
+  max-width: 230px;
   margin: 0 auto;
   margin-bottom: 0.5rem; // Reducido significativamente
   display: flex;

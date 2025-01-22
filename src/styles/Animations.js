@@ -16,14 +16,11 @@ export const floatAnimation = keyframes`
 
 // Convertir a función para mantener consistencia
 export const floatingStyles = (intensity = 1) => css`
-  animation: ${floatAnimation} 2s infinite ease-in-out;
+  // Reducir la duración de 2s a 1s
+  animation: ${floatAnimation} 1s infinite ease-in-out;
   animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transform: translateY(0);
-  transition: all 0.3s ease;
-  
-  &:hover {
-    transform: translateY(${-3 * intensity}px);
-  }
+  // Reducir la duración de la transición de 0.3s a 0.2s
+  transition: all 0.2s ease;
 `;
 
 // Los otros estilos que ya convertimos a funciones
@@ -32,7 +29,7 @@ export const glowButtonStyles = (intensity = 1) => css`
   overflow: hidden;
   animation: ${gradientGlow} 4s ease-in-out infinite;
   background-size: 200% auto;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   
   &:hover {
     animation: none;

@@ -6,7 +6,6 @@ import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { useTranslation } from 'react-i18next';
 import Button from './Button.js';
 
-// Estilos
 const Card = styled(motion.div)`
   background: ${props => props.theme.colors.cardBackground};
   border: 1px solid ${props => props.theme.colors.secondaryBackground};
@@ -20,8 +19,8 @@ const Card = styled(motion.div)`
   position: relative;
   overflow: visible;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s ease;
-  margin-bottom: 2rem; // Cambiado de -10rem a 2rem
+  transition: all 0.2s ease;
+  margin-bottom: 2rem; 
 
   @media (max-width: 768px) {
     width: 100%; 
@@ -50,16 +49,6 @@ const ServiceName = styled.h3`
   box-shadow: ${props => props.theme.effects.glow};
 `;
 
-
-const Price = styled.p`
-  font-size: 0.9rem;
-  color: ${props => props.theme.colors.secondaryBackground};
-  margin: 1.2rem 0;
-  margin-bottom: 1rem;
-  font-weight: bold;
-`;
-
-
 const FeatureList = styled.ul`
   list-style-type: none;
   padding: 0 2rem;
@@ -73,8 +62,8 @@ const FeatureList = styled.ul`
   justify-content: flex-start;
 
   @media (max-width: 768px) {
-    width: 100%; // Ajustamos el ancho en móvil
-    padding: 0 1rem; // Reducimos el padding
+    width: 100%;
+    padding: 0 1rem;
   }
 `;
 
@@ -129,7 +118,6 @@ const StyledCard = styled(Card)`
   }
 `;
 
-
 // Componente Feature
 const Feature = ({ feature, description }) => {
   const [showDescription, setShowDescription] = useState(false);
@@ -160,17 +148,25 @@ const Feature = ({ feature, description }) => {
 };
 
 // Componente ServiceCard
-const ServiceCard = ({ serviceKey, onContactClick }) => {
+const ServiceCard = ({ serviceKey }) => {
   const { t } = useTranslation();
 
+  const handleMoreInfo = () => {
+    // Scroll suave hacia la sección de contacto
+    const contactSection = document.getElementById('contact');
+    if (contactSection) {
+      contactSection.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  };
+
   return (
-    <StyledCard> {/* Usamos StyledCard aquí en lugar de Card */}
+    <StyledCard>
       <ServiceName>
         {t(`services.categories.${serviceKey}.name`)}
       </ServiceName>
-      {/* <Price>
-        {t(`services.categories.${serviceKey}.price`)}
-      </Price> */}
       <FeatureList>
         {t(`services.categories.${serviceKey}.features`, { returnObjects: true })
           .map((feature, index) => (
@@ -185,7 +181,7 @@ const ServiceCard = ({ serviceKey, onContactClick }) => {
         variant="primary"
         size="small"
         glow={true}
-        onClick={() => onContactClick(serviceKey)}
+        onClick={handleMoreInfo}
         glowIntensity={0.5}
       >
         {t('services.moreInfo')}

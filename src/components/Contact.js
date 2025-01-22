@@ -44,24 +44,28 @@ const CheckboxTitle = styled.h3`
 `;
 
 const FormContainer = styled.div`
-  width: 100%; // Cambiado de 150% a 100%
+  width: 100%;
   max-width: 1300px;
-  margin: 1.5rem auto; // Añadido auto para centrar
+  margin: 1.5rem auto;
   padding: 2rem;
   background: ${props => props.theme.colors.cardBackground};
   backdrop-filter: blur(10px);
   border-radius: 20px;
   position: relative;
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-  border: 1px solid ${props => props.hasError ? '#ff3333' : props.theme.colors.secondaryBackground}40;
+  border: 1px solid ${props => props.$hasError ? '#ff3333' : props.theme.colors.secondaryBackground}40;
   min-width: min(90%, 1200px);
   box-sizing: border-box;
+  opacity: ${props => props.$isSubmitting || props.$showPopup ? 0.6 : 1};
+  pointer-events: ${props => props.$isSubmitting || props.$showPopup ? 'none' : 'all'};
+  filter: ${props => props.$isSubmitting || props.$showPopup ? 'blur(2px)' : 'none'};
+  transition: all 0.3s ease;
   
   @media (max-width: 768px) {
     width: 95%;
     padding: 1rem;
     margin: 1rem auto;
-    min-width: unset; // Removemos el min-width en móvil
+    min-width: unset;
   }
 `;
 
@@ -82,6 +86,20 @@ const FormGrid = styled.div`
     width: 100%;
     max-width: 100%;
   }
+`;
+
+const SpinnerOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  pointer-events: none;
 `;
 
 const Section = styled.div`
@@ -406,7 +424,7 @@ const ContentFadeIn = styled.div`
 
 
 
-const Contact = () => {  // Inicio del componente
+const Contact = () => {
   const { t } = useTranslation();
   const controls = useAnimation();
   const [ref, inView] = useInView({
@@ -414,7 +432,7 @@ const Contact = () => {  // Inicio del componente
     triggerOnce: true
   });
 
-  // Estados
+  // Estados del formulario
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -434,157 +452,42 @@ const Contact = () => {  // Inicio del componente
   const [selectedDate, setSelectedDate] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
-  const [isAppointmentLoading, setIsAppointmentLoading] = useState(true);
-  const [formStatus, setFormStatus] = useState({
-    isSubmitting: false,
-    isSuccess: false,
-    error: null
-  });
+  const [isAppointmentLoading, setIsAppointmentLoading] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const formRef = useRef(null);
 
-  // Efectos
   useEffect(() => {
-    init(PUBLIC_KEY); // key emils
-    if (inView) {
-      const sequence = async () => {
-        await controls.start("titleVisible");
-        await new Promise(resolve => setTimeout(resolve, 600));
-        await controls.start("contentVisible");
-      };
-      sequence();
-    }
-  }, [inView, controls]);
-
-  useEffect(() => {
-    const contentTimer = setTimeout(() => {
-      setIsAppointmentLoading(false);
-    }, 1000);
-
-    return () => {
-      clearTimeout(contentTimer);
-    };
+    init(PUBLIC_KEY);
   }, []);
 
-  useEffect(() => {
-    if (showPopup) {
-      // Guarda la posición actual del scroll
-      const scrollPosition = window.scrollY;
-      // Centra el popup en el viewport actual
-      const viewportHeight = window.innerHeight;
-      const popupElement = document.querySelector('.popup-overlay');
-      if (popupElement) {
-        const popupHeight = popupElement.offsetHeight;
-        const newTop = scrollPosition + (viewportHeight - popupHeight) / 2;
-        popupElement.style.top = `${newTop}px`;
-      }
-    }
-  }, [showPopup]);
-
-  // Funciones auxiliares
-  const handleClosePopup = () => {
-    setShowPopup(false);
-
-    if (submitStatus.success) {
-      handleReset(); // Solo reseteamos el formulario después de cerrar el popup exitoso
-      const homeSection = document.getElementById('home');
-      if (homeSection) {
-        setTimeout(() => {
-          homeSection.scrollIntoView({ behavior: 'smooth' });
-        }, 100);
-      }
-    }
-  };
-
+  // Función de validación del formulario
   const validateForm = () => {
-    console.log('Starting form validation');
     const newErrors = {};
 
     if (!formData.name.trim()) newErrors.name = true;
     if (!formData.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) newErrors.email = true;
     if (!formData.phone.trim()) newErrors.phone = true;
     if (!formData.observations || formData.observations.trim() === '') newErrors.observations = true;
+    if (!formData.appointmentDate) newErrors.appointmentDate = true;
+    if (!formData.appointmentMedium) newErrors.appointmentMedium = true;
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const currentPosition = window.scrollY;
-
-    if (!validateForm()) {
-      console.log('Form validation failed');
-      return;
-    }
-
-    setIsLoading(true);
-
-    try {
-      // Enviar email al cliente
-      await send(
-        SERVICE_ID,
-        TEMPLATE_ID_CLIENT,
-        {
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          appointmentDate: formData.appointmentDate,
-          appointmentTime: formData.appointmentTime,
-          appointmentMedium: formData.appointmentMedium
-        }
-      );
-
-      // Enviar email al admin
-      await send(
-        SERVICE_ID,
-        TEMPLATE_ID_ADMIN,
-        {
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          appointmentDate: formData.appointmentDate,
-          appointmentTime: formData.appointmentTime,
-          appointmentMedium: formData.appointmentMedium,
-          observations: formData.observations
-        }
-      );
-
-      // Actualizar estado de éxito
-      setSubmitStatus({
-        success: true,
-        titleKey: 'contact.form.status.success.title',
-        message: t('contact.form.status.success.message')
-      });
-      setShowPopup(true);
-
-      window.scrollTo({
-        top: currentPosition,
-        behavior: 'instant'
-      });
-
-    } catch (error) {
-      console.error('================== ERROR ==================');
-      console.error('Error type:', error.name);
-      console.error('Error message:', error.message);
-      console.error('Error stack:', error.stack);
-
-      setSubmitStatus({
-        success: false,
-        titleKey: 'contact.form.status.error.title',
-        message: t('contact.form.status.error.message')
-      });
-      setShowPopup(true);
-
-      window.scrollTo({
-        top: currentPosition,
-        behavior: 'instant'
-      });
-    } finally {
-      setIsLoading(false);
+  // Función para manejar el cierre del popup
+  const handleClosePopup = () => {
+    setShowPopup(false);
+    if (submitStatus.success) {
+      handleReset();
+      // Dar tiempo para que se vea la animación de cierre
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 500);
     }
   };
 
-
+  // Función para resetear el formulario
   const handleReset = () => {
     setFormData({
       name: '',
@@ -595,19 +498,110 @@ const Contact = () => {  // Inicio del componente
       appointmentMedium: '',
       observations: ''
     });
-
     setSelectedDate(null);
     setErrors({});
-    setSubmitStatus({
-      success: false,
-      titleKey: '',
-      message: ''
-    });
-    setShowPopup(false);
+  };
+
+  // Efecto para manejar el estado de carga del calendario
+  useEffect(() => {
+    setIsAppointmentLoading(true);
+    // Simular un pequeño tiempo de carga para la inicialización del calendario
+    const timer = setTimeout(() => {
+      setIsAppointmentLoading(false);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Efecto para la animación inicial
+  useEffect(() => {
+    if (inView) {
+      setIsVisible(true);
+      const sequence = async () => {
+        await controls.start("titleVisible");
+        await new Promise(resolve => setTimeout(resolve, 300));
+        await controls.start("contentVisible");
+      };
+      sequence();
+    }
+  }, [inView, controls]);
+
+  // Manejo del envío del formulario
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const templateParamsClient = {
+        to_name: formData.name,
+        user_email: formData.email,
+        user_name: formData.name,
+        phone: formData.phone,
+        appointment_date: formData.appointmentDate,
+        appointment_time: formData.appointmentTime,
+        meeting_medium: formData.appointmentMedium
+      };
+
+      const templateParamsAdmin = {
+        from_name: formData.name,
+        user_email: formData.email,
+        phone: formData.phone,
+        appointment_date: formData.appointmentDate,
+        appointment_time: formData.appointmentTime,
+        meeting_medium: formData.appointmentMedium,
+        message: formData.observations
+      };
+
+      // Enviar email al cliente
+      await send(
+        SERVICE_ID,
+        TEMPLATE_ID_CLIENT,
+        templateParamsClient,
+        PUBLIC_KEY
+      );
+
+      // Enviar email al admin
+      await send(
+        SERVICE_ID,
+        TEMPLATE_ID_ADMIN,
+        templateParamsAdmin,
+        PUBLIC_KEY
+      );
+
+      setSubmitStatus({
+        success: true,
+        titleKey: 'contact.form.status.success.title',
+        message: t('contact.form.status.success.message')
+      });
+      setShowPopup(true);
+
+      // Esperar antes de redireccionar
+      if (submitStatus.success) {
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 3000);
+      }
+
+    } catch (error) {
+      console.error('Error al enviar el formulario:', error);
+      setSubmitStatus({
+        success: false,
+        titleKey: 'contact.form.status.error.title',
+        message: t('contact.form.status.error.message')
+      });
+      setShowPopup(true);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <PageContainer isLoading={isLoading}>
+    <PageContainer>
       <ContactWrapper id="contact" ref={ref}>
         <Suspense fallback={<LoadingSpinner />}>
           {/* Animación del título */}
@@ -639,7 +633,11 @@ const Contact = () => {  // Inicio del componente
               }
             }}
           >
-            <FormContainer $hasError={Object.keys(errors).length > 0}>
+            <FormContainer
+              $hasError={Object.keys(errors).length > 0}
+              $isSubmitting={isLoading}
+              $showPopup={showPopup}
+            >
               <form onSubmit={handleSubmit} ref={formRef}>
                 <FormGrid>
                   {/* Sección de información personal */}
@@ -819,6 +817,7 @@ const Contact = () => {  // Inicio del componente
                     variant="secondary"
                     size="small"
                     onClick={handleReset}
+                    disabled={isLoading}
                   >
                     {t('contact.form.buttons.clear')}
                   </ClearButton>
@@ -826,6 +825,7 @@ const Contact = () => {  // Inicio del componente
                     variant="primary"
                     size="small"
                     type="submit"
+                    disabled={isLoading}
                   >
                     {t('contact.form.buttons.submit')}
                   </SubmitButton>
@@ -836,7 +836,13 @@ const Contact = () => {  // Inicio del componente
         </Suspense>
       </ContactWrapper>
 
-      {/* Popup para mensajes de estado */}
+      {/* Superposiciones: Spinner y Popup */}
+      {isLoading && (
+        <SpinnerOverlay>
+          <LoadingSpinner />
+        </SpinnerOverlay>
+      )}
+
       {showPopup && (
         <Suspense fallback={null}>
           <StandardPopup

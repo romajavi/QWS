@@ -42,7 +42,7 @@ const useScrollAnimation = () => {
                 const progress = Math.min(1, (window.innerHeight - rect.top) / window.innerHeight);
                 servicesSection.style.transform = `translateY(${20 * (1 - progress)}px)`;
                 servicesSection.style.opacity = progress;
-                servicesSection.style.transition = 'transform 0.5s ease-out, opacity 0.5s ease-out';
+                servicesSection.style.transition = 'transform 0.3s ease-out, opacity 0.3s ease-out';
             }
         }
 
@@ -56,9 +56,11 @@ const useScrollAnimation = () => {
                 const progress = Math.min(1, (window.innerHeight - rect.top) / window.innerHeight);
                 contactSection.style.opacity = progress;
                 contactSection.style.transform = `translateY(${15 * (1 - progress)}px)`;
-                contactSection.style.transition = 'transform 0.5s ease-out, opacity 0.5s ease-out';
+                // Reducir la duración de 0.5s a 0.3s
+                contactSection.style.transition = 'transform 0.3s ease-out, opacity 0.3s ease-out';
             }
         }
+
     }, []);
 
     useEffect(() => {

@@ -31,8 +31,8 @@ const StyledButton = styled.button.withConfig({
   };
   
   min-width: ${({ $size }) =>
-    $size === 'small' ? '100px' :
-      $size === 'medium' ? '150px' :
+    $size === 'small' ? '80px' :
+      $size === 'medium' ? '100px' :
         '200px'
   };
   

@@ -35,6 +35,8 @@ const ContentWrapper = styled(motion.div)`
   min-height: 550px;
   position: relative;
   overflow: hidden;
+  border-radius: 24px;
+
 
   @media (max-width: 768px) {
     width: 95%;
@@ -168,7 +170,7 @@ const SecondaryContent = styled(motion.div)`
 const buttonStyle = {
 
   background: 'linear-gradient(45deg, #52c1b9, #FFD700)',
-  minWidth: '250px',
+  minWidth: '150px',
   '@media (max-width: 768px)': {
     minWidth: '150px'
   }
@@ -256,7 +258,7 @@ const Home = () => {
                     transition={{ duration: 0.4, delay: 0.2 }}
                   >
                     <Button
-                      size="large"
+                      size="medium"
                       glow={true}
                       glowIntensity={1.2}
                       variant="primary"
