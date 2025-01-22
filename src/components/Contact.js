@@ -487,8 +487,6 @@ const Contact = () => {
     if (!formData.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) newErrors.email = true;
     if (!formData.phone.trim()) newErrors.phone = true;
     if (!formData.observations || formData.observations.trim() === '') newErrors.observations = true;
-    if (!formData.appointmentDate) newErrors.appointmentDate = true;
-    if (!formData.appointmentMedium) newErrors.appointmentMedium = true;
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -557,23 +555,24 @@ const Contact = () => {
 
     try {
       const templateParamsClient = {
-        to_name: formData.name,
+        name: formData.name,
         user_email: formData.email,
         user_name: formData.name,
         phone: formData.phone,
-        appointment_date: formData.appointmentDate,
-        appointment_time: formData.appointmentTime,
-        meeting_medium: formData.appointmentMedium
+        appointmentDate: formData.appointmentDate || 'No especificada',
+        appointmentTime: formData.appointmentTime || 'No especificada',
+        appointmentMedium: formData.appointmentMedium || 'No especificado',
+        observations: formData.observations
       };
 
       const templateParamsAdmin = {
-        from_name: formData.name,
-        user_email: formData.email,
+        name: formData.name,
+        email: formData.email,
         phone: formData.phone,
-        appointment_date: formData.appointmentDate,
-        appointment_time: formData.appointmentTime,
-        meeting_medium: formData.appointmentMedium,
-        message: formData.observations
+        appointmentDate: formData.appointmentDate || 'No especificada',
+        appointmentTime: formData.appointmentTime || 'No especificada',
+        appointmentMedium: formData.appointmentMedium || 'No especificado',
+        observations: formData.observations
       };
 
       // Enviar email al cliente

@@ -9,11 +9,11 @@
     "home": {
         "title": "Desarrollo Web y Soluciones Digitales",
         "subtitle": {
-            "1": "🎯 Desarrollo de sitios web modernos y accesibles para pequeñas y medianas empresas",
-            "2": "💻 Desarrollo y diseño de Landing Pages atractivas y optimizadas",
-            "3": "⚡ Mantenimiento y actualizaciones de sitios web en WordPress",
-            "4": "📱 Diseño responsivo para una experiencia perfecta en todos los dispositivos",
-            "5": "🔍 Implementación de SEO para mejorar tu visibilidad en línea"
+            "1": "Desarrollo de sitios web modernos y accesibles para pequeñas y medianas empresas 🎯",
+            "2": "Desarrollo y diseño de Landing Pages atractivas y optimizadas 💻",
+            "3": "Mantenimiento y actualizaciones de sitios web en WordPress ⚡", 
+            "4": "Diseño responsivo para una experiencia perfecta en todos los dispositivos 📱",
+            "5": "Implementación de SEO para mejorar tu visibilidad en línea 🔍"
         },
         "exploreButton": "Descubre más"
     },

@@ -77,7 +77,7 @@ const ContentWrapper = styled(motion.div)`
   @media (max-width: 768px) {
     width: 95%;
     padding: 3rem 1.5rem;
-    min-height: 500px;
+    min-height: 400px;
   }
 `;
 
@@ -93,30 +93,23 @@ const BorderContainer = styled.div`
 `;
 
 const InnerContent = styled.div`
-  position: relative;
-  width: 100%;
-  margin-top: -50px;
-  min-height: 400px;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  contain: layout style;
-
-  @media (max-width: 768px) {
-    min-height: 350px;
-  }
+ position: relative;
+ width: 100%;
+ height: 500px;
+ display: flex;
+ flex-direction: column;
+ z-index: 1;
 `;
 
-const TitleContainer = styled.div`
-  position: absolute;
-  width: 100%;
-  text-align: center;
-  contain: layout style;
 
-  @media (max-width: 768px) {
-    top: 1rem;
-  }
+const TitleContainer = styled.div`
+ width: 100%;
+ height: 80px;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ text-align: center;
+ margin-top: 20px;
 `;
 
 const ShimmerContainer = styled.div`
@@ -174,48 +167,28 @@ const Title = styled.h1`
 `;
 
 const SecondaryContent = styled(motion.div)`
-  position: absolute;
-  top: 45%;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 3rem;
-  padding: 0 2rem;
-  contain: layout style;
-  will-change: opacity, transform;
+ flex: 1;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ justify-content: space-between;
+ padding: 20px;
 
-  @media (max-width: 768px) {
-    top: 40%;
-    padding: 0 1rem;
-    gap: 2rem;
-  }
+ & > div:first-child {
+   flex: 1;
+   min-height: 200px;
+   display: flex;
+   align-items: center;
+ }
 
-  & > div:first-child {
-    margin-bottom: 1rem;
-    
-    @media (max-width: 768px) {
-      font-size: 1rem;
-      text-align: center;
-      margin-bottom: 0.5rem;
-    }
-  }
-
-  & > div:last-child {
-    margin-top: 1rem;
-    
-    @media (max-width: 768px) {
-      margin-top: 0.5rem;
-      
-      button {
-        padding: 0.75rem 1.5rem;
-        font-size: 1rem;
-        min-width: 200px;
-      }
-    }
-  }
+ & > div:last-child {
+   height: 60px;
+   display: flex;
+   align-items: center;
+ }
 `;
+
+
 
 const buttonStyle = {
   background: 'linear-gradient(45deg, #52c1b9, #FFD700)',

@@ -84,6 +84,7 @@ const theme = {
     fonts: {
         main: "'Orbitron', sans-serif",
         secondary: "'Roboto', sans-serif",
+        mono: "'Share Tech Mono', 'Courier New', monospace",
     },
     effects: {
         glow: '0 0 5px rgba(0, 255, 255, 0.5)',

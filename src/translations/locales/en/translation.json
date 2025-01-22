@@ -9,11 +9,11 @@
     "home": {
         "title": "Web Development and Digital Solutions",
         "subtitle": {
-            "1": "🎯 Development of modern and accessible websites for small and medium businesses",
-            "2": "💻 Development and design of attractive and optimized landing pages",
-            "3": "⚡ WordPress website maintenance and updates",
-            "4": "📱 Responsive design for a perfect experience on all devices",
-            "5": "🔍 SEO implementation to improve your online visibility"
+            "1": "Development of modern and accessible websites for small and medium businesses 🎯",
+            "2": "Development and design of attractive and optimized landing pages 💻",
+            "3": "WordPress website maintenance and updates ⚡",
+            "4": "Responsive design for a perfect experience on all devices 📱",
+            "5": "SEO implementation to improve your online visibility 🔍"
         },
         "exploreButton": "Discover more"
     },
