@@ -41,8 +41,8 @@ const TextWrapper = styled(motion.p)`
   text-align: center;
   
   @media (max-width: 768px) {
-    margin: 0 20px;
-    width: calc(100% - 40px);
+    margin: 0 10px;
+    width: calc(100% - 10px);
     padding: 1.5rem;
     min-height: 100px;
     font-size: 1.2rem;

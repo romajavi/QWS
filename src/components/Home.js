@@ -60,13 +60,14 @@ const HomeWrapper = styled.div`
 `;
 
 const ContentWrapper = styled(motion.div)`
+  margin-top: 25px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 90%;
   max-width: 1200px;
-  height: 720px; // 20% más alto que 600px
+  height: 700px; 
   position: relative;
   overflow: hidden;
   border-radius: 24px;
@@ -74,7 +75,7 @@ const ContentWrapper = styled(motion.div)`
 
   @media (max-width: 768px) {
     width: 95%;
-    height: 600px; // 20% más alto que 500px
+    height: 600px; 
     padding: 1rem;
   }
 `;
