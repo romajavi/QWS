@@ -66,20 +66,19 @@ const ContentWrapper = styled(motion.div)`
   justify-content: center;
   width: 90%;
   max-width: 1200px;
-  min-height: 550px;
-  height: auto;
+  height: 720px; // 20% más alto que 600px
   position: relative;
   overflow: hidden;
   border-radius: 24px;
   will-change: opacity, transform;
-  contain: layout style paint;
 
   @media (max-width: 768px) {
     width: 95%;
-    padding: 3rem 1.5rem;
-    min-height: 400px;
+    height: 600px; // 20% más alto que 500px
+    padding: 1rem;
   }
 `;
+
 
 const BorderContainer = styled.div`
   position: absolute;
@@ -93,14 +92,15 @@ const BorderContainer = styled.div`
 `;
 
 const InnerContent = styled.div`
- position: relative;
- width: 100%;
- height: 500px;
- display: flex;
- flex-direction: column;
- z-index: 1;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 20px;
+  padding: 20px;
+  z-index: 1;
 `;
-
 
 const TitleContainer = styled.div`
  width: 100%;
@@ -167,28 +167,25 @@ const Title = styled.h1`
 `;
 
 const SecondaryContent = styled(motion.div)`
- flex: 1;
- display: flex;
- flex-direction: column;
- align-items: center;
- justify-content: space-between;
- padding: 20px;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  gap: 20px;
+  width: 100%;
+  height: 100%;
 
- & > div:first-child {
-   flex: 1;
-   min-height: 200px;
-   display: flex;
-   align-items: center;
- }
+  & > div:first-child {
+    overflow: visible; // Elimina el scroll
+    display: flex;
+    align-items: center;
+  }
 
- & > div:last-child {
-   height: 60px;
-   display: flex;
-   align-items: center;
- }
+  & > div:last-child {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 `;
-
-
 
 const buttonStyle = {
   background: 'linear-gradient(45deg, #52c1b9, #FFD700)',

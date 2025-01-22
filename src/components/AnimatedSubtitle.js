@@ -4,48 +4,50 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 
 const SubtitleContainer = styled(motion.div)`
- font-size: clamp(1.1rem, 2.2vw, 1.6rem);
- width: 100%;
- height: 220px;
- overflow-y: auto;
- display: flex;
- align-items: center;
- justify-content: center;
- overflow: hidden;
+  font-size: clamp(1.1rem, 2.2vw, 1.6rem);
+  width: 100%;
+  height: auto;
+  min-height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 0;
+  
+  @media (max-width: 768px) {
+    min-height: 180px;
+    padding: 30px 0;
+  }
 `;
-
 
 const TextWrapper = styled(motion.p)`
- margin: 0 80px;
- background: linear-gradient(
-   135deg,
-   rgba(0, 0, 0, 0.85) 0%,
-   rgba(0, 0, 0, 0.95) 100%
- );
- padding: 2rem 1rem;
- border-radius: 12px;
- width: calc(100% - 30px);
- height: 100%;
- display: flex;
- align-items: center;
- justify-content: center;
- border: 1px solid rgba(255, 255, 255, 0.1);
- backdrop-filter: blur(8px);
- letter-spacing: 0.3px;
- font-family: ${({ theme }) => theme.fonts.mono};
- font-size: 2.0rem;
- text-align: center; 
- 
- @media (max-width: 768px) {
-   margin: 10px 10px;
-   padding: 1rem;
-   width: calc(100% - 30px);
-   letter-spacing: 0.2px;
-   font-size: 1.2rem;
-   
- }
+  margin: 0 80px;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.85) 0%,
+    rgba(0, 0, 0, 0.95) 100%
+  );
+  padding: 2rem;
+  border-radius: 12px;
+  width: calc(100% - 160px);
+  min-height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  letter-spacing: 0.3px;
+  font-family: ${({ theme }) => theme.fonts.mono};
+  font-size: 2.0rem;
+  text-align: center;
+  
+  @media (max-width: 768px) {
+    margin: 0 20px;
+    width: calc(100% - 40px);
+    padding: 1.5rem;
+    min-height: 100px;
+    font-size: 1.2rem;
+  }
 `;
-
 const AnimatedSubtitle = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const { t } = useTranslation();
