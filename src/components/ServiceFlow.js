@@ -21,11 +21,13 @@ const GradientOverlay = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(
-    circle at 50% 0%,
-    ${({ theme }) => `${theme.colors.accent}25`} 0%,
-    ${({ theme }) => `${theme.colors.primary}15`} 40%,
-    transparent 80%
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.85) 20%,
+    rgba(0, 0, 0, 0.6) 40%,
+    rgba(50, 50, 0, 0.36) 100%,
+    rgba(50, 50, 0, 0.36) 100%
   );
   pointer-events: none;
   z-index: 0;

@@ -29,11 +29,30 @@ const ContactWrapper = styled.div`
   min-height: calc(100vh - 80px);
   width: 100%;
   padding-top: 80px;
-  padding-bottom: 5rem; // Añadimos padding inferior
+  padding-bottom: 5rem;
   scroll-margin-top: 80px;
-  margin-bottom: 3rem; // Añadimos margen inferior
+  margin-bottom: 3rem;
+  position: relative;
+  z-index: 1; // Añadimos esto para asegurar que esté por encima del gradiente
 `;
 
+const GradientOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.85) 20%,
+    rgba(0, 0, 0, 0.6) 40%,
+    rgba(0, 50, 50, 0.36) 100%,
+    rgba(0, 50, 50, 0.36) 100%
+  );
+  pointer-events: none;
+  z-index: -1;
+`;
 
 const CheckboxTitle = styled.h3`
   color: ${props => props.theme.colors.accent};
@@ -603,6 +622,7 @@ const Contact = () => {
   return (
     <PageContainer>
       <ContactWrapper id="contact" ref={ref}>
+        <GradientOverlay /> {/* Añadimos esto aquí */}
         <Suspense fallback={<LoadingSpinner />}>
           {/* Animación del título */}
           <motion.div
@@ -615,6 +635,8 @@ const Contact = () => {
                 transition: { duration: 0.6, ease: "easeOut" }
               }
             }}
+            style={{ position: 'relative', zIndex: 1 }}
+
           >
             <TitlePages text={t('contact.title')} />
           </motion.div>
@@ -632,6 +654,7 @@ const Contact = () => {
                 }
               }
             }}
+            style={{ position: 'relative', zIndex: 1 }}
           >
             <FormContainer
               $hasError={Object.keys(errors).length > 0}
@@ -861,6 +884,7 @@ const Contact = () => {
           </StandardPopup>
         </Suspense>
       )}
+      <GradientOverlay />
     </PageContainer>
   );
 };

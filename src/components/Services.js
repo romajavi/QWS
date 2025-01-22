@@ -39,7 +39,27 @@ const ServicesSection = styled.div`
   scroll-margin-top: 80px;
   position: relative;
   overflow: hidden;
+
 `;
+
+const InvertedGradientOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.85) 20%,
+    rgba(0, 0, 0, 0.6) 40%,
+    rgba(30, 30, 0, 0.2) 80%,
+    rgba(50, 50, 0, 0.36) 100%
+  );
+  pointer-events: none;
+  z-index: 0;
+`;
+
 
 const Services = () => {
     const { t } = useTranslation();
@@ -64,6 +84,7 @@ const Services = () => {
 
     return (
         <ServicesSection id="services" ref={containerRef}>
+            <InvertedGradientOverlay />
             <PageContainer>
                 <ServicesWrapper>
                     <motion.div
