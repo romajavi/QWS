@@ -15,7 +15,7 @@ const pulse = keyframes`
 
 const WhatsAppContainer = styled.div`
   position: fixed;
-  bottom: 30px;
+  bottom: 50px;
   right: 50px;
   z-index: 1000;
   transition: all 0.3s ease;
@@ -25,8 +25,8 @@ const WhatsAppContainer = styled.div`
   }
 
     @media (max-width: 768px) {
-  bottom: 50px;
-  right: 40px;
+  bottom: 70px;
+  right: px;
 `;
 
 const WhatsAppLink = styled.a`

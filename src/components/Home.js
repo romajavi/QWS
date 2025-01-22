@@ -75,7 +75,8 @@ const ContentWrapper = styled(motion.div)`
 
   @media (max-width: 768px) {
     width: 95%;
-    height: 600px; 
+    height: 700px;
+    overflow: hidden; 
     padding: 1rem;
   }
 `;
@@ -97,7 +98,7 @@ const InnerContent = styled.div`
   width: 100%;
   height: 100%;
   display: grid;
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: 80px 1fr 80px;
   gap: 20px;
   padding: 20px;
   z-index: 1;
