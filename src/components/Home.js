@@ -48,26 +48,26 @@ const HomeWrapper = styled.div`
   align-items: center;
   justify-content: center;
   padding: 1rem;
-  margin-top: 100px;
+  margin-top: 80px; // Reducido para mobile
   z-index: 1;
   perspective: 1000px;
   contain: layout style;
 
   @media (max-width: 768px) {
-    padding: 1rem;
-    margin-top: 100px;
+    padding: 0.5rem;
+    margin-top: 60px;
   }
 `;
 
 const ContentWrapper = styled(motion.div)`
-  margin-top: 25px;
+  margin-top: 60px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 90%;
-  max-width: 1200px;
-  height: 700px; 
+  width: 100%;
+  max-width: 1500px;
+  height: 600px; // Altura fija
   position: relative;
   overflow: hidden;
   border-radius: 24px;
@@ -75,12 +75,10 @@ const ContentWrapper = styled(motion.div)`
 
   @media (max-width: 768px) {
     width: 95%;
-    height: 700px;
-    overflow: hidden; 
-    padding: 1rem;
+    height: 650px;
+    padding: 0.5rem;
   }
 `;
-
 
 const BorderContainer = styled.div`
   position: absolute;
@@ -170,19 +168,19 @@ const Title = styled.h1`
 
 const SecondaryContent = styled(motion.div)`
   display: grid;
-  grid-template-rows: 1fr auto;
+  grid-template-rows: 1fr 60px; // Altura fija para el área del botón
   gap: 20px;
   width: 100%;
   height: 100%;
 
   & > div:first-child {
-    overflow: visible; // Elimina el scroll
+    overflow: hidden; // Previene el scroll
     display: flex;
     align-items: center;
   }
 
   & > div:last-child {
-    height: 60px;
+    height: 60px; // Altura fija para el área del botón
     display: flex;
     align-items: center;
     justify-content: center;
@@ -192,10 +190,9 @@ const SecondaryContent = styled(motion.div)`
 const buttonStyle = {
   background: 'linear-gradient(45deg, #52c1b9, #FFD700)',
   minWidth: '150px',
-  '@media (max-width: 768px)': {
-    minWidth: '150px'
-  }
+  minHeight: '40px'
 };
+
 
 const Home = () => {
   const { t } = useTranslation();
@@ -307,8 +304,10 @@ const Home = () => {
                       glow={true}
                       glowIntensity={1.2}
                       variant="primary"
+                      useGradient={true}
+                      customWidth="250px"
+                      mobileWidth="150px"
                       onClick={handleExploreClick}
-                      style={buttonStyle}
                     >
                       {t('home.exploreButton')}
                     </Button>

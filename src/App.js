@@ -89,6 +89,9 @@ const theme = {
     effects: {
         glow: '0 0 5px rgba(0, 255, 255, 0.5)',
         gradient: 'linear-gradient(45deg, #FFD700, #00FFFF)',
+    },
+    gradients: {
+        primary: 'linear-gradient(45deg, #52c1b9, #FFD700)',
     }
 };
 

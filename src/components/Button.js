@@ -2,13 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 import { glowButtonStyles, subtleGlowStyles } from '../styles/Animations.js';
 
-// Filtramos las props que no queremos que lleguen al DOM
 const StyledButton = styled.button.withConfig({
   shouldComponentUpdate: props => {
     return !['isActive'].includes(props);
   },
 })`
-  background: ${props => props.theme.colors.primary};
   color: ${props => props.theme.colors.buttonText};
   border: none;
   border-radius: 8px;
@@ -30,16 +28,36 @@ const StyledButton = styled.button.withConfig({
         '1.125rem'
   };
   
+  width: ${({ $customWidth }) => $customWidth || 'auto'};
   min-width: ${({ $size }) =>
     $size === 'small' ? '80px' :
-      $size === 'medium' ? '100px' :
-        '200px'
+      $size === 'medium' ? '120px' :
+        '150px'
   };
   
-  background: ${({ $variant, theme }) =>
-    $variant === 'secondary'
-      ? theme.colors.secondaryBackground
-      : theme.colors.primary
+  @media (max-width: 768px) {
+    width: ${({ $mobileWidth }) => $mobileWidth || 'auto'};
+    min-width: ${({ $size }) =>
+    $size === 'small' ? '60px' :
+      $size === 'medium' ? '100px' :
+        '120px'
+  };
+    padding: ${({ $size }) =>
+    $size === 'small' ? '0.4rem 0.8rem' :
+      $size === 'medium' ? '0.6rem 1.2rem' :
+        '0.8rem 1.6rem'
+  };
+    font-size: ${({ $size }) =>
+    $size === 'small' ? '0.75rem' :
+      $size === 'medium' ? '0.875rem' :
+        '1rem'
+  };
+  }
+  
+  background: ${({ $useGradient, $variant, theme }) =>
+    $useGradient ? 'linear-gradient(45deg, #52c1b9, #FFD700)' :
+      $variant === 'secondary' ? theme.colors.secondaryBackground :
+        theme.colors.primary
   };
   
   ${({ $glow, $variant, $glowIntensity = 1 }) =>
@@ -73,16 +91,21 @@ const Button = ({
   glow = false,
   glowIntensity = 1,
   className,
-  isActive,  // Capturamos isActive aquí para que no se pase al DOM
+  isActive,
+  customWidth,
+  mobileWidth,
+  useGradient = false,
   ...props
 }) => {
-  // Omitimos isActive de las props que se pasan al StyledButton
   return (
     <StyledButton
       $variant={variant}
       $size={size}
       $glow={glow}
       $glowIntensity={glowIntensity}
+      $customWidth={customWidth}
+      $mobileWidth={mobileWidth}
+      $useGradient={useGradient}
       className={className}
       {...props}
     >

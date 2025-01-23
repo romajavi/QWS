@@ -7,20 +7,20 @@ const SubtitleContainer = styled(motion.div)`
   font-size: clamp(1.1rem, 2.2vw, 1.6rem);
   width: 100%;
   height: auto;
-  min-height: 220px;
+  min-height: 120px; // Reducido para mobile
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 20px 0;
   
   @media (max-width: 768px) {
-    min-height: 180px;
-    padding: 30px 0;
+    min-height: 100px;
+    padding: 15px 0;
   }
 `;
 
 const TextWrapper = styled(motion.p)`
-  margin: 0 80px;
+  margin: 0; // Eliminamos márgenes
   background: linear-gradient(
     135deg,
     rgba(0, 0, 0, 0.85) 0%,
@@ -28,8 +28,8 @@ const TextWrapper = styled(motion.p)`
   );
   padding: 2rem;
   border-radius: 12px;
-  width: calc(100% - 160px);
-  min-height: 120px;
+  width: 100%; // Ancho completo
+  max-width: 950px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -37,17 +37,18 @@ const TextWrapper = styled(motion.p)`
   backdrop-filter: blur(8px);
   letter-spacing: 0.3px;
   font-family: ${({ theme }) => theme.fonts.mono};
-  font-size: 2.0rem;
+  font-size: 1.8rem;
   text-align: center;
   
   @media (max-width: 768px) {
-    margin: 0 10px;
-    width: calc(100% - 10px);
-    padding: 1.5rem;
-    min-height: 100px;
-    font-size: 1.2rem;
+    width: 85%;
+    padding: 1.2rem;
+    min-height: 60px;
+    font-size: 1rem;
+    margin: 0 0;
   }
 `;
+
 const AnimatedSubtitle = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const { t } = useTranslation();
