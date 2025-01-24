@@ -39,6 +39,9 @@ const TextWrapper = styled(motion.p)`
   font-family: ${({ theme }) => theme.fonts.mono};
   font-size: 1.8rem;
   text-align: center;
+  font-weight: 700; // Bold weight
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); // Profundidad
+  color: white;
   
   @media (max-width: 768px) {
     width: 85%;
@@ -46,6 +49,7 @@ const TextWrapper = styled(motion.p)`
     min-height: 60px;
     font-size: 1.2rem;
     margin: 0 0;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); // Sombra más sutil para texto pequeño
   }
 `;
 
