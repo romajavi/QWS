@@ -44,7 +44,7 @@ const TextWrapper = styled(motion.p)`
     width: 85%;
     padding: 1.2rem;
     min-height: 60px;
-    font-size: 1rem;
+    font-size: 1.2rem;
     margin: 0 0;
   }
 `;
